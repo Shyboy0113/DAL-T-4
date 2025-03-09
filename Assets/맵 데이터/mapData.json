@@ -1,0 +1,66 @@
+{
+    "chapters": [
+      {
+        "chapterNum": 1,
+        "stages": [
+          {
+            "stageName": "Stage 1-1",
+            "chapterNum": 1,
+            "stageNum": 1,
+            "canUseAlt": true,
+            "canUseF4": true,
+            "canUseTab": false,
+            "firstMission": "Finish within 1 minute",
+            "secondMission": "Collect all coins",
+            "thirdMission": "Don't take damage",
+            "isFirstMissionCleared": false,
+            "isSecondMissionCleared": false,
+            "isThirdMissionCleared": false,
+            "isAppeared": true,
+            "isCleared": false,
+            "clearTime": 0.0
+          },
+          {
+            "stageName": "Stage 1-2",
+            "chapterNum": 1,
+            "stageNum": 2,
+            "canUseAlt": true,
+            "canUseF4": true,
+            "canUseTab": false,
+            "firstMission": "Use only dashes",
+            "secondMission": "Defeat all enemies",
+            "thirdMission": "Don't get hit",
+            "isFirstMissionCleared": false,
+            "isSecondMissionCleared": false,
+            "isThirdMissionCleared": false,
+            "isAppeared": false,
+            "isCleared": false,
+            "clearTime": 0.0
+          }
+        ]
+      },
+      {
+        "chapterNum": 2,
+        "stages": [
+          {
+            "stageName": "Stage 2-1",
+            "chapterNum": 2,
+            "stageNum": 1,
+            "canUseAlt": true,
+            "canUseF4": true,
+            "canUseTab": true,
+            "firstMission": "Defeat boss",
+            "secondMission": "No power-ups",
+            "thirdMission": "Clear in under 2 min",
+            "isFirstMissionCleared": false,
+            "isSecondMissionCleared": false,
+            "isThirdMissionCleared": false,
+            "isAppeared": true,
+            "isCleared": false,
+            "clearTime": 0.0
+          }
+        ]
+      }
+    ]
+  }
+  
