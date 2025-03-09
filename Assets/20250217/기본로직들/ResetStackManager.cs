@@ -8,7 +8,10 @@ public class ResetStackManager : MonoBehaviour
     private bool _isGameOver = false;
     private List<int> inputQueue = new List<int> { 0, 0, 0 };
 
-    
+    private Rigidbody2D _rigidbody2D;
+    [SerializeField]
+    private float forceAmount = 1f;
+
     [SerializeField]
     private Animator _animatior;
     public GameObject arrow;
@@ -16,6 +19,7 @@ public class ResetStackManager : MonoBehaviour
     private void Awake()
     {
         _animatior = GetComponent<Animator>();
+        _rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     public bool IsGameOver()
@@ -71,16 +75,16 @@ public class ResetStackManager : MonoBehaviour
 
     void MovePlayer()
     {
-        Vector3 moveDirection = direction switch
+        Vector2 moveDirection = direction switch
         {
-            0 => Vector3.right,
-            1 => Vector3.down,
-            2 => Vector3.left,
-            3 => Vector3.up,
-            _ => Vector3.zero
+            0 => Vector2.right,
+            1 => Vector2.down,
+            2 => Vector2.left,
+            3 => Vector2.up,
+            _ => Vector2.zero
         };
-
-        transform.position += moveDirection;
+        Debug.Log(moveDirection + " 이동");
+        _rigidbody2D.AddForce(moveDirection * forceAmount, ForceMode2D.Impulse);
     }
 
     void RotateArrow()
@@ -94,7 +98,7 @@ public class ResetStackManager : MonoBehaviour
             _ => 0f
         };
 
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        arrow.transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     public int CheckInputQueue(int slot)
