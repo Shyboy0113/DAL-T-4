@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Note
+  - Destination
   layers:
   - Default
   - TransparentFX
