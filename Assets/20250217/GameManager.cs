@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     public int pushedNumberF4;
     public int pushedNumberTAB;
 
+    //게임 클리어 패널
+    public GameObject clearPanel;
 
     void Awake()
     {
@@ -91,6 +93,33 @@ public class GameManager : MonoBehaviour
     {
         isCleared = true;
         _playerPrefsManager.ReportData(_mapDataLoader, currentStageData);
+        clearPanel.SetActive(true);
+    }
+
+    public void GoToNextScene()
+    {
+        ResetData();
+
+        //씬 이동 코드 추가
+    }
+
+    public void ResetData()
+    {
+        //스택 상태 초기화
+        DisconnectStackManager();
+
+        //클리어 패널 false로
+        clearPanel.SetActive(false);
+
+        //게임 상태 초기화
+        isGameOver = false;
+        isCleared = false;
+
+        //도전과제 초기화
+        currentTime = 0f;
+        pushedNumberALT = 0;
+        pushedNumberF4 = 0;
+        pushedNumberTAB = 0;
     }
 
     public void TileOut()
