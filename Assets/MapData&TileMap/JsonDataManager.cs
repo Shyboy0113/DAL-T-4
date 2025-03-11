@@ -17,7 +17,7 @@ public class StageProgressData
     public int minTAB = int.MaxValue;
 
     public bool isCleared = false;
-    public bool isAppeared = false; //이전 스테이지 클리어 시, 다음 스테이지가 해금
+    public bool isAppeared = true; //이전 스테이지 클리어 시, 다음 스테이지가 해금
     public float minClearTime = float.MaxValue;
 
     public StageProgressData(int chapter, int stage)
