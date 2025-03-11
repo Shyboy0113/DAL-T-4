@@ -71,7 +71,6 @@ public class Video_Option : MonoBehaviour
             selectedResolution.height != Screen.currentResolution.height)
         {
             Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
-        }
-        SceneManager.LoadScene(1);
+        }        
     }
 }

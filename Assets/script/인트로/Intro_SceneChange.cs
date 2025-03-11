@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class Intro_SceneChange : MonoBehaviour
 {
     public GameObject audioSource;
+
+    public GameObject optionPanel;
+
     private void Awake()
     {
         Time.timeScale = 1;
@@ -17,12 +20,12 @@ public class Intro_SceneChange : MonoBehaviour
         {
             Destroy(audioSource);
         }
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
         
     }
     public void Scene_Option()
     {
-        SceneManager.LoadScene(3);
+        optionPanel.SetActive(true);
     }
 
     public void Scene_Exit()

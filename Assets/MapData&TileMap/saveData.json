@@ -1,0 +1,41 @@
+{
+  "1-1": {
+      "chapter": 1,
+      "stage": 1,
+      "isCleared": true,
+      "isAppeared": true,
+      "isFirstMissionCleared": true,
+      "isSecondMissionCleared": true,
+      "isThirdMissionCleared": false,
+      "minALT": 3,
+      "minF4": 2,
+      "minTAB": 5,
+      "minClearTime": 45.6
+  },
+  "1-2": {
+      "chapter": 1,
+      "stage": 2,
+      "isCleared": false,
+      "isAppeared": false,
+      "isFirstMissionCleared": false,
+      "isSecondMissionCleared": false,
+      "isThirdMissionCleared": false,
+      "minALT": 999999,
+      "minF4": 999999,
+      "minTAB": 999999,
+      "minClearTime": 99999999.0
+  },
+  "2-1": {
+      "chapter": 2,
+      "stage": 1,
+      "isCleared": true,
+      "isAppeared": true,
+      "isFirstMissionCleared": true,
+      "isSecondMissionCleared": true,
+      "isThirdMissionCleared": true,
+      "minALT": 1,
+      "minF4": 1,
+      "minTAB": 1,
+      "minClearTime": 30.2
+  }
+}
