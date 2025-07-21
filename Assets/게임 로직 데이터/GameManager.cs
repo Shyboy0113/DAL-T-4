@@ -223,4 +223,21 @@ public class GameManager : MonoBehaviour
             _jsonDataManager.SaveStageData(nextStageData);
         }
     }
+
+    public void ResetStage()
+    {
+        //스택 상태 초기화
+        DisconnectStackManager();
+        ConnectStackManager();
+
+        //게임 상태 초기화
+        isGameOver = false;
+        isCleared = false;
+
+        //도전과제 초기화
+        currentTime = 0f;
+        pushedNumberALT = 0;
+        pushedNumberF4 = 0;
+        pushedNumberTAB = 0;
+    }
 }
