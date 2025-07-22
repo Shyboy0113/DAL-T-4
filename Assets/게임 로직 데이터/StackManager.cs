@@ -5,6 +5,17 @@ using UnityEngine;
 //DoTween 사용
 using DG.Tweening;
 
+//TileMap 사용
+using UnityEngine.Tilemaps;
+
+public enum KeyType
+{
+    None = 0,
+    Alt = 1,
+    F4 = 2,
+    Tab = 3
+}
+
 public class StackManager : MonoBehaviour
 {
     //전역 접근이 가능하도록 하는 이벤트
@@ -29,13 +40,71 @@ public class StackManager : MonoBehaviour
     public Vector3 DOTweenPunch;
     public int DOTweenVibrato;
 
+    #region TileMap
+
+    // 인스펙터에서 두 타일맵을 연결할 변수
+    public Tilemap tilemapFirst;
+    public Tilemap tilemapSecond;
+
+    private Tilemap activeTilemap; // 현재 활성화된 타일맵을 저장할 변수
+
+    #endregion
+    
+
     private void Awake()
     {
         _animatior = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
 
     }
+
+    private void Start()
+    {
+        // 게임 시작 시 첫 번째 맵을 활성화
+        activeTilemap = tilemapFirst;
+        tilemapFirst.gameObject.SetActive(true);
+        tilemapSecond.gameObject.SetActive(false);
+    }
     
+    // 맵 전환을 처리하는 메서드
+    public void SwitchMap()
+    {
+        // 현재 활성화된 맵을 기준으로 다른 맵으로 전환
+        if (activeTilemap == tilemapFirst)
+        {
+            activeTilemap = tilemapSecond;
+            tilemapFirst.gameObject.SetActive(false);
+            tilemapSecond.gameObject.SetActive(true);
+        }
+        else
+        {
+            activeTilemap = tilemapFirst;
+            tilemapFirst.gameObject.SetActive(true);
+            tilemapSecond.gameObject.SetActive(false);
+        }
+    }
+    
+    private void CheckForGroundAfterSwitch()
+    {
+        // 1. 플레이어의 현재 월드 좌표를 가져옵니다.
+        Vector3 playerPosition = transform.position;
+
+        // 2. 월드 좌표를 현재 활성화된 타일맵의 셀(그리드) 좌표로 변환합니다.
+        Vector3Int cellPosition = activeTilemap.WorldToCell(playerPosition);
+
+        // 3. 변환된 셀 좌표에 타일이 존재하는지 확인합니다.
+        bool hasGround = activeTilemap.HasTile(cellPosition);
+
+        // 4. 만약 타일이 없다면, 사망 처리를 합니다.
+        if (!hasGround)
+        {
+            Debug.Log("맵 전환 후 발밑에 타일이 없습니다! 사망 처리!");
+            
+            PlayExplosion(); // 사망 이벤트 발동
+             
+        }
+    }
+
     public void ProcessAltInput()
     {
         if (stack >= 3) ResetQueue();
@@ -72,7 +141,7 @@ public class StackManager : MonoBehaviour
 
         if (CheckGameOver())
         {
-            gameObject.GetComponent<BoxCollider2D>().enabled = false;            
+            gameObject.GetComponent<BoxCollider2D>().enabled = false;
 
             Debug.Log("게임 오버!");
             _animatior.Play("Explosion");
@@ -81,11 +150,26 @@ public class StackManager : MonoBehaviour
             OnPlayerDied?.Invoke(); //플레이어가 죽었다는 방송을 내보냄 
             //GameManager.Instance.isGameOver = true;
         }
+        else if (CheckMapChange())
+        {
+            // 맵 전환
+            SwitchMap();
+            
+            // 맵 전환 직후, 플레이어 위치의 타일 유효성 검사 실행!
+            CheckForGroundAfterSwitch();
+        }
     }
 
     bool CheckGameOver()
     {
-        return (inputQueue[0] == 1 && inputQueue[1] == 2) || (inputQueue[1] == 1 && inputQueue[2] == 2);
+        return (inputQueue[0] == (int)KeyType.Alt && inputQueue[1] == (int)KeyType.F4)
+               || (inputQueue[1] == (int)KeyType.Alt && inputQueue[2] == (int)KeyType.F4);
+    }
+    
+    bool CheckMapChange()
+    {
+        return (inputQueue[0] == (int)KeyType.Alt && inputQueue[1] == (int)KeyType.Tab)
+               || (inputQueue[1] == (int)KeyType.Alt && inputQueue[2] == (int)KeyType.Tab);
     }
 
     void ResetQueue()

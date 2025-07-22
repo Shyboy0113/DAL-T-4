@@ -40,13 +40,13 @@ public class SequenceUI : MonoBehaviour
     {
         switch (key)
         {
-            case 1:
+            case (int)KeyType.Alt:
                 _tmp_Text[index].color = Color.red;
                 return "ALT";
-            case 2:
+            case (int)KeyType.F4:
                 _tmp_Text[index].color = Color.black;
                 return "F4";
-            case 3:
+            case (int)KeyType.Tab:
                 _tmp_Text[index].color = Color.blue;
                 return "TAB";
             default:
