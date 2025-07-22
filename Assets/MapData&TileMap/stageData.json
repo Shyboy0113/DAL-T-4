@@ -9,12 +9,12 @@
             "isFirstMissionCleared": true,
             "isSecondMissionCleared": true,
             "isThirdMissionCleared": true,
-            "minALT": 7,
-            "minF4": 12,
+            "minALT": 5,
+            "minF4": 2,
             "minTAB": 0,
             "isCleared": true,
             "isAppeared": true,
-            "minClearTime": 6.599296569824219
+            "minClearTime": 5.616575717926025
         }
     ]
 }
