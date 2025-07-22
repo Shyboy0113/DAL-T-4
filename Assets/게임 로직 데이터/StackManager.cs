@@ -1,8 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class StackManager : MonoBehaviour
 {
+    //전역 접근이 가능하도록 하는 이벤트
+    public static event Action OnStageCleared; 
+    public static event Action OnPlayerDied;
+    public event Action OnInputQueueChanged; // SequenceUI의 Update 함수 비용 줄이기
+    
     private int direction = 0;
     private int stack = 0;
     private List<int> inputQueue = new List<int> { 0, 0, 0 };
@@ -47,15 +53,20 @@ public class StackManager : MonoBehaviour
     {
         inputQueue[stack] = keyCode;
         stack++;
+        
+        //이벤트 발생
+        OnInputQueueChanged?.Invoke();
 
         if (CheckGameOver())
         {
             gameObject.GetComponent<BoxCollider2D>().enabled = false;            
 
             Debug.Log("게임 오버!");
-            GameManager.Instance.isGameOver = true;
             _animatior.Play("Explosion");
             arrow.SetActive(false);
+            
+            OnPlayerDied?.Invoke(); //플레이어가 죽었다는 방송을 내보냄 
+            //GameManager.Instance.isGameOver = true;
         }
     }
 
@@ -68,6 +79,9 @@ public class StackManager : MonoBehaviour
     {
         inputQueue = new List<int> { 0, 0, 0 };
         stack = 0;
+        
+        //큐가 리셋 될 경우에도 발동
+        OnInputQueueChanged?.Invoke();
     }
 
     void MovePlayer()
@@ -106,9 +120,11 @@ public class StackManager : MonoBehaviour
     public void PlayExplosion()
     {
         Debug.Log("게임 오버!");
-        GameManager.Instance.isGameOver = true;
+        //GameManager.Instance.isGameOver = true;
         _animatior.Play("Explosion");
         arrow.SetActive(false);
+        
+        OnPlayerDied?.Invoke(); //플레이어가 죽었다는 방송을 내보낸다
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -116,7 +132,9 @@ public class StackManager : MonoBehaviour
         if (collision.CompareTag("Destination"))
         {
             Debug.Log("게임을 클리어하셨습니다.");
-            GameManager.Instance.GameClear();
+            
+            OnStageCleared?.Invoke(); //게임이 클리어 됐다는 방송을 내보냄
+            //GameManager.Instance.GameClear();
         }
     }
 

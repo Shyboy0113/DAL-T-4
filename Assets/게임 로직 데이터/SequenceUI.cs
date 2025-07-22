@@ -5,28 +5,35 @@ using TMPro;
 
 public class SequenceUI : MonoBehaviour
 {
-    // Start is called before the first frame update
+    
     [SerializeField]
     private TMP_Text[] _tmp_Text = new TMP_Text[3];
 
     [SerializeField]
     private StackManager _stackManager;
-    void Start()
+    
+    void Awake()
     {
         _stackManager = FindObjectOfType<StackManager>();
-    }
-    private void Update()
-    {
-        if(_stackManager is not null)
+        
+        if (_stackManager != null)
         {
-            int key = _stackManager.CheckInputQueue(0);
-            _tmp_Text[0].text = InputText(0, key);
-
-            key = _stackManager.CheckInputQueue(1);
-            _tmp_Text[1].text = InputText(1, key);
-
-            key = _stackManager.CheckInputQueue(2);
-            _tmp_Text[2].text = InputText(2, key);
+            // ◀️ StackManager의 이벤트에 UpdateUI 메서드를 구독
+            _stackManager.OnInputQueueChanged += UpdateUI;
+            UpdateUI(); // ◀️ 시작할 때 한 번 초기화
+        }
+        
+    }
+    
+    private void UpdateUI()
+    {
+        if (_stackManager is not null)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                int key = _stackManager.CheckInputQueue(i);
+                _tmp_Text[i].text = InputText(i, key);
+            }
         }
     }
     private string InputText(int index, int key)
@@ -45,6 +52,14 @@ public class SequenceUI : MonoBehaviour
             default:
                 _tmp_Text[index].color = Color.black;
                 return "";
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        if (_stackManager != null)
+        {
+            _stackManager.OnInputQueueChanged -= UpdateUI;
         }
     }
 
