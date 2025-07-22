@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
 
         if (_isStackManagerLoaded)
         {
-            if (Input.GetKeyDown(KeyCode.LeftAlt) && currentStageData.canUseF4)
+            if (Input.GetKeyDown(KeyCode.LeftAlt) && currentStageData.canUseAlt)
             {
                 _stackManager.ProcessAltInput();
                 pushedNumberALT += 1;
