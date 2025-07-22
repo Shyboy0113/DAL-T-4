@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//DoTween 사용
+using DG.Tweening;
+
 public class StackManager : MonoBehaviour
 {
     //전역 접근이 가능하도록 하는 이벤트
@@ -20,20 +23,26 @@ public class StackManager : MonoBehaviour
     [SerializeField]
     private Animator _animatior;
     public GameObject arrow;
+    
+    //DOTween 전용 변동 속도
+    public float DOTweenDuration;
+    public Vector3 DOTweenPunch;
+    public int DOTweenVibrato;
 
     private void Awake()
     {
         _animatior = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
 
-    }    
-
+    }
+    
     public void ProcessAltInput()
     {
         if (stack >= 3) ResetQueue();
         HandleInput(1); // ALT 입력
         direction = (direction + 1) % 4;
         RotateArrow();
+
     }
 
     public void ProcessF4Input()
@@ -47,6 +56,10 @@ public class StackManager : MonoBehaviour
     {
         if (stack >= 3) ResetQueue();
         HandleInput(3); // Tab 입력
+        
+        direction = (direction + 3) % 4; // direction -1 + 4 = direction +3
+        RotateArrow(); // 
+        
     }
 
     void HandleInput(int keyCode)
@@ -109,7 +122,16 @@ public class StackManager : MonoBehaviour
             _ => 0f
         };
 
-        arrow.transform.rotation = Quaternion.Euler(0, 0, angle);
+        //arrow.transform.rotation = Quaternion.Euler(0, 0, angle);
+        arrow.transform.DORotate(new Vector3(0, 0, angle), DOTweenDuration).SetEase(Ease.OutElastic); //일반 rotation을 Dotween으로 교체
+        
+        // Z축으로 90도만큼 '펀치'를 날렸다가 돌아옵니다.
+        // punch: 펀치의 강도 (회전할 각도)
+        // duration: 전체 애니메이션 시간
+        // vibrato: 흔들림 횟수 (많을수록 더 덜렁거림)
+        // elasticity: 탄성 (0~1 사이 값, 1에 가까울수록 더 많이 튕김)
+        transform.DOPunchRotation(punch: DOTweenPunch, duration: DOTweenDuration, vibrato: DOTweenVibrato, elasticity: 0.5f);
+        
     }
 
     public int CheckInputQueue(int slot)
@@ -134,7 +156,6 @@ public class StackManager : MonoBehaviour
             Debug.Log("게임을 클리어하셨습니다.");
             
             OnStageCleared?.Invoke(); //게임이 클리어 됐다는 방송을 내보냄
-            //GameManager.Instance.GameClear();
         }
     }
 
