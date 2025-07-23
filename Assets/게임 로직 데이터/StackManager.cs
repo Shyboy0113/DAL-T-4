@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,6 +40,10 @@ public class StackManager : MonoBehaviour
     public float DOTweenDuration;
     public Vector3 DOTweenPunch;
     public int DOTweenVibrato;
+    
+    //Alt + Tab 전용 로직 bool
+    [SerializeField]
+    private bool _isSwitched;
 
     #region TileMap
 
@@ -46,7 +51,12 @@ public class StackManager : MonoBehaviour
     public Tilemap tilemapFirst;
     public Tilemap tilemapSecond;
 
-    private Tilemap activeTilemap; // 현재 활성화된 타일맵을 저장할 변수
+    private Tilemap _activeTilemap; // 현재 활성화된 타일맵을 저장할 변수
+    
+    public GameObject mainCamera; // 메인 카메라
+    
+    [SerializeField]
+    private CanvasGroup changePanelCanvasGroup;
 
     #endregion
     
@@ -61,27 +71,36 @@ public class StackManager : MonoBehaviour
     private void Start()
     {
         // 게임 시작 시 첫 번째 맵을 활성화
-        activeTilemap = tilemapFirst;
-        tilemapFirst.gameObject.SetActive(true);
-        tilemapSecond.gameObject.SetActive(false);
+        _activeTilemap = tilemapFirst;
+      
+        // 게임 시작 시 CanvasGroup의 알파값을 0으로, 비활성화 상태로 만듭니다.
+        changePanelCanvasGroup.alpha = 0;
+        changePanelCanvasGroup.interactable = false; // 클릭 등 상호작용 비활성화
+        changePanelCanvasGroup.blocksRaycasts = false; // UI 뒤의 오브젝트가 클릭되는 것을 막지 않음
+
+        _isSwitched = false;
     }
     
     // 맵 전환을 처리하는 메서드
     public void SwitchMap()
     {
         // 현재 활성화된 맵을 기준으로 다른 맵으로 전환
-        if (activeTilemap == tilemapFirst)
+        if (_activeTilemap == tilemapFirst)
         {
-            activeTilemap = tilemapSecond;
-            tilemapFirst.gameObject.SetActive(false);
-            tilemapSecond.gameObject.SetActive(true);
+            _activeTilemap = tilemapSecond;
+            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, tilemapSecond.gameObject.transform.position.z -10f);
+            transform.position = new Vector3(transform.position.x, transform.position.y, tilemapSecond.gameObject.transform.position.z);
+            
         }
         else
         {
-            activeTilemap = tilemapFirst;
-            tilemapFirst.gameObject.SetActive(true);
-            tilemapSecond.gameObject.SetActive(false);
+            _activeTilemap = tilemapFirst;
+            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y,tilemapFirst.gameObject.transform.position.z -10f);
+            transform.position = new Vector3(transform.position.x, transform.position.y, tilemapFirst.gameObject.transform.position.z);
         }
+
+        _isSwitched = true;
+
     }
     
     private void CheckForGroundAfterSwitch()
@@ -90,10 +109,10 @@ public class StackManager : MonoBehaviour
         Vector3 playerPosition = transform.position;
 
         // 2. 월드 좌표를 현재 활성화된 타일맵의 셀(그리드) 좌표로 변환합니다.
-        Vector3Int cellPosition = activeTilemap.WorldToCell(playerPosition);
+        Vector3Int cellPosition = _activeTilemap.WorldToCell(playerPosition);
 
         // 3. 변환된 셀 좌표에 타일이 존재하는지 확인합니다.
-        bool hasGround = activeTilemap.HasTile(cellPosition);
+        bool hasGround = _activeTilemap.HasTile(cellPosition);
 
         // 4. 만약 타일이 없다면, 사망 처리를 합니다.
         if (!hasGround)
@@ -103,6 +122,26 @@ public class StackManager : MonoBehaviour
             PlayExplosion(); // 사망 이벤트 발동
              
         }
+    }
+
+    IEnumerator FadeSwitchPanel()
+    {
+        // 1. CanvasGroup의 알파값을 즉시 1로 만들어 전체를 보이게 함
+        changePanelCanvasGroup.alpha = 1f;
+
+        // 0.5초 대기
+        yield return new WaitForSeconds(0.5f);
+    
+        // 2. CanvasGroup에 DOFade를 한 번만 호출하여 전체를 페이드 아웃
+        changePanelCanvasGroup.DOFade(0f, 1.0f);
+    
+        // 1초 대기 (페이드 아웃 완료까지)
+        yield return new WaitForSeconds(1.0f);
+
+        // 3. 필요하다면 여기서 상호작용을 막을 수 있습니다.
+        // (어차피 알파값이 0이라 보이지 않으므로 필수는 아님)
+        changePanelCanvasGroup.interactable = false;
+        changePanelCanvasGroup.blocksRaycasts = false;
     }
 
     public void ProcessAltInput()
@@ -157,6 +196,9 @@ public class StackManager : MonoBehaviour
             
             // 맵 전환 직후, 플레이어 위치의 타일 유효성 검사 실행!
             CheckForGroundAfterSwitch();
+            
+            // 코루틴 시작
+            StartCoroutine(FadeSwitchPanel());
         }
     }
 
@@ -168,14 +210,16 @@ public class StackManager : MonoBehaviour
     
     bool CheckMapChange()
     {
-        return (inputQueue[0] == (int)KeyType.Alt && inputQueue[1] == (int)KeyType.Tab)
-               || (inputQueue[1] == (int)KeyType.Alt && inputQueue[2] == (int)KeyType.Tab);
+        return (inputQueue[0] == (int)KeyType.Alt && inputQueue[1] == (int)KeyType.Tab && !_isSwitched)
+               || (inputQueue[1] == (int)KeyType.Alt && inputQueue[2] == (int)KeyType.Tab && !_isSwitched);
     }
 
     void ResetQueue()
     {
         inputQueue = new List<int> { 0, 0, 0 };
         stack = 0;
+
+        _isSwitched = false;
         
         //큐가 리셋 될 경우에도 발동
         OnInputQueueChanged?.Invoke();
