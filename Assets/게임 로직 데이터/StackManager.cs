@@ -8,6 +8,7 @@ using DG.Tweening;
 
 //TileMap 사용
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public enum KeyType
 {
@@ -51,6 +52,9 @@ public class StackManager : MonoBehaviour
     public Tilemap tilemapFirst;
     public Tilemap tilemapSecond;
 
+    private BoxCollider2D _colliderFirst;
+    private BoxCollider2D _colliderSecond;
+
     private Tilemap _activeTilemap; // 현재 활성화된 타일맵을 저장할 변수
     
     public GameObject mainCamera; // 메인 카메라
@@ -66,6 +70,9 @@ public class StackManager : MonoBehaviour
         _animatior = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
 
+        _colliderFirst = tilemapFirst.GetComponent<BoxCollider2D>();
+        _colliderSecond = tilemapSecond.GetComponent<BoxCollider2D>();
+
     }
 
     private void Start()
@@ -79,26 +86,42 @@ public class StackManager : MonoBehaviour
         changePanelCanvasGroup.blocksRaycasts = false; // UI 뒤의 오브젝트가 클릭되는 것을 막지 않음
 
         _isSwitched = false;
+
+        _colliderSecond.enabled = false; //2번째 맵 콜라이더를 끈다.
     }
     
     // 맵 전환을 처리하는 메서드
     public void SwitchMap()
     {
+        Vector3 newPlayerPosition;
+    
         // 현재 활성화된 맵을 기준으로 다른 맵으로 전환
         if (_activeTilemap == tilemapFirst)
         {
-            _activeTilemap = tilemapSecond;
-            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, tilemapSecond.gameObject.transform.position.z -10f);
-            transform.position = new Vector3(transform.position.x, transform.position.y, tilemapSecond.gameObject.transform.position.z);
+            _colliderFirst.enabled = false;
+            _colliderSecond.enabled = true;
             
+            _activeTilemap = tilemapSecond;
+            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, tilemapSecond.gameObject.transform.position.z - 10f);
+        
+            // Z 위치만 새로운 타일맵에 맞게 설정
+            newPlayerPosition = new Vector3(transform.position.x, transform.position.y, tilemapSecond.gameObject.transform.position.z);
+
         }
         else
         {
+            _colliderFirst.enabled = true;
+            _colliderSecond.enabled = false;
+            
             _activeTilemap = tilemapFirst;
-            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y,tilemapFirst.gameObject.transform.position.z -10f);
-            transform.position = new Vector3(transform.position.x, transform.position.y, tilemapFirst.gameObject.transform.position.z);
+            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y,tilemapFirst.gameObject.transform.position.z - 10f);
+        
+            // Z 위치만 새로운 타일맵에 맞게 설정
+            newPlayerPosition = new Vector3(transform.position.x, transform.position.y, tilemapFirst.gameObject.transform.position.z);
         }
-
+        
+        transform.position  = newPlayerPosition;
+        _rigidbody2D.MovePosition(newPlayerPosition); //transform.position이 아니라, MovePosition으로 이동해야 콜라이더 판정이 작동한다.
         _isSwitched = true;
 
     }
