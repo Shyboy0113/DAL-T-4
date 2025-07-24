@@ -5918,7 +5918,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1812244042
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6728,6 +6728,7 @@ MonoBehaviour:
   pushedNumberF4: 0
   pushedNumberTAB: 0
   clearPanel: {fileID: 114661808}
+  pausePanel: {fileID: 0}
 --- !u!4 &2112455305
 Transform:
   m_ObjectHideFlags: 0

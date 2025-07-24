@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour
 
     // 게임 클리어 패널
     public GameObject clearPanel;
+    public GameObject pausePanel;
+    private bool _pausePanelActivity;
 
     void Awake()
     {
@@ -82,12 +84,17 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Can't find the MapDataLoader!!");
             _ismapDataLoaded = false;
         }
+        
+        pausePanel = GameObject.Find("Pause Canvas");
     }
 
     private void Start()
     {
         // ✅ JSON에서 현재 스테이지 데이터 불러오기
         LoadStageData(1, 1);
+
+        pausePanel.SetActive(false);
+        _pausePanelActivity = false;
     }
 
     void Update()
@@ -95,6 +102,15 @@ public class GameManager : MonoBehaviour
         if (isGameOver || isCleared) return;
 
         currentTime += Time.deltaTime;
+
+        if (!isCleared)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) && pausePanel is not null)
+            {
+                _pausePanelActivity = !_pausePanelActivity;
+                pausePanel.SetActive(_pausePanelActivity);
+            }
+        }
 
         if (_isStackManagerLoaded)
         {
