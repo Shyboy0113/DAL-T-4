@@ -51,9 +51,9 @@ public class StackManager : MonoBehaviour
     // 인스펙터에서 두 타일맵을 연결할 변수
     public Tilemap tilemapFirst;
     public Tilemap tilemapSecond;
-
-    private BoxCollider2D _colliderFirst;
-    private BoxCollider2D _colliderSecond;
+    
+    private TilemapCollider2D _colliderFirst;
+    private TilemapCollider2D _colliderSecond;
 
     private Tilemap _activeTilemap; // 현재 활성화된 타일맵을 저장할 변수
     
@@ -70,8 +70,8 @@ public class StackManager : MonoBehaviour
         _animatior = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
 
-        _colliderFirst = tilemapFirst.GetComponent<BoxCollider2D>();
-        _colliderSecond = tilemapSecond.GetComponent<BoxCollider2D>();
+        _colliderFirst = tilemapFirst.GetComponent<TilemapCollider2D>();
+        _colliderSecond = tilemapSecond.GetComponent<TilemapCollider2D>();
 
     }
 
