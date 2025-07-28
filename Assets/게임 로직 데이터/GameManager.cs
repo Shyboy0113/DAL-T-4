@@ -52,9 +52,7 @@ public class GameManager : MonoBehaviour
 
     // NullReferenceException 방지용 토글
     private bool _ismapDataLoaded = false;
-    [SerializeField]
-    private bool _isStackManagerLoaded = false;
-
+    
     // 게임 상태
     public bool isGameOver = false;
     public bool isCleared = false;
@@ -81,9 +79,6 @@ public class GameManager : MonoBehaviour
         }
         else Destroy(gameObject);
 
-        // JsonDataManager 가져오기
-        _jsonDataManager = FindObjectOfType<JsonDataManager>();
-
         // 맵 데이터 로드 확인
         if (_mapDataLoader is null)
         {
@@ -91,7 +86,8 @@ public class GameManager : MonoBehaviour
             _ismapDataLoaded = false;
         }
         
-        pausePanel = GameObject.Find("Pause Canvas");
+        CheckClearPanel();
+        CheckPausePanel();
     }
 
     private void Start()
@@ -117,27 +113,33 @@ public class GameManager : MonoBehaviour
                 pausePanel.SetActive(_pausePanelActivity);
             }
         }
+    }
 
-        if (_isStackManagerLoaded)
-        {
-            if (Input.GetKeyDown(KeyCode.LeftAlt) && currentStageData.canUseAlt)
-            {
-                _stackManager.ProcessAltInput();
-                pushedNumberALT += 1;
-            }
+    #region StackManager 외부 등록
+    public void RegisterStackManager(StackManager stackManager)
+    {
+        //StackManager 클래스에서 GameManager.Instance에 직접 자기를 등록
+        _stackManager = stackManager;
+        
+    }
 
-            if (Input.GetKeyDown(KeyCode.F4) && currentStageData.canUseF4)
-            {
-                _stackManager.ProcessF4Input();
-                pushedNumberF4 += 1;
-            }
+    public void UnregisterStackManager()
+    {
+        _stackManager = null;
+    }
+    #endregion
 
-            if (Input.GetKeyDown(KeyCode.Tab) && currentStageData.canUseTab)
-            {
-                _stackManager.ProcessTabInput();
-                pushedNumberTAB += 1;
-            }
-        }
+    
+    public void CheckClearPanel()
+    {
+        clearPanel = GameObject.Find("Clear Canvas");
+        if(clearPanel) clearPanel.gameObject.SetActive(false);
+    }
+
+    public void CheckPausePanel()
+    {
+        pausePanel = GameObject.Find("Pause Canvas");
+        if(pausePanel) pausePanel.gameObject.SetActive(false);
     }
 
     public void GameClear()
@@ -156,20 +158,14 @@ public class GameManager : MonoBehaviour
 
         // ✅ 다음 스테이지 진행 상태 업데이트
         UnlockNextStage();
-
-        // 씬 이동 코드 추가
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); // buildIndex 바로 다음
-
     }
 
     public void ResetData()
     {
-        // 스택 상태 초기화
-        DisconnectStackManager();
-
-        // 클리어 패널 숨기기
-        clearPanel.SetActive(false);
-
+        //Scene에 있는 두 패널을 재연결
+        CheckClearPanel();
+        CheckPausePanel();
+        
         // 게임 상태 초기화
         isGameOver = false;
         isCleared = false;
@@ -183,31 +179,10 @@ public class GameManager : MonoBehaviour
 
     public void TileOut()
     {
-        if (_isStackManagerLoaded)
+        if (_stackManager)
         {
             _stackManager.PlayExplosion();
         }
-    }
-
-    public void ConnectStackManager()
-    {
-        _stackManager = FindObjectOfType<StackManager>();
-
-        if (_stackManager is null)
-        {
-            Debug.LogError("Failed To Connect StackManager!");
-        }
-        else
-        {
-            Debug.Log("Succeed To Connect StackManager!");
-            _isStackManagerLoaded = true;
-        }
-    }
-
-    public void DisconnectStackManager()
-    {
-        _stackManager = null;
-        _isStackManagerLoaded = false;
     }
 
     private void OnDestroy()
@@ -276,20 +251,4 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ResetStage()
-    {
-        //스택 상태 초기화
-        DisconnectStackManager();
-        ConnectStackManager();
-
-        //게임 상태 초기화
-        isGameOver = false;
-        isCleared = false;
-
-        //도전과제 초기화
-        currentTime = 0f;
-        pushedNumberALT = 0;
-        pushedNumberF4 = 0;
-        pushedNumberTAB = 0;
-    }
 }

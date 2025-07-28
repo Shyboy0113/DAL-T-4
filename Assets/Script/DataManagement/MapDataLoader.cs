@@ -54,7 +54,7 @@ public class MapDataLoader : MonoBehaviour
     //JSON 파일에서 맵 데이터 전체를 불러옵니다.
     void LoadGameData()
     {
-        string path = Path.Combine(Application.dataPath, "MapData&TileMap", "mapData.json");
+        string path = Path.Combine(Application.dataPath, "Datas(Json...etc)", "mapData.json");
 
         if (File.Exists(path))
         {

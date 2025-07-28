@@ -8,7 +8,6 @@ using DG.Tweening;
 
 //TileMap 사용
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 public enum KeyType
 {
@@ -20,14 +19,25 @@ public enum KeyType
 
 public class StackManager : MonoBehaviour
 {
+    //플레이어의 회전 방향을 Enum(문자)로 표시
+    public enum PlayerDirection
+    {
+        Right,Down,Left,Up
+    }
+    
+    private PlayerDirection _playerDirection = PlayerDirection.Right;
+    
+    
     //전역 접근이 가능하도록 하는 이벤트
     public static event Action OnStageCleared; 
     public static event Action OnPlayerDied;
     public event Action OnInputQueueChanged; // SequenceUI의 Update 함수 비용 줄이기
     
-    private int direction = 0;
-    private int stack = 0;
-    private List<int> inputQueue = new List<int> { 0, 0, 0 };
+    private int _stack = 0;
+    
+    // 최대로 쌓을 수 있는 큐 스택을 상수로 선언
+    private const int MaxQueueSize = 3;
+    private List<int> _inputQueue = new List<int>(new int[MaxQueueSize]);
 
     private Rigidbody2D _rigidbody2D;
     [SerializeField]
@@ -100,6 +110,30 @@ public class StackManager : MonoBehaviour
         _mainCamera.cullingMask |= 1 << LayerMask.NameToLayer("Map 1"); // Map 1 Layer를 카메라의 Culling Mask에서 추가
     }
     
+    private void Update()
+    {
+        // 게임이 진행 중일 때만 입력을 받도록 GameManager 상태를 확인합니다.
+        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && GameManager.Instance.currentStageData.canUseAlt)
+        {
+            ProcessAltInput();
+            GameManager.Instance.pushedNumberALT++; // 카운트는 GameManager가 관리
+        }
+
+        if (Input.GetKeyDown(KeyCode.F4) && GameManager.Instance.currentStageData.canUseF4)
+        {
+            ProcessF4Input();
+            GameManager.Instance.pushedNumberF4++;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab) && GameManager.Instance.currentStageData.canUseTab)
+        {
+            ProcessTabInput();
+            GameManager.Instance.pushedNumberTAB++;
+        }
+    }
+    
     // 맵 전환을 처리하는 메서드
     public void SwitchMap()
     {
@@ -139,7 +173,6 @@ public class StackManager : MonoBehaviour
             
         }
         
-        transform.position  = newPlayerPosition;
         _rigidbody2D.MovePosition(newPlayerPosition); //transform.position이 아니라, MovePosition으로 이동해야 콜라이더 판정이 작동한다.
         _isSwitched = true;
 
@@ -188,34 +221,34 @@ public class StackManager : MonoBehaviour
 
     public void ProcessAltInput()
     {
-        if (stack >= 3) ResetQueue();
         HandleInput(1); // ALT 입력
-        direction = (direction + 1) % 4;
-        RotateArrow();
+        _playerDirection = (PlayerDirection)(((int)_playerDirection + 1) % 4);
+        RotateArrow(); // 정방향 회전
 
     }
-
+    public void ProcessTabInput()
+    {
+        HandleInput(3); // Tab 입력
+        
+        _playerDirection = (PlayerDirection)(((int)_playerDirection + 3) % 4); // direction -1 + 4 = direction +3
+        RotateArrow(); // 역방향 회전
+        
+    }
+    
     public void ProcessF4Input()
     {
-        if (stack >= 3) ResetQueue();
         HandleInput(2); // F4 입력
         MovePlayer();
     }
 
-    public void ProcessTabInput()
-    {
-        if (stack >= 3) ResetQueue();
-        HandleInput(3); // Tab 입력
-        
-        direction = (direction + 3) % 4; // direction -1 + 4 = direction +3
-        RotateArrow(); // 
-        
-    }
-
     void HandleInput(int keyCode)
     {
-        inputQueue[stack] = keyCode;
-        stack++;
+        
+        // 1. 여기서 스택을 먼저 체크하고 가득 찼으면 리셋합니다.
+        if (_stack >= MaxQueueSize) ResetQueue();
+        
+        _inputQueue[_stack] = keyCode;
+        _stack++;
         
         //이벤트 발생
         OnInputQueueChanged?.Invoke();
@@ -246,20 +279,20 @@ public class StackManager : MonoBehaviour
 
     bool CheckGameOver()
     {
-        return (inputQueue[0] == (int)KeyType.Alt && inputQueue[1] == (int)KeyType.F4)
-               || (inputQueue[1] == (int)KeyType.Alt && inputQueue[2] == (int)KeyType.F4);
+        return (_inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.F4)
+               || (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.F4);
     }
     
     bool CheckMapChange()
     {
-        return (inputQueue[0] == (int)KeyType.Alt && inputQueue[1] == (int)KeyType.Tab && !_isSwitched)
-               || (inputQueue[1] == (int)KeyType.Alt && inputQueue[2] == (int)KeyType.Tab && !_isSwitched);
+        return (_inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.Tab && !_isSwitched)
+               || (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.Tab && !_isSwitched);
     }
 
     void ResetQueue()
     {
-        inputQueue = new List<int> { 0, 0, 0 };
-        stack = 0;
+        _inputQueue = new List<int>(new int[MaxQueueSize]);
+        _stack = 0;
 
         _isSwitched = false;
         
@@ -269,26 +302,28 @@ public class StackManager : MonoBehaviour
 
     void MovePlayer()
     {
-        Vector2 moveDirection = direction switch
+        Vector2 moveDirection = _playerDirection switch
         {
-            0 => Vector2.right,
-            1 => Vector2.down,
-            2 => Vector2.left,
-            3 => Vector2.up,
+            PlayerDirection.Right => Vector2.right,
+            PlayerDirection.Down => Vector2.down,
+            PlayerDirection.Left => Vector2.left,
+            PlayerDirection.Up => Vector2.up,
             _ => Vector2.zero
         };
+        
         Debug.Log(moveDirection + " 이동");
+        
         _rigidbody2D.AddForce(moveDirection * forceAmount, ForceMode2D.Impulse);
     }
 
     void RotateArrow()
     {
-        float angle = direction switch
+        float angle = _playerDirection switch
         {
-            0 => 0f,
-            1 => 270f,
-            2 => 180f,
-            3 => 90f,
+            PlayerDirection.Right => 0f,
+            PlayerDirection.Down => 270f,
+            PlayerDirection.Left => 180f,
+            PlayerDirection.Up => 90f,
             _ => 0f
         };
 
@@ -306,7 +341,7 @@ public class StackManager : MonoBehaviour
 
     public int CheckInputQueue(int slot)
     {
-        return inputQueue[slot];
+        return _inputQueue[slot];
     }
 
     public void PlayExplosion()
@@ -337,6 +372,11 @@ public class StackManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         
         OnStageCleared?.Invoke(); //게임이 클리어 됐다는 방송을 내보냄
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.Instance.UnregisterStackManager(); //파괴시, StackManager의 연결 해제
     }
 
 }

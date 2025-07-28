@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,19 +6,18 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 
-public class StartManager : MonoBehaviour
+public class StartManagement : MonoBehaviour
 {    
     //싱글톤에 기존 찌꺼기 데이터들이 남아있지 않게 초기 설정해주는 스크립트입니다.
-    
     public Image transparentCircle;
     public Image fadeSquare;
 
     public Ease DOEase;
-    
+
     private void Start()
     {
-        GameManager.Instance.ResetStage();
-
+        GameManager.Instance.ResetData();
+        
         StartCoroutine(CircleFadeIn()); // 1 -> 55 Size
 
     }
@@ -25,6 +25,8 @@ public class StartManager : MonoBehaviour
     public void Restart()
     {
         StartCoroutine(CircleFadeOut()); // 55 -> 1 Size
+        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void TestButton()
@@ -70,7 +72,29 @@ public class StartManager : MonoBehaviour
         Debug.Log("잠시 대기");
         yield return new WaitForSeconds(0.5f);
         
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    IEnumerator CircleFadeOutAndGoToStageSelect()
+    {
+        transparentCircle.transform.DOScale(1.05f,  0.8f).SetEase(DOEase);
+        yield return new WaitForSeconds(0.7f);
+        
+        fadeSquare.gameObject.SetActive(true);
+        transparentCircle.transform.DOScale(1.0f,  0.1f).SetEase(DOEase);
+        
+        Debug.Log("잠시 대기");
+        yield return new WaitForSeconds(0.5f);
+        
+        GameManager.Instance.GoToNextScene();
+        // 씬 이동 코드 추가
+        SceneManager.LoadScene("StageSelect"); // buildIndex 바로 다음
+        
+    }
+
+    public void NextStage()
+    {
+        StartCoroutine(CircleFadeOutAndGoToStageSelect());
+        
     }
     
 }

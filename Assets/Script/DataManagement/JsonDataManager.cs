@@ -17,7 +17,7 @@ public class StageProgressData
     public int minTAB = int.MaxValue;
 
     public bool isCleared = false;
-    public bool isAppeared = true; //ÀÌÀü ½ºÅ×ÀÌÁö Å¬¸®¾î ½Ã, ´ÙÀ½ ½ºÅ×ÀÌÁö°¡ ÇØ±Ý
+    public bool isAppeared = true; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø±ï¿½
     public float minClearTime = float.MaxValue;
 
     public StageProgressData(int chapter, int stage)
@@ -34,7 +34,7 @@ public class JsonDataManager : MonoBehaviour
 
     private void Awake()
     {
-        filePath = Path.Combine(Application.dataPath, "MapData&TileMap", "stageData.json");
+        filePath = Path.Combine(Application.dataPath, "Datas(Json...etc)", "stageData.json");
         LoadAllStageData();
     }
 

@@ -420,8 +420,8 @@ GameObject:
   - component: {fileID: 238038203}
   - component: {fileID: 238038202}
   - component: {fileID: 238038201}
-  - component: {fileID: 238038205}
   - component: {fileID: 238038204}
+  - component: {fileID: 238038205}
   m_Layer: 5
   m_Name: 1-5 Button
   m_TagString: Untagged
@@ -494,8 +494,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 238038205}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -555,6 +555,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &238038205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -564,10 +566,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 238038199}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 1-5
+  stageText: {fileID: 0}
 --- !u!1 &321958197
 GameObject:
   m_ObjectHideFlags: 0
@@ -1195,8 +1197,8 @@ GameObject:
   - component: {fileID: 520888385}
   - component: {fileID: 520888384}
   - component: {fileID: 520888383}
-  - component: {fileID: 520888386}
   - component: {fileID: 520888382}
+  - component: {fileID: 520888386}
   m_Layer: 5
   m_Name: 2-1 Button
   m_TagString: Untagged
@@ -1236,6 +1238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &520888383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1281,8 +1285,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 520888386}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1339,10 +1343,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 520888380}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 2-1
+  stageText: {fileID: 0}
 --- !u!1 &579577910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1355,8 +1359,8 @@ GameObject:
   - component: {fileID: 579577914}
   - component: {fileID: 579577913}
   - component: {fileID: 579577912}
-  - component: {fileID: 579577916}
   - component: {fileID: 579577915}
+  - component: {fileID: 579577916}
   m_Layer: 5
   m_Name: 1-4 Button
   m_TagString: Untagged
@@ -1429,8 +1433,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 579577916}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1490,6 +1494,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &579577916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1499,10 +1505,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 579577910}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 1-4
+  stageText: {fileID: 0}
 --- !u!1 &579687432
 GameObject:
   m_ObjectHideFlags: 0
@@ -2300,8 +2306,8 @@ GameObject:
   - component: {fileID: 706905748}
   - component: {fileID: 706905747}
   - component: {fileID: 706905746}
-  - component: {fileID: 706905749}
   - component: {fileID: 706905745}
+  - component: {fileID: 706905749}
   m_Layer: 5
   m_Name: 2-4 Button
   m_TagString: Untagged
@@ -2341,6 +2347,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &706905746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2386,8 +2394,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 706905749}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2444,10 +2452,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 706905743}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 2-4
+  stageText: {fileID: 0}
 --- !u!1 &772425197
 GameObject:
   m_ObjectHideFlags: 0
@@ -3795,6 +3803,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!1 &1280621824
 GameObject:
   m_ObjectHideFlags: 0
@@ -3941,8 +3951,8 @@ GameObject:
   - component: {fileID: 1352678146}
   - component: {fileID: 1352678145}
   - component: {fileID: 1352678144}
-  - component: {fileID: 1352678147}
   - component: {fileID: 1352678143}
+  - component: {fileID: 1352678147}
   m_Layer: 5
   m_Name: 2-5 Button
   m_TagString: Untagged
@@ -3982,6 +3992,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &1352678144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4027,8 +4039,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1352678147}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4085,10 +4097,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1352678141}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 2-5
+  stageText: {fileID: 0}
 --- !u!1 &1367895646
 GameObject:
   m_ObjectHideFlags: 0
@@ -4101,8 +4113,8 @@ GameObject:
   - component: {fileID: 1367895650}
   - component: {fileID: 1367895649}
   - component: {fileID: 1367895648}
-  - component: {fileID: 1367895652}
   - component: {fileID: 1367895651}
+  - component: {fileID: 1367895652}
   m_Layer: 5
   m_Name: 1-3 Button
   m_TagString: Untagged
@@ -4175,8 +4187,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1367895652}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4236,6 +4248,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &1367895652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4245,10 +4259,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1367895646}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 1-3
+  stageText: {fileID: 0}
 --- !u!1 &1400588142
 GameObject:
   m_ObjectHideFlags: 0
@@ -4623,6 +4637,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!1 &1590867111
 GameObject:
   m_ObjectHideFlags: 0
@@ -5040,8 +5056,8 @@ GameObject:
   - component: {fileID: 1693284239}
   - component: {fileID: 1693284238}
   - component: {fileID: 1693284237}
-  - component: {fileID: 1693284241}
   - component: {fileID: 1693284240}
+  - component: {fileID: 1693284241}
   m_Layer: 5
   m_Name: 1-1 Button
   m_TagString: Untagged
@@ -5114,8 +5130,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1693284241}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5175,6 +5191,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &1693284241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5184,10 +5202,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1693284235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 1-1
+  stageText: {fileID: 0}
 --- !u!1 &1725631115
 GameObject:
   m_ObjectHideFlags: 0
@@ -5544,8 +5562,8 @@ GameObject:
   - component: {fileID: 1808892137}
   - component: {fileID: 1808892136}
   - component: {fileID: 1808892135}
-  - component: {fileID: 1808892139}
   - component: {fileID: 1808892138}
+  - component: {fileID: 1808892139}
   m_Layer: 5
   m_Name: 1-2 Button
   m_TagString: Untagged
@@ -5618,8 +5636,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1808892139}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5679,6 +5697,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &1808892139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5688,10 +5708,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1808892133}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 1-2
+  stageText: {fileID: 0}
 --- !u!1 &1917670864
 GameObject:
   m_ObjectHideFlags: 0
@@ -5704,8 +5724,8 @@ GameObject:
   - component: {fileID: 1917670869}
   - component: {fileID: 1917670868}
   - component: {fileID: 1917670867}
-  - component: {fileID: 1917670870}
   - component: {fileID: 1917670866}
+  - component: {fileID: 1917670870}
   m_Layer: 5
   m_Name: 2-3 Button
   m_TagString: Untagged
@@ -5745,6 +5765,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &1917670867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5790,8 +5812,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1917670870}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5848,10 +5870,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1917670864}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 2-3
+  stageText: {fileID: 0}
 --- !u!1 &1941707217
 GameObject:
   m_ObjectHideFlags: 0
@@ -5978,8 +6000,8 @@ GameObject:
   - component: {fileID: 2076455502}
   - component: {fileID: 2076455501}
   - component: {fileID: 2076455500}
-  - component: {fileID: 2076455503}
   - component: {fileID: 2076455499}
+  - component: {fileID: 2076455503}
   m_Layer: 5
   m_Name: 2-2 Button
   m_TagString: Untagged
@@ -6019,6 +6041,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ed3acf4c2773a4ab9ee7d3fbc2def9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  hoverScale: 1.1
 --- !u!114 &2076455500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6064,8 +6088,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2076455503}
-        m_TargetAssemblyTypeName: Button_Select, Assembly-CSharp
-        m_MethodName: SceneChange
+        m_TargetAssemblyTypeName: StageSelect, Assembly-CSharp
+        m_MethodName: GotoStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6122,10 +6146,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2076455497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33595036d0c7f5c4b94a41cc04250fe8, type: 3}
+  m_Script: {fileID: 11500000, guid: dfffb7f7b7fb08647b8d314e9e7f99fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageName: 2-2
+  stageText: {fileID: 0}
 --- !u!1 &2082066461
 GameObject:
   m_ObjectHideFlags: 0
