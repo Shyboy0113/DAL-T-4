@@ -45,6 +45,9 @@ public class StackManager : MonoBehaviour
     //Alt + Tab 전용 로직 bool
     [SerializeField]
     private bool _isSwitched;
+    
+    // 카메라 Layer Culling Mask 전환을 위한 메인 카메라
+    private Camera _mainCamera;
 
     #region TileMap
 
@@ -72,6 +75,9 @@ public class StackManager : MonoBehaviour
 
         _colliderFirst = tilemapFirst.GetComponent<TilemapCollider2D>();
         _colliderSecond = tilemapSecond.GetComponent<TilemapCollider2D>();
+        
+        _mainCamera = Camera.main;
+        Debug.Log(_mainCamera);
 
     }
 
@@ -88,6 +94,10 @@ public class StackManager : MonoBehaviour
         _isSwitched = false;
 
         _colliderSecond.enabled = false; //2번째 맵 콜라이더를 끈다.
+        
+        // 카메라 시야에서 보이지 않도록 규정
+        _mainCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Map 2")); // Map 2 Layer를 카메라의 Culling Mask에서 제거
+        _mainCamera.cullingMask |= 1 << LayerMask.NameToLayer("Map 1"); // Map 1 Layer를 카메라의 Culling Mask에서 추가
     }
     
     // 맵 전환을 처리하는 메서드
@@ -106,6 +116,10 @@ public class StackManager : MonoBehaviour
         
             // Z 위치만 새로운 타일맵에 맞게 설정
             newPlayerPosition = new Vector3(transform.position.x, transform.position.y, tilemapSecond.gameObject.transform.position.z);
+            
+            // 카메라 시야에서 보이지 않도록 규정
+            _mainCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Map 1")); // Map 1 Layer를 카메라의 Culling Mask에서 제거
+            _mainCamera.cullingMask |= 1 << LayerMask.NameToLayer("Map 2"); // Map 2 Layer를 카메라의 Culling Mask에서 추가
 
         }
         else
@@ -118,6 +132,11 @@ public class StackManager : MonoBehaviour
         
             // Z 위치만 새로운 타일맵에 맞게 설정
             newPlayerPosition = new Vector3(transform.position.x, transform.position.y, tilemapFirst.gameObject.transform.position.z);
+            
+            // 카메라 시야에서 보이지 않도록 규정
+            _mainCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Map 2")); // Map 2 Layer를 카메라의 Culling Mask에서 제거
+            _mainCamera.cullingMask |= 1 << LayerMask.NameToLayer("Map 1"); // Map 1 Layer를 카메라의 Culling Mask에서 추가
+            
         }
         
         transform.position  = newPlayerPosition;
@@ -306,8 +325,18 @@ public class StackManager : MonoBehaviour
         {
             Debug.Log("게임을 클리어하셨습니다.");
             
-            OnStageCleared?.Invoke(); //게임이 클리어 됐다는 방송을 내보냄
+            _animatior.Play("Clear");
+            arrow.SetActive(false);
+
+            StartCoroutine(StageClear(1.0f));
         }
+    }
+
+    IEnumerator StageClear(float time)
+    {
+        yield return new WaitForSeconds(time);
+        
+        OnStageCleared?.Invoke(); //게임이 클리어 됐다는 방송을 내보냄
     }
 
 }

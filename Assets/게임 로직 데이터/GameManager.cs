@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -41,7 +42,7 @@ public class GameManager : MonoBehaviour
     private MapDataLoader _mapDataLoader;    
     [SerializeField]
     private JsonDataManager _jsonDataManager;  // ✅ JsonDataManager로 변경
-
+    
     // 선택한 맵 정보
     public StageData currentStageData;
     public StageProgressData currentProgressData; // ✅ 현재 진행 데이터 추가
@@ -72,7 +73,12 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         // 싱글톤 구현
-        if (Instance == null) Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            
+            DontDestroyOnLoad(gameObject);
+        }
         else Destroy(gameObject);
 
         // JsonDataManager 가져오기
@@ -152,6 +158,8 @@ public class GameManager : MonoBehaviour
         UnlockNextStage();
 
         // 씬 이동 코드 추가
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); // buildIndex 바로 다음
+
     }
 
     public void ResetData()

@@ -1,6 +1,7 @@
 {
     "keys": [
-        "1-1"
+        "1-1",
+        "1-2"
     ],
     "values": [
         {
@@ -15,6 +16,19 @@
             "isCleared": true,
             "isAppeared": true,
             "minClearTime": 3.5534770488739015
+        },
+        {
+            "chapter": 1,
+            "stage": 2,
+            "isFirstMissionCleared": false,
+            "isSecondMissionCleared": false,
+            "isThirdMissionCleared": false,
+            "minALT": 2147483647,
+            "minF4": 2147483647,
+            "minTAB": 2147483647,
+            "isCleared": false,
+            "isAppeared": true,
+            "minClearTime": 3.4028234663852887e38
         }
     ]
 }
