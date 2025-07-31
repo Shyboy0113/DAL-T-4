@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public class ImageOnMouseEvent : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private Color hoverColor = Color.yellow;
+    [SerializeField] private Color hoverColor = Color.white;
     [SerializeField] private float hoverScale = 1.1f;
     
     private Image _image;
@@ -20,8 +20,8 @@ public class ImageOnMouseEvent : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        _image.rectTransform.sizeDelta = _originalSize * 1.1f;  // 이미지 크기만 1.1배 증가
-        _image.color = Color.yellow;  // 색상을 노란색으로 변경
+        _image.rectTransform.sizeDelta = _originalSize * hoverScale;  // 이미지 크기만 1.1배 증가
+        _image.color = hoverColor;  // 색상을 지정한 색으로 변경
     }
 
     public void OnPointerExit(PointerEventData eventData)

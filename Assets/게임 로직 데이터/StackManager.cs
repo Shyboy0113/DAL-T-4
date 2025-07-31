@@ -376,7 +376,11 @@ public class StackManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.Instance.UnregisterStackManager(); //파괴시, StackManager의 연결 해제
+        // 유니티 에디터에서 랜덤으로 OnDestroy를 실행해서, 가끔 NullReferenceException 오류가 뜸
+        if (GameManager.Instance)
+        {
+            //파괴시, StackManager의 연결 해제
+            GameManager.Instance.UnregisterStackManager();
+        } 
     }
-
 }

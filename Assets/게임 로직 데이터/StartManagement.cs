@@ -13,6 +13,8 @@ public class StartManagement : MonoBehaviour
     public Image fadeSquare;
 
     public Ease DOEase;
+    
+    private bool _isRestart = false;
 
     private void Start()
     {
@@ -24,9 +26,8 @@ public class StartManagement : MonoBehaviour
 
     public void Restart()
     {
+        _isRestart = true; //재시작 bool을 true로 설정
         StartCoroutine(CircleFadeOut()); // 55 -> 1 Size
-        
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void TestButton()
@@ -71,6 +72,9 @@ public class StartManagement : MonoBehaviour
         
         Debug.Log("잠시 대기");
         yield return new WaitForSeconds(0.5f);
+        
+        //만약 재시작 버튼이라면 대기 후, 재시작
+        if(_isRestart) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         
     }
     
