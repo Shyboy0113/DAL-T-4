@@ -95,7 +95,6 @@ public class GameManager : MonoBehaviour
         // ✅ JSON에서 현재 스테이지 데이터 불러오기
         LoadStageData(1, 1);
 
-        pausePanel.SetActive(false);
         _pausePanelActivity = false;
     }
 

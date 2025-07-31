@@ -4,8 +4,10 @@
     <file url="file://$PROJECT_DIR$/Assets/ImageOnMouseEvent.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/MapData&amp;TileMap/JsonDataManager.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/Script/DataManagement/MapDataLoader.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Intro/Intro_Music.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/Script/MouseClickEvent/ImageOnMouseEvent.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/Script/MouseClickEvent/TextOnMouseEvent.cs" charset="x-windows-949" />
+    <file url="file://$PROJECT_DIR$/Assets/Script/Resolution/Video_Option.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/TextOnMouseEvent.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/게임 로직 데이터/StartManagement.cs" charset="x-windows-949" />
     <file url="file://$PROJECT_DIR$/Assets/게임 로직 데이터/StartManager.cs" charset="x-windows-949" />
