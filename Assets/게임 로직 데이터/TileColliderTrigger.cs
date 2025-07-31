@@ -18,9 +18,9 @@ public class TileColliderTrigger : MonoBehaviour
         {
             Debug.Log("Å¸ÀÏ¿¡¼­ ¹þ¾î³µ½À´Ï´Ù.");
             
-            //GameManager.Instance.TileOut();
             OnPlayerExitedTile?.Invoke();
             
         }
     }
+    
 }

@@ -47,6 +47,12 @@ public class StackManager : MonoBehaviour
     private Animator _animatior;
     public GameObject arrow;
     
+    //방향 전환 및 이동시 효과음 발동
+    [SerializeField] private AudioClip rotateSound;
+    [SerializeField] private AudioClip moveSound;
+    
+    private SoundPlayer _soundPlayer;
+    
     //DOTween 전용 변동 속도
     public float DOTweenDuration;
     public Vector3 DOTweenPunch;
@@ -80,11 +86,23 @@ public class StackManager : MonoBehaviour
 
     private void Awake()
     {
+        // GameManager에 자신을 등록합니다.
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RegisterStackManager(this);
+        }
+        else
+        {
+            Debug.LogError("GameManager instance not found! Make sure GameManager has a lower execution order.");
+        }
+        
         _animatior = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
 
         _colliderFirst = tilemapFirst.GetComponent<TilemapCollider2D>();
         _colliderSecond = tilemapSecond.GetComponent<TilemapCollider2D>();
+
+        _soundPlayer = GetComponent<SoundPlayer>();
         
         _mainCamera = Camera.main;
         Debug.Log(_mainCamera);
@@ -117,19 +135,22 @@ public class StackManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftAlt) && GameManager.Instance.currentStageData.canUseAlt)
         {
+            PlayRotateSound(); // 시계 방향 회전 효과음
             ProcessAltInput();
             GameManager.Instance.pushedNumberALT++; // 카운트는 GameManager가 관리
         }
 
         if (Input.GetKeyDown(KeyCode.F4) && GameManager.Instance.currentStageData.canUseF4)
         {
-            ProcessF4Input();
+            PlayMoveSound(); // 움직임 효과음
+            ProcessF4Input(); 
             GameManager.Instance.pushedNumberF4++;
         }
 
         if (Input.GetKeyDown(KeyCode.Tab) && GameManager.Instance.currentStageData.canUseTab)
         {
-            ProcessTabInput();
+            PlayRotateSound(); // 반시계 방향 회전 효과음
+            ProcessTabInput(); 
             GameManager.Instance.pushedNumberTAB++;
         }
     }
@@ -176,6 +197,16 @@ public class StackManager : MonoBehaviour
         _rigidbody2D.MovePosition(newPlayerPosition); //transform.position이 아니라, MovePosition으로 이동해야 콜라이더 판정이 작동한다.
         _isSwitched = true;
 
+    }
+
+    private void PlayMoveSound()
+    {
+        _soundPlayer.PlaySound(moveSound);
+    }
+
+    private void PlayRotateSound()
+    {
+        _soundPlayer.PlaySound(rotateSound);
     }
     
     private void CheckForGroundAfterSwitch()

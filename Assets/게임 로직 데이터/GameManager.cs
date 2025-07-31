@@ -186,7 +186,10 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        Instance = null;
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     // ✅ JSON 데이터에서 현재 스테이지 데이터 불러오기

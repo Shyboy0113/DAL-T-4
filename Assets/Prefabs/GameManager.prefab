@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4227328682830352908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2145699856760227560}
+  - component: {fileID: 6190125492101835476}
+  - component: {fileID: 4235201927906267008}
+  - component: {fileID: 583788740016456793}
+  - component: {fileID: 1292367323586166665}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2145699856760227560
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4227328682830352908}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.1651608, y: -0.5563925, z: 0.22486843}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6190125492101835476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4227328682830352908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6a4122d6deea884f877071dbf3824cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stackManager: {fileID: 0}
+  _mapDataLoader: {fileID: 4235201927906267008}
+  _jsonDataManager: {fileID: 583788740016456793}
+  currentStageData:
+    stageName: 
+    chapterNum: 0
+    stageNum: 0
+    canUseAlt: 0
+    canUseF4: 0
+    canUseTab: 0
+    firstMission: 
+    secondMission: 
+    thirdMission: 
+    limitNumberALT: 0
+    limitNumberF4: 0
+    limitNumberTAB: 0
+    limitTime: 0
+  currentProgressData:
+    chapter: 0
+    stage: 0
+    isFirstMissionCleared: 0
+    isSecondMissionCleared: 0
+    isThirdMissionCleared: 0
+    minALT: 0
+    minF4: 0
+    minTAB: 0
+    isCleared: 0
+    isAppeared: 0
+    minClearTime: 0
+  chapter: 1
+  stage: 1
+  isGameOver: 0
+  isCleared: 0
+  currentTime: 0
+  pushedNumberALT: 0
+  pushedNumberF4: 0
+  pushedNumberTAB: 0
+  clearPanel: {fileID: 0}
+  pausePanel: {fileID: 0}
+--- !u!114 &4235201927906267008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4227328682830352908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c5ba50f90da7b245bad0f7bb208c072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameData:
+    chapters: []
+--- !u!114 &583788740016456793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4227328682830352908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21255cd9daea1e446b41b2dabbf84649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1292367323586166665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4227328682830352908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab2ec7707e3d56849a7240824f9e3d3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chapter: 0
+  stage: 0
+  isFirstMissionCleared: 0
+  isSecondMissionCleared: 0
+  isThirdMissionCleared: 0
+  minimumPushedNumberALT: 0
+  minimumPushedNumberF4: 0
+  minimumPushedNumberTAB: 0
+  isCleared: 0
+  minimumTime: 0
