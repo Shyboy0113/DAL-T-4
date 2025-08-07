@@ -38,7 +38,7 @@ public class JsonDataManager : MonoBehaviour
         LoadAllStageData();
     }
 
-    private void LoadAllStageData()
+    private void Previous_LoadAllStageData()
     {
         if (File.Exists(filePath))
         {
@@ -48,6 +48,23 @@ public class JsonDataManager : MonoBehaviour
         else
         {
             Debug.Log("No save file found, starting fresh.");
+        }
+    }
+    
+    private void LoadAllStageData()
+    {
+        // 여기도 마찬가지로 Resources.Load를 사용합니다.
+        TextAsset textAsset = Resources.Load<TextAsset>("stageData");
+
+        if (textAsset != null)
+        {
+            string jsonData = textAsset.text;
+            stageDataDict = JsonUtility.FromJson<SerializableDictionary>(jsonData).ToDictionary();
+            Debug.Log("Loaded stage progress data from Resources.");
+        }
+        else
+        {
+            Debug.Log("No save file found in Resources, starting fresh.");
         }
     }
 

@@ -66,6 +66,10 @@ public class StackManager : MonoBehaviour
     // 카메라 Layer Culling Mask 전환을 위한 메인 카메라
     private Camera _mainCamera;
 
+    // 파티클 시스템
+    [SerializeField]
+    private ParticleSystem particle; // 파티클 시스템
+    
     #region TileMap
 
     // 인스펙터에서 두 타일맵을 연결할 변수
@@ -75,9 +79,15 @@ public class StackManager : MonoBehaviour
     private TilemapCollider2D _colliderFirst;
     private TilemapCollider2D _colliderSecond;
 
-    private Tilemap _activeTilemap; // 현재 활성화된 타일맵을 저장할 변수
+    private Tilemap _activatedTilemap; // 현재 활성화된 타일맵을 저장할 변수
+    private Tilemap _deactivatedTilemap; //현재 비활성화된 타일맵을 저장하는 변수
     
     public GameObject mainCamera; // 메인 카메라
+    
+    // 파티클용 타일맵 색깔 가져오기
+    
+    private Color _activatedTileColor;
+    private Color _deactivatedTileColor;
     
     [SerializeField]
     private CanvasGroup changePanelCanvasGroup;
@@ -107,14 +117,21 @@ public class StackManager : MonoBehaviour
         
         _mainCamera = Camera.main;
         Debug.Log(_mainCamera);
-
+        
     }
 
     private void Start()
     {
+        // 파티클 일단 끄기
+        particle.Stop();
+        
         // 게임 시작 시 첫 번째 맵을 활성화
-        _activeTilemap = tilemapFirst;
-      
+        _activatedTilemap = tilemapFirst;
+        _deactivatedTilemap = tilemapSecond;
+
+        _activatedTileColor = tilemapFirst.color; //파티클용 색깔 가져오기
+        _deactivatedTileColor = tilemapSecond.color; //파티클용 색깔 가져오기
+        
         // 게임 시작 시 CanvasGroup의 알파값을 0으로, 비활성화 상태로 만듭니다.
         changePanelCanvasGroup.alpha = 0;
         changePanelCanvasGroup.interactable = false; // 클릭 등 상호작용 비활성화
@@ -154,6 +171,38 @@ public class StackManager : MonoBehaviour
             ProcessTabInput(); 
             GameManager.Instance.pushedNumberTAB++;
         }
+        
+     
+        if (CheckBackTile()) 
+        {
+            var main = particle.main;
+            main.startColor = _deactivatedTileColor;
+            
+            // 파티클이 현재 재생 중이 아닐 때만 Play()를 호출합니다.
+            if (!particle.isPlaying)
+            {
+                particle.Play();
+            }
+        }
+        else
+        {
+            // 파티클이 현재 멈춰있지 않을 때만 Stop()을 호출합니다.
+            if (!particle.isStopped)
+            {
+                particle.Stop();
+            }
+        }
+        
+    }
+
+    public bool CheckBackTile()
+    {
+        // 1. 플레이어의 월드 좌표(Vector3)를 타일맵의 셀 좌표(Vector3Int)로 변환합니다.
+        Vector3Int cellPosition = _deactivatedTilemap.WorldToCell(transform.position);
+        
+        Debug.Log(cellPosition);
+        
+        return _deactivatedTilemap.HasTile(cellPosition);
     }
     
     // 맵 전환을 처리하는 메서드
@@ -162,12 +211,13 @@ public class StackManager : MonoBehaviour
         Vector3 newPlayerPosition;
     
         // 현재 활성화된 맵을 기준으로 다른 맵으로 전환
-        if (_activeTilemap == tilemapFirst)
+        if (_activatedTilemap == tilemapFirst)
         {
             _colliderFirst.enabled = false;
             _colliderSecond.enabled = true;
             
-            _activeTilemap = tilemapSecond;
+            _activatedTilemap = tilemapSecond;
+            _deactivatedTilemap = tilemapFirst; //비활성화된 타일맵 표기
             mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, tilemapSecond.gameObject.transform.position.z - 10f);
         
             // Z 위치만 새로운 타일맵에 맞게 설정
@@ -183,7 +233,8 @@ public class StackManager : MonoBehaviour
             _colliderFirst.enabled = true;
             _colliderSecond.enabled = false;
             
-            _activeTilemap = tilemapFirst;
+            _activatedTilemap = tilemapFirst;
+            _deactivatedTilemap = tilemapSecond; //비활성화된 타일맵 할당
             mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y,tilemapFirst.gameObject.transform.position.z - 10f);
         
             // Z 위치만 새로운 타일맵에 맞게 설정
@@ -224,10 +275,10 @@ public class StackManager : MonoBehaviour
         Vector3 playerPosition = transform.position;
 
         // 2. 월드 좌표를 현재 활성화된 타일맵의 셀(그리드) 좌표로 변환합니다.
-        Vector3Int cellPosition = _activeTilemap.WorldToCell(playerPosition);
+        Vector3Int cellPosition = _activatedTilemap.WorldToCell(playerPosition);
 
         // 3. 변환된 셀 좌표에 타일이 존재하는지 확인합니다.
-        bool hasGround = _activeTilemap.HasTile(cellPosition);
+        bool hasGround = _activatedTilemap.HasTile(cellPosition);
 
         // 4. 만약 타일이 없다면, 사망 처리를 합니다.
         if (!hasGround)

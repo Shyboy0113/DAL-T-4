@@ -52,7 +52,7 @@ public class MapDataLoader : MonoBehaviour
     }
     
     //JSON 파일에서 맵 데이터 전체를 불러옵니다.
-    void LoadGameData()
+    void Previous_LoadGameData()
     {
         string path = Path.Combine(Application.dataPath, "Datas(Json...etc)", "mapData.json");
 
@@ -65,6 +65,24 @@ public class MapDataLoader : MonoBehaviour
         else
         {
             Debug.LogError("JSON 파일을 찾을 수 없습니다.");
+        }
+    }
+    
+    void LoadGameData()
+    {
+        // 경로를 지정하는 대신, Resources.Load를 사용합니다.
+        // 확장자(.json)는 쓰지 않습니다.
+        TextAsset textAsset = Resources.Load<TextAsset>("mapData");
+
+        if (textAsset != null)
+        {
+            string json = textAsset.text;
+            gameData = JsonUtility.FromJson<GameData>(json);
+            Debug.Log($"Loaded {gameData.chapters.Count} chapters from Resources.");
+        }
+        else
+        {
+            Debug.LogError("Resources 폴더에서 mapData.json 파일을 찾을 수 없습니다.");
         }
     }
 
