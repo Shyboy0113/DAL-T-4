@@ -3,13 +3,18 @@
 using UnityEngine;
 using DG.Tweening;
 using System;
-using System.Collections; // Start()의 코루틴 때문에 유지
+using System.Collections;
+using TMPro; // Start()의 코루틴 때문에 유지
+
+using UnityEngine.UI;
 
 public class CutoutFade : MonoBehaviour
 {
     public RectTransform rectTransform;
     public float fadeDuration = 1.0f;
     public Ease easeType = Ease.Unset;
+
+    [SerializeField] private RectTransform background;
 
     private void Awake()
     {
@@ -21,8 +26,13 @@ public class CutoutFade : MonoBehaviour
 
     private void Start()
     {
+        
         // 씬 시작 시 FadeIn 연출 (이 부분은 그대로 둬도 좋습니다)
         StartCoroutine(IFadeIn());
+        
+        //if (background != null) background.sizeDelta = new Vector2(Screen.width , Screen.height);
+        if (background != null) background.sizeDelta = new Vector2(1920 , 1080);
+        
     }
 
     IEnumerator IFadeIn()
@@ -37,15 +47,24 @@ public class CutoutFade : MonoBehaviour
     {
         // FadeIn은 특별한 콜백이 필요 없으므로 그대로 둡니다.
         rectTransform.sizeDelta = Vector2.zero;
-        Vector2 targetSize = new Vector2(Screen.width * 2, Screen.width * 2);
+        //Vector2 targetSize = new Vector2(Screen.width * 2, Screen.height * 2);
+        Vector2 targetSize = new Vector2(1920 * 2, 1080 * 2);
         rectTransform.DOSizeDelta(targetSize, fadeDuration).SetEase(easeType);
+    }
+
+    public void ResizeResolution()
+    {
+        //if (background != null) background.sizeDelta = new Vector2(Screen.width , Screen.height);
+        if (background != null) background.sizeDelta = new Vector2(1920 , 1080);
+        
+        //rectTransform.sizeDelta = new Vector2(Screen.width * 2, Screen.height * 2);
+        rectTransform.sizeDelta = new Vector2(1920 * 2, 1080 * 2);
+        
     }
 
     // UI의 크기를 현재 해상도에서 0으로 축소시켜 사라지게 합니다.
     public void FadeOut(Action onFadeComplete = null)
     {
-        rectTransform.sizeDelta = new Vector2(Screen.width * 2, Screen.width * 2);
-        
         // DOSizeDelta 뒤에 .OnComplete()를 연결하는 것이 핵심입니다.
         rectTransform.DOSizeDelta(Vector2.zero, fadeDuration)
             .SetEase(easeType)

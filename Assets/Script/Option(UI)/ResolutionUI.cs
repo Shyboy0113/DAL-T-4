@@ -59,6 +59,10 @@ public class ResolutionUI : MonoBehaviour
     {
         isOk = true;
         Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
+
+        CutoutFade fade = FindObjectOfType<CutoutFade>().GetComponent<CutoutFade>();
+        if (fade is not null) fade.ResizeResolution();
+
     }
 
     public void SetFullScreen(bool isFullScreen)
