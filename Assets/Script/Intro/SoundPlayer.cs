@@ -1,9 +1,13 @@
+using System.Collections;
 using UnityEngine;
 
 public class SoundPlayer : MonoBehaviour
 {
     private AudioSource _audioSource;
 
+    [SerializeField]
+    private GameObject optionPanel; // 비활성화용
+    
     void Awake()
     {
         // 이 스크립트가 붙은 오브젝트에 AudioSource가 없으면 추가해줍니다.
@@ -26,4 +30,21 @@ public class SoundPlayer : MonoBehaviour
             _audioSource.PlayOneShot(clip);
         }
     }
+
+    public void PlaySoundAndDeactivate(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            _audioSource.PlayOneShot(clip);
+        }
+        
+        Invoke("DeactivatePanel", clip.length);
+        
+    }
+
+    public void DeactivatePanel()
+    {
+        if(optionPanel!=null) optionPanel.SetActive(false);
+    }
+    
 }
