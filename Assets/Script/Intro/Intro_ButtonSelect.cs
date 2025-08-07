@@ -4,11 +4,12 @@ using UnityEngine.SceneManagement;
 public class Intro_ButtonSelect : MonoBehaviour
 {
     [SerializeField] private GameObject optionPanel;
-    [SerializeField] private TransparentHoleFade fadeScript;
+    
+    [SerializeField] private CutoutFade cutoutFade;
     
     public void StartGame() // 게임 시작 버튼 클릭 시 Stage 선택창으로 넘어감
     {
-        fadeScript.FadeOut(() => 
+        cutoutFade.FadeOut(() => 
         {
             SceneManager.LoadScene("StageSelect");
         });
