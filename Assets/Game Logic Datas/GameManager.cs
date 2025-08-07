@@ -131,8 +131,8 @@ public class GameManager : MonoBehaviour
     
     public void CheckClearPanel()
     {
-        clearPanel = GameObject.Find("Clear Canvas");
-        if(clearPanel) clearPanel.gameObject.SetActive(false);
+        if(clearPanel is null) clearPanel = GameObject.Find("Clear Canvas");
+        
     }
 
     public void CheckPausePanel()
@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
         // ✅ JsonDataManager를 통해 데이터 저장
         SaveStageProgress();
 
-        clearPanel.SetActive(true);
+        CheckClearPanel();
     }
 
     public void GoToNextScene()

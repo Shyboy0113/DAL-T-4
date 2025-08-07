@@ -50,6 +50,7 @@ public class StackManager : MonoBehaviour
     //방향 전환 및 이동시 효과음 발동
     [SerializeField] private AudioClip rotateSound;
     [SerializeField] private AudioClip moveSound;
+    [SerializeField] private AudioClip explosionSound;
     
     private SoundPlayer _soundPlayer;
     
@@ -194,9 +195,17 @@ public class StackManager : MonoBehaviour
             
         }
         
-        _rigidbody2D.MovePosition(newPlayerPosition); //transform.position이 아니라, MovePosition으로 이동해야 콜라이더 판정이 작동한다.
+        Debug.Log(newPlayerPosition);
+
+        transform.position = newPlayerPosition;
+        //_rigidbody2D.MovePosition(newPlayerPosition); // rigidbody2D라서, Z축이 반영 안되는 문제가 있음
         _isSwitched = true;
 
+    }
+
+    private void PlayExplosionSound()
+    {
+        _soundPlayer.PlaySound(explosionSound);
     }
 
     private void PlayMoveSound()
@@ -288,12 +297,8 @@ public class StackManager : MonoBehaviour
         {
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
 
-            Debug.Log("게임 오버!");
-            _animatior.Play("Explosion");
-            arrow.SetActive(false);
+            PlayExplosion();
             
-            OnPlayerDied?.Invoke(); //플레이어가 죽었다는 방송을 내보냄 
-            //GameManager.Instance.isGameOver = true;
         }
         else if (CheckMapChange())
         {
@@ -381,6 +386,8 @@ public class StackManager : MonoBehaviour
         //GameManager.Instance.isGameOver = true;
         _animatior.Play("Explosion");
         arrow.SetActive(false);
+
+        PlayExplosionSound();
         
         OnPlayerDied?.Invoke(); //플레이어가 죽었다는 방송을 내보낸다
     }
