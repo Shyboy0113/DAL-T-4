@@ -5664,6 +5664,8 @@ MonoBehaviour:
   rotateSound: {fileID: 8300000, guid: 5af76f4cb1807fd4eb2c96f18e80753e, type: 3}
   moveSound: {fileID: 8300000, guid: 7cb94cb702eddae4d9c6c495e8427099, type: 3}
   explosionSound: {fileID: 8300000, guid: 7e5e291f283dded4cb36cedf3abd8ee9, type: 3}
+  triggerSound: {fileID: 8300000, guid: f82647e6218505949b9a038503aac203, type: 3}
+  cancelSound: {fileID: 8300000, guid: 02bb62f0fd347de41ac6aa721fb7733e, type: 3}
   DOTweenDuration: 0.25
   DOTweenPunch: {x: 0, y: 0, z: 60}
   DOTweenVibrato: 100

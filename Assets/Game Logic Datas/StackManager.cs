@@ -51,6 +51,8 @@ public class StackManager : MonoBehaviour
     [SerializeField] private AudioClip rotateSound;
     [SerializeField] private AudioClip moveSound;
     [SerializeField] private AudioClip explosionSound;
+    [SerializeField] private AudioClip triggerSound; // 2번째 맵에 발판이 있어 Alt + Tab 로직을 쓸 수 있는 경우
+    [SerializeField] private AudioClip cancelSound; // Alt + Tab 트리거에서 벗어날 때
     
     private SoundPlayer _soundPlayer;
     
@@ -181,6 +183,7 @@ public class StackManager : MonoBehaviour
             // 파티클이 현재 재생 중이 아닐 때만 Play()를 호출합니다.
             if (!particle.isPlaying)
             {
+                PlayTriggerSound();
                 particle.Play();
             }
         }
@@ -189,6 +192,7 @@ public class StackManager : MonoBehaviour
             // 파티클이 현재 멈춰있지 않을 때만 Stop()을 호출합니다.
             if (!particle.isStopped)
             {
+                PlayCancelSound();
                 particle.Stop();
             }
         }
@@ -254,6 +258,9 @@ public class StackManager : MonoBehaviour
 
     }
 
+    #region PlaySound(효과음 재생 함수)
+    
+    // private void PlaySound(AudioClip audioClip)으로 만들까 고민하다가, 가독성을 위해 일부러 나눠서 표현
     private void PlayExplosionSound()
     {
         _soundPlayer.PlaySound(explosionSound);
@@ -268,6 +275,16 @@ public class StackManager : MonoBehaviour
     {
         _soundPlayer.PlaySound(rotateSound);
     }
+
+    private void PlayTriggerSound()
+    {
+        _soundPlayer.PlaySound(triggerSound);
+    }
+    private void PlayCancelSound()
+    {
+        _soundPlayer.PlaySound(cancelSound);
+    }
+    #endregion
     
     private void CheckForGroundAfterSwitch()
     {
