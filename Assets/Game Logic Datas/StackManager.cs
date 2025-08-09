@@ -53,6 +53,8 @@ public class StackManager : MonoBehaviour
     [SerializeField] private AudioClip explosionSound;
     [SerializeField] private AudioClip triggerSound; // 2번째 맵에 발판이 있어 Alt + Tab 로직을 쓸 수 있는 경우
     [SerializeField] private AudioClip cancelSound; // Alt + Tab 트리거에서 벗어날 때
+
+    private bool _isTriggerd = false;
     
     private SoundPlayer _soundPlayer;
     
@@ -127,6 +129,9 @@ public class StackManager : MonoBehaviour
         // 파티클 일단 끄기
         particle.Stop();
         
+        // 트리거도 false
+        _isTriggerd = false;
+        
         // 게임 시작 시 첫 번째 맵을 활성화
         _activatedTilemap = tilemapFirst;
         _deactivatedTilemap = tilemapSecond;
@@ -185,15 +190,17 @@ public class StackManager : MonoBehaviour
             {
                 PlayTriggerSound();
                 particle.Play();
+                _isTriggerd = true;
             }
         }
         else
         {
             // 파티클이 현재 멈춰있지 않을 때만 Stop()을 호출합니다.
-            if (!particle.isStopped)
+            if (!particle.isStopped && _isTriggerd)
             {
                 PlayCancelSound();
                 particle.Stop();
+                _isTriggerd = false;
             }
         }
         
