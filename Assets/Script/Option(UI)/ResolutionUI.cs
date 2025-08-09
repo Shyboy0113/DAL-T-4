@@ -1,20 +1,28 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI; // DropDown을 사용하기 위한 기능
-using UnityEngine.SceneManagement; // 장면 전환에 필요한 기능
 
-using TMPro;
+using TMPro; // TextMeshPro
 
 public class ResolutionUI : MonoBehaviour
 {
+    [SerializeField]
     private Resolution[] resolutions;
 
     public TMP_Dropdown resolutionDropdown;
     public Toggle fullscreenToggle;
 
     private bool isOk = false;
-    private Resolution selectedResolution;
+    private Resolution _selectedResolution;
+    
+    private Resolution _originalResolution;
+
+    private void OnEnable()
+    {
+        _originalResolution = Screen.currentResolution;
+    }
 
     void Start()
     {
@@ -35,8 +43,8 @@ public class ResolutionUI : MonoBehaviour
             string option = resolutions[i].width + " x " + resolutions[i].height + " @ " + resolutions[i].refreshRate + "hz";
             options.Add(option);
 
-            if (resolutions[i].width == Screen.currentResolution.width &&
-                resolutions[i].height == Screen.currentResolution.height)
+            // Resolution.Equals()를 사용하여 가로, 세로, 주사율까지 정확하게 비교
+            if (resolutions[i].Equals(Screen.currentResolution))
             {
                 currentResolutionIndex = i;
             }
@@ -46,20 +54,20 @@ public class ResolutionUI : MonoBehaviour
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue(); // 새로 고침
 
-        selectedResolution = Screen.currentResolution;
+        _selectedResolution = Screen.currentResolution;
     }
 
     public void SetResolution(int resolutionIndex)
     {
         isOk = false;
-        selectedResolution = resolutions[resolutionIndex];
+        _selectedResolution = resolutions[resolutionIndex];
     }
 
     public void SetOk()
     {
         isOk = true;
-        Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
-
+        Screen.SetResolution(_selectedResolution.width, _selectedResolution.height, Screen.fullScreen);
+        
         CutoutFade fade = FindObjectOfType<CutoutFade>().GetComponent<CutoutFade>();
         if (fade is not null) fade.ResizeResolution();
 
@@ -73,10 +81,10 @@ public class ResolutionUI : MonoBehaviour
 
     public void Return()
     {
-        if (isOk && selectedResolution.width != Screen.currentResolution.width &&
-            selectedResolution.height != Screen.currentResolution.height)
+        if (isOk && _originalResolution.width != Screen.currentResolution.width &&
+            _originalResolution.height != Screen.currentResolution.height)
         {
-            Screen.SetResolution(selectedResolution.width, selectedResolution.height, Screen.fullScreen);
-        }        
+            Screen.SetResolution(_originalResolution.width, _originalResolution.height, Screen.fullScreen);
+        }
     }
 }
