@@ -5,6 +5,7 @@ using UnityEngine;
 
 //DoTween 사용
 using DG.Tweening;
+using UnityEngine.Serialization;
 
 //TileMap 사용
 using UnityEngine.Tilemaps;
@@ -56,7 +57,8 @@ public class StackManager : MonoBehaviour
 
     private bool _isTriggerd = false;
     
-    private SoundPlayer _soundPlayer;
+    [SerializeField]
+    private SoundPlayer soundPlayer;
     
     //DOTween 전용 변동 속도
     public float DOTweenDuration;
@@ -117,7 +119,7 @@ public class StackManager : MonoBehaviour
         _colliderFirst = tilemapFirst.GetComponent<TilemapCollider2D>();
         _colliderSecond = tilemapSecond.GetComponent<TilemapCollider2D>();
 
-        _soundPlayer = GetComponent<SoundPlayer>();
+        soundPlayer = GetComponent<SoundPlayer>();
         
         _mainCamera = Camera.main;
         Debug.Log(_mainCamera);
@@ -270,26 +272,26 @@ public class StackManager : MonoBehaviour
     // private void PlaySound(AudioClip audioClip)으로 만들까 고민하다가, 가독성을 위해 일부러 나눠서 표현
     private void PlayExplosionSound()
     {
-        _soundPlayer.PlaySound(explosionSound);
+        soundPlayer.PlaySound(explosionSound);
     }
 
     private void PlayMoveSound()
     {
-        _soundPlayer.PlaySound(moveSound);
+        soundPlayer.PlaySound(moveSound);
     }
 
     private void PlayRotateSound()
     {
-        _soundPlayer.PlaySound(rotateSound);
+        soundPlayer.PlaySound(rotateSound);
     }
 
     private void PlayTriggerSound()
     {
-        _soundPlayer.PlaySound(triggerSound);
+        soundPlayer.PlaySound(triggerSound);
     }
     private void PlayCancelSound()
     {
-        _soundPlayer.PlaySound(cancelSound);
+        soundPlayer.PlaySound(cancelSound);
     }
     #endregion
     

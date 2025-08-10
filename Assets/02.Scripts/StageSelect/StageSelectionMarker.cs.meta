@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 200044cae77f0d5499597e91a926eea1
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - navigationClip: {fileID: 8300000, guid: 7cb94cb702eddae4d9c6c495e8427099, type: 3}
+  - selectionCircle: {instanceID: 0}
+  - selectionText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

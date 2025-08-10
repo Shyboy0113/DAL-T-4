@@ -10,9 +10,17 @@ public class ResetManagement : MonoBehaviour
     
     private bool _isRestart = false;
 
+    
+    // 사운드 및 스테이지 관련 기초 정보
+    [SerializeField] private string stageName;
+    [SerializeField] private AudioClip audioClip; //각 스테이지별로 할당되는 오디오클립(mp3)
+    
     private void Start()
     {
         GameManager.Instance.ResetData();
+        
+        //만약 SoundManager가 있을 경우, BGM 갱신
+        if(SoundManager.Instance is not null) SoundManager.Instance.RenewalBGM(audioClip, stageName);
         
     }
 
