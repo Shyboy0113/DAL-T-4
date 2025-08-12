@@ -9,7 +9,7 @@
             "stageNum": 1,
             "canUseAlt": true,
             "canUseF4": true,
-            "canUseTab": false,
+            "canUseTab": true,
             "firstMission": "Clear the Game",
             "secondMission": "Press the button and clear within the limit",
             "thirdMission": "Clear within the time limit",

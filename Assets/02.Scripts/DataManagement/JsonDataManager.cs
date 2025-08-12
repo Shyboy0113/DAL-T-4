@@ -34,37 +34,36 @@ public class JsonDataManager : MonoBehaviour
 
     private void Awake()
     {
-        filePath = Path.Combine(Application.dataPath, "Datas(Json...etc)", "stageData.json");
+        filePath = Path.Combine(Application.persistentDataPath, "stageData.json");
+        
+        // 현재 세이브 파일 저장 위치 표기
+        Debug.Log("세이브 파일 경로: " + filePath);
+        
         LoadAllStageData();
     }
-
-    private void Previous_LoadAllStageData()
+    private void LoadAllStageData()
     {
+        // 1. 먼저 플레이어의 컴퓨터에 저장된 파일(filePath)이 있는지 확인합니다.
         if (File.Exists(filePath))
         {
             string jsonData = File.ReadAllText(filePath);
             stageDataDict = JsonUtility.FromJson<SerializableDictionary>(jsonData).ToDictionary();
+            Debug.Log("저장된 데이터를 불러왔습니다: " + filePath);
+            return; // 저장 파일을 성공적으로 불러왔으므로 여기서 함수를 종료합니다.
         }
-        else
-        {
-            Debug.Log("No save file found, starting fresh.");
-        }
-    }
-    
-    private void LoadAllStageData()
-    {
-        // 여기도 마찬가지로 Resources.Load를 사용합니다.
+        
+        // 2. 저장된 파일이 없다면 (처음 실행 등), Resources 폴더의 초기 데이터를 불러옵니다.
         TextAsset textAsset = Resources.Load<TextAsset>("stageData");
 
         if (textAsset != null)
         {
             string jsonData = textAsset.text;
             stageDataDict = JsonUtility.FromJson<SerializableDictionary>(jsonData).ToDictionary();
-            Debug.Log("Loaded stage progress data from Resources.");
+            Debug.Log("저장 파일이 없어 Resources 폴더의 기본 데이터를 불러왔습니다.");
         }
         else
         {
-            Debug.Log("No save file found in Resources, starting fresh.");
+            Debug.Log("저장 파일과 기본 데이터가 모두 없습니다. 새롭게 시작합니다.");
         }
     }
 

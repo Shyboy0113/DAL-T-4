@@ -1,15 +1,14 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 
-public class TextFade : MonoBehaviour
+// 스테이지가 클리어 됐을 경우, Stage Clear 문구가 뜨도록 하는 텍스트. Clear Text에 들어가있어야 함
+
+public class FadeClearText : MonoBehaviour
 {
     [SerializeField] private TMP_Text text;
-
+    
     private void OnEnable()
     {
         StackManager.OnStageCleared += FadeIn;

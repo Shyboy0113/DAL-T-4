@@ -86,7 +86,6 @@ public class GameManager : MonoBehaviour
             _ismapDataLoaded = false;
         }
         
-        CheckClearPanel();
         CheckPausePanel();
     }
 
@@ -128,13 +127,6 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    
-    public void CheckClearPanel()
-    {
-        if(clearPanel is null) clearPanel = GameObject.Find("Clear Canvas");
-        
-    }
-
     public void CheckPausePanel()
     {
         pausePanel = GameObject.Find("Pause Canvas");
@@ -145,10 +137,11 @@ public class GameManager : MonoBehaviour
     {
         isCleared = true;
 
+        // GameManager 초기화 호출
+        GoToNextScene();
+        
         // ✅ JsonDataManager를 통해 데이터 저장
         SaveStageProgress();
-
-        CheckClearPanel();
     }
 
     public void GoToNextScene()
@@ -161,8 +154,7 @@ public class GameManager : MonoBehaviour
 
     public void ResetData()
     {
-        //Scene에 있는 두 패널을 재연결
-        CheckClearPanel();
+        //Scene에 있는 패널을 재연결
         CheckPausePanel();
         
         // 게임 상태 초기화

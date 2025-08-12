@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 9215244}
   - component: {fileID: 9215243}
   - component: {fileID: 9215242}
-  - component: {fileID: 9215241}
   - component: {fileID: 9215240}
   m_Layer: 5
   m_Name: Clear Canvas
@@ -175,22 +174,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &9215241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9215238}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a55982c390e535c42bbd42534eecfa6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ALT: {fileID: 0}
-  F4: {fileID: 0}
-  TAB: {fileID: 0}
-  clearTime: {fileID: 0}
 --- !u!114 &9215242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2080,7 +2063,6 @@ GameObject:
   - component: {fileID: 646907079}
   - component: {fileID: 646907078}
   - component: {fileID: 646907083}
-  - component: {fileID: 646907084}
   m_Layer: 0
   m_Name: Tilemap(Grid)
   m_TagString: Untagged
@@ -2155,28 +2137,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!64 &646907084
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646907077}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &651812500
 GameObject:
   m_ObjectHideFlags: 0
@@ -5317,7 +5277,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cutoutFade: {fileID: 746989898}
-  stageName: 1-1
+  isEndStage: 0
+  currentStageName: 1-1
+  nextStageName: 1-2
   audioClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
 --- !u!1 &1762955021
 GameObject:
@@ -6522,10 +6484,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1639864500}
     m_Modifications:
-    - target: {fileID: 2270217641907837959, guid: e83438a7933e94144af9b3b1cc9e56ed, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 5420b24b5f921a34594af6ff3731df9b, type: 2}
     - target: {fileID: 2805358052490238451, guid: e83438a7933e94144af9b3b1cc9e56ed, type: 3}
       propertyPath: m_Name
       value: SwitchableParticle
@@ -6571,16 +6529,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5401596388741423655, guid: e83438a7933e94144af9b3b1cc9e56ed, type: 3}
-      propertyPath: ShapeModule.arc.mode
+      propertyPath: looping
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5401596388741423655, guid: e83438a7933e94144af9b3b1cc9e56ed, type: 3}
-      propertyPath: ShapeModule.m_Texture
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5401596388741423655, guid: e83438a7933e94144af9b3b1cc9e56ed, type: 3}
-      propertyPath: ShapeModule.radiusThickness
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

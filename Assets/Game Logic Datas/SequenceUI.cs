@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -11,19 +9,6 @@ public class SequenceUI : MonoBehaviour
 
     [SerializeField]
     private StackManager _stackManager;
-    
-    void Awake()
-    {
-        _stackManager = FindObjectOfType<StackManager>();
-        
-        if (_stackManager != null)
-        {
-            // ◀️ StackManager의 이벤트에 UpdateUI 메서드를 구독
-            _stackManager.OnInputQueueChanged += UpdateUI;
-            UpdateUI(); // ◀️ 시작할 때 한 번 초기화
-        }
-        
-    }
     
     private void UpdateUI()
     {
@@ -54,7 +39,19 @@ public class SequenceUI : MonoBehaviour
                 return "";
         }
     }
-    
+
+    private void OnEnable()
+    {
+        _stackManager = FindObjectOfType<StackManager>();
+        
+        if (_stackManager != null)
+        {
+            // ◀️ StackManager의 이벤트에 UpdateUI 메서드를 구독
+            _stackManager.OnInputQueueChanged += UpdateUI;
+            UpdateUI(); // ◀️ 시작할 때 한 번 초기화
+        }
+    }
+
     private void OnDestroy()
     {
         if (_stackManager != null)

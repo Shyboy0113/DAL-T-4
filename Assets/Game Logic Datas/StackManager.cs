@@ -30,7 +30,7 @@ public class StackManager : MonoBehaviour
     
     
     //전역 접근이 가능하도록 하는 이벤트
-    public static event Action OnStageCleared; 
+    public static event Action OnStageCleared;
     public static event Action OnPlayerDied;
     public event Action OnInputQueueChanged; // SequenceUI의 Update 함수 비용 줄이기
     
@@ -92,7 +92,7 @@ public class StackManager : MonoBehaviour
     
     // 파티클용 타일맵 색깔 가져오기
     
-    private Color _activatedTileColor;
+    private Color _particleTileColor;
     private Color _deactivatedTileColor;
     
     [SerializeField]
@@ -126,20 +126,34 @@ public class StackManager : MonoBehaviour
         
     }
 
+    private void OnEnable()
+    {
+        //이벤트 추가
+        OnPlayerDied += StopParticle;
+        OnStageCleared += StopParticle;
+    }
+
+    private void OnDisable()
+    {
+        //이벤트 추가
+        OnPlayerDied -= StopParticle;
+        OnStageCleared -= StopParticle;
+    }
+
     private void Start()
     {
         // 파티클 일단 끄기
         particle.Stop();
-        
+    
         // 트리거도 false
         _isTriggerd = false;
-        
+    
         // 게임 시작 시 첫 번째 맵을 활성화
         _activatedTilemap = tilemapFirst;
         _deactivatedTilemap = tilemapSecond;
 
-        _activatedTileColor = tilemapFirst.color; //파티클용 색깔 가져오기
-        _deactivatedTileColor = tilemapSecond.color; //파티클용 색깔 가져오기
+        // 비활성화된 타일맵의 색깔만 저장해둡니다.
+        _deactivatedTileColor = tilemapSecond.color; 
         
         // 게임 시작 시 CanvasGroup의 알파값을 0으로, 비활성화 상태로 만듭니다.
         changePanelCanvasGroup.alpha = 0;
@@ -157,6 +171,8 @@ public class StackManager : MonoBehaviour
     
     private void Update()
     {
+        Debug.Log(_activatedTilemap + " + " + _deactivatedTilemap);
+        
         // 게임이 진행 중일 때만 입력을 받도록 GameManager 상태를 확인합니다.
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
 
@@ -184,10 +200,13 @@ public class StackManager : MonoBehaviour
      
         if (CheckBackTile()) 
         {
+            // 1. 파티클의 Main 모듈을 가져옵니다.
             var main = particle.main;
+        
+            // 2. 불필요한 비교 없이, 비활성화된 타일의 색상으로 바로 설정합니다.
             main.startColor = _deactivatedTileColor;
-            
-            // 파티클이 현재 재생 중이 아닐 때만 Play()를 호출합니다.
+
+            // 3. 파티클이 재생 중이 아닐 때만 Play()를 호출하여 효율을 높입니다.
             if (!particle.isPlaying)
             {
                 PlayTriggerSound();
@@ -197,7 +216,7 @@ public class StackManager : MonoBehaviour
         }
         else
         {
-            // 파티클이 현재 멈춰있지 않을 때만 Stop()을 호출합니다.
+            // 파티클이 현재 멈춰있지 않고, 트리거 상태였다면 Stop()을 호출합니다.
             if (!particle.isStopped && _isTriggerd)
             {
                 PlayCancelSound();
@@ -232,7 +251,7 @@ public class StackManager : MonoBehaviour
             _activatedTilemap = tilemapSecond;
             _deactivatedTilemap = tilemapFirst; //비활성화된 타일맵 표기
             mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, tilemapSecond.gameObject.transform.position.z - 10f);
-        
+            
             // Z 위치만 새로운 타일맵에 맞게 설정
             newPlayerPosition = new Vector3(transform.position.x, transform.position.y, tilemapSecond.gameObject.transform.position.z);
             
@@ -259,10 +278,11 @@ public class StackManager : MonoBehaviour
             
         }
         
-        Debug.Log(newPlayerPosition);
+        // 맵이 전환되었으므로, 새로 비활성화된 타일맵에서 색상 값을 다시 가져와 갱신합니다.
+        _deactivatedTileColor = _deactivatedTilemap.color;
 
+        // 플레이어 위치 (Z축) 변경
         transform.position = newPlayerPosition;
-        //_rigidbody2D.MovePosition(newPlayerPosition); // rigidbody2D라서, Z축이 반영 안되는 문제가 있음
         _isSwitched = true;
 
     }
@@ -338,14 +358,14 @@ public class StackManager : MonoBehaviour
 
     public void ProcessAltInput()
     {
-        HandleInput(1); // ALT 입력
+        HandleInput(KeyType.Alt); // ALT 입력
         _playerDirection = (PlayerDirection)(((int)_playerDirection + 1) % 4);
         RotateArrow(); // 정방향 회전
 
     }
     public void ProcessTabInput()
     {
-        HandleInput(3); // Tab 입력
+        HandleInput(KeyType.Tab); // Tab 입력
         
         _playerDirection = (PlayerDirection)(((int)_playerDirection + 3) % 4); // direction -1 + 4 = direction +3
         RotateArrow(); // 역방향 회전
@@ -354,17 +374,17 @@ public class StackManager : MonoBehaviour
     
     public void ProcessF4Input()
     {
-        HandleInput(2); // F4 입력
+        HandleInput(KeyType.F4); // F4 입력
         MovePlayer();
     }
 
-    void HandleInput(int keyCode)
+    void HandleInput(KeyType keyType)
     {
         
         // 1. 여기서 스택을 먼저 체크하고 가득 찼으면 리셋합니다.
         if (_stack >= MaxQueueSize) ResetQueue();
         
-        _inputQueue[_stack] = keyCode;
+        _inputQueue[_stack] = (int)keyType;
         _stack++;
         
         //이벤트 발생
@@ -480,6 +500,19 @@ public class StackManager : MonoBehaviour
 
             StartCoroutine(StageClear(1.0f));
         }
+    }
+
+    private void StopParticle()
+    {
+        // 파티클이 재생 중일 경우
+        if (particle.isPlaying)
+        {
+            // StopEmittingAndClear 옵션을 사용해
+            // 새로운 파티클 생성을 막고, 기존 파티클도 즉시 제거합니다.
+            particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+
+        _isTriggerd = false;
     }
 
     IEnumerator StageClear(float time)
