@@ -30,6 +30,7 @@ public class StackManager : MonoBehaviour
     
     
     //전역 접근이 가능하도록 하는 이벤트
+    public static event Action OnPlayerMoved;
     public static event Action OnStageCleared;
     public static event Action OnPlayerDied;
     public event Action OnInputQueueChanged; // SequenceUI의 Update 함수 비용 줄이기
@@ -376,6 +377,8 @@ public class StackManager : MonoBehaviour
     {
         HandleInput(KeyType.F4); // F4 입력
         MovePlayer();
+        
+        OnPlayerMoved?.Invoke(); // 플레이어가 움직였다는 이벤트 발동 (MainCameraMovement에서 수신)
     }
 
     void HandleInput(KeyType keyType)
@@ -497,7 +500,9 @@ public class StackManager : MonoBehaviour
             
             _animatior.Play("Clear");
             arrow.SetActive(false);
-
+            
+            GameManager.Instance.isCleared = true;
+            
             StartCoroutine(StageClear(1.0f));
         }
     }
@@ -515,7 +520,7 @@ public class StackManager : MonoBehaviour
         _isTriggerd = false;
     }
 
-    IEnumerator StageClear(float time)
+    IEnumerator StageClear(float time) // 목적지에 닿자마자 곧바로 Clear!이란 UI 텍스트가 출력되지 않도록 하는 코루틴
     {
         yield return new WaitForSeconds(time);
         

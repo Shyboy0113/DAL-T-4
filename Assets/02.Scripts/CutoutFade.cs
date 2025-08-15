@@ -23,7 +23,7 @@ public class CutoutFade : MonoBehaviour
             rectTransform = GetComponent<RectTransform>();
         }
     }
-
+    
     private void Start()
     {
         
@@ -73,5 +73,17 @@ public class CutoutFade : MonoBehaviour
                 // 이 블록 안의 코드는 애니메이션이 '정말로' 끝났을 때 실행됩니다.
                 onFadeComplete?.Invoke();
             });
+    }
+
+    public void ClearFadeOut() //스테이지를 클리어 했을 때의 FadeOut
+    {
+        StartCoroutine(IFadeOut());
+    }
+
+    IEnumerator IFadeOut()
+    {
+        yield return new WaitForSeconds(1.5f);
+        
+        FadeOut();
     }
 }

@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 /*
 싱글톤에 기존 찌꺼기 데이터들이 남아있지 않게 초기 설정해주는 스크립트입니다.
@@ -11,7 +13,7 @@ using UnityEngine.SceneManagement;
 public class ResetManagement : MonoBehaviour
 {    
     [SerializeField] private CutoutFade cutoutFade; //Fade용
-    
+
     // 재시작 버튼을 눌렀을 경우에 bool 값
     private bool _isRestart;
     
@@ -44,6 +46,7 @@ public class ResetManagement : MonoBehaviour
         isEndStage = false;
         
         GameManager.Instance.ResetData();
+        GameManager.Instance.isCleared = false;
         
         //만약 SoundManager가 있을 경우, BGM 갱신
         if(SoundManager.Instance is not null) SoundManager.Instance.RenewalBGM(audioClip, currentStageName);
@@ -61,19 +64,20 @@ public class ResetManagement : MonoBehaviour
 
     public void NextStage()
     {
-        // FadeOut 발동
-        cutoutFade.FadeOut();
+        cutoutFade.ClearFadeOut();
         
-        Invoke("ChangeStage",1.0f);
+        Invoke("ChangeStage",5.0f);
     }
     
     public void ChangeStage()
     {
-        // 만약 재시작 버튼이라면 대기 후, 재시작
-        if(_isRestart) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // 씬을 로드하기 직전에 모든 DOTween 애니메이션을 깔끔하게 제거합니다.
+        DOTween.KillAll(); //이걸 안 하면 Dotween 기존 Scene에서의 Dotween 찌꺼기가 그대로 남아있음
         
+        // 만약 재시작 버튼이라면 대기 후, 재시작
+        if (_isRestart) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         // 씬 이동 코드 추가
-        if(isEndStage) SceneManager.LoadScene("StageSelect"); // buildIndex 바로 다음
+        else if(isEndStage) SceneManager.LoadScene("StageSelect"); // buildIndex 바로 다음
         else SceneManager.LoadScene(nextStageName);
         
     }
