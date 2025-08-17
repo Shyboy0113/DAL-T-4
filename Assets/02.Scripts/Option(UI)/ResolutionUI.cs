@@ -15,8 +15,8 @@ public class ResolutionUI : MonoBehaviour
     public Toggle fullscreenToggle;
 
     private bool isOk = false;
-    private Resolution _selectedResolution;
     
+    private Resolution _selectedResolution;
     private Resolution _originalResolution;
 
     private void OnEnable()

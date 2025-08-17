@@ -196,7 +196,7 @@ public class StackManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Tab) && GameManager.Instance.currentStageData.canUseTab)
         {
-            PlayRotateSound(); // 반시계 방향 회전 효과음
+            soundEffectPlayer.PlaySoundEffect(moveSound); // 반시계 방향 회전 효과음
             ProcessTabInput(); 
             GameManager.Instance.pushedNumberTAB++;
         }

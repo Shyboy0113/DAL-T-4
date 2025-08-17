@@ -3,7 +3,7 @@ using UnityEngine.EventSystems; // EventSystem 인터페이스 사용을 위해 
 
 // ISelectHandler: 선택되었을 때 호출될 함수를 정의
 // IDeselectHandler: 선택 해제되었을 때 호출될 함수를 정의
-public class SelectionMarker : MonoBehaviour, ISelectHandler, IDeselectHandler
+public class Intro_SelectionMarker : MonoBehaviour, ISelectHandler, IDeselectHandler
 {
     // 인스펙터에서 켜고 끌 화살표(마커) 오브젝트를 연결
     public GameObject selectionMarkers;
