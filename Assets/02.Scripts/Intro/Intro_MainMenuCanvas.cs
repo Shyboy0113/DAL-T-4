@@ -2,13 +2,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Intro_ButtonSelect : MonoBehaviour
+public class Intro_MainMenuCanvas : MonoBehaviour
 {
     [SerializeField] private GameObject optionPanel;
-    
     [SerializeField] private CutoutFade cutoutFade;
     
-    public void StartGame() // 게임 시작 버튼 클릭 시 Stage 선택창으로 넘어감
+    public void StartButton() // 게임 시작 버튼 클릭 시 Stage 선택창으로 넘어감
     {
         cutoutFade.FadeOut(() => 
         {
@@ -17,14 +16,14 @@ public class Intro_ButtonSelect : MonoBehaviour
         
     }
 
-    public void ActivateOption()
+    public void OptionButton()
     {
         optionPanel.SetActive(true);
         
         StartCoroutine(DeactivateMainMenu());
     }
     
-    public void ExitGame() // 게임 종료 버튼 클릭 시 게임 종료
+    public void ExitButton() // 게임 종료 버튼 클릭 시 게임 종료
     {
         Application.Quit();
     }

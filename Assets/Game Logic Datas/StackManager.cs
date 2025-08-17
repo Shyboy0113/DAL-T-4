@@ -59,7 +59,7 @@ public class StackManager : MonoBehaviour
     private bool _isTriggerd = false;
     
     [SerializeField]
-    private SoundPlayer soundPlayer;
+    private SoundEffectPlayer soundEffectPlayer;
     
     //DOTween 전용 변동 속도
     public float DOTweenDuration;
@@ -120,7 +120,7 @@ public class StackManager : MonoBehaviour
         _colliderFirst = tilemapFirst.GetComponent<TilemapCollider2D>();
         _colliderSecond = tilemapSecond.GetComponent<TilemapCollider2D>();
 
-        soundPlayer = GetComponent<SoundPlayer>();
+        soundEffectPlayer = GetComponent<SoundEffectPlayer>();
         
         _mainCamera = Camera.main;
         Debug.Log(_mainCamera);
@@ -179,14 +179,17 @@ public class StackManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftAlt) && GameManager.Instance.currentStageData.canUseAlt)
         {
-            PlayRotateSound(); // 시계 방향 회전 효과음
+            // 시계 방향 회전 효과음 재생
+            soundEffectPlayer.PlaySoundEffect(rotateSound);
+            
             ProcessAltInput();
             GameManager.Instance.pushedNumberALT++; // 카운트는 GameManager가 관리
         }
 
         if (Input.GetKeyDown(KeyCode.F4) && GameManager.Instance.currentStageData.canUseF4)
         {
-            PlayMoveSound(); // 움직임 효과음
+            // 움직일 때의 효과음 재생
+            soundEffectPlayer.PlaySoundEffect(moveSound);
             ProcessF4Input(); 
             GameManager.Instance.pushedNumberF4++;
         }
@@ -210,7 +213,9 @@ public class StackManager : MonoBehaviour
             // 3. 파티클이 재생 중이 아닐 때만 Play()를 호출하여 효율을 높입니다.
             if (!particle.isPlaying)
             {
-                PlayTriggerSound();
+                // 트리거 됐을 경우, 효과음 재생
+                soundEffectPlayer.PlaySoundEffect(triggerSound);
+                
                 particle.Play();
                 _isTriggerd = true;
             }
@@ -220,7 +225,9 @@ public class StackManager : MonoBehaviour
             // 파티클이 현재 멈춰있지 않고, 트리거 상태였다면 Stop()을 호출합니다.
             if (!particle.isStopped && _isTriggerd)
             {
-                PlayCancelSound();
+                //트리거 취소 효과음 재생
+                soundEffectPlayer.PlaySoundEffect(cancelSound);
+                
                 particle.Stop();
                 _isTriggerd = false;
             }
@@ -287,34 +294,6 @@ public class StackManager : MonoBehaviour
         _isSwitched = true;
 
     }
-
-    #region PlaySound(효과음 재생 함수)
-    
-    // private void PlaySound(AudioClip audioClip)으로 만들까 고민하다가, 가독성을 위해 일부러 나눠서 표현
-    private void PlayExplosionSound()
-    {
-        soundPlayer.PlaySound(explosionSound);
-    }
-
-    private void PlayMoveSound()
-    {
-        soundPlayer.PlaySound(moveSound);
-    }
-
-    private void PlayRotateSound()
-    {
-        soundPlayer.PlaySound(rotateSound);
-    }
-
-    private void PlayTriggerSound()
-    {
-        soundPlayer.PlaySound(triggerSound);
-    }
-    private void PlayCancelSound()
-    {
-        soundPlayer.PlaySound(cancelSound);
-    }
-    #endregion
     
     private void CheckForGroundAfterSwitch()
     {
@@ -486,8 +465,9 @@ public class StackManager : MonoBehaviour
         //GameManager.Instance.isGameOver = true;
         _animatior.Play("Explosion");
         arrow.SetActive(false);
-
-        PlayExplosionSound();
+        
+        // 효과음 실행
+        soundEffectPlayer.PlaySoundEffect(explosionSound);
         
         OnPlayerDied?.Invoke(); //플레이어가 죽었다는 방송을 내보낸다
     }
