@@ -16,7 +16,7 @@ public class MainCameraMovement : MonoBehaviour
         // DOTween 초기화 (안전하게 한 번만 호출되도록 설정)
         DOTween.Init();
         
-        MoveAndLookAtTarget(); //초기 카메라 위치 세팅
+        MoveAndLookAtTarget("Reset"); //초기 카메라 위치 세팅
     }
 
     private void OnEnable()
@@ -42,5 +42,13 @@ public class MainCameraMovement : MonoBehaviour
         
     }
     
+    void MoveAndLookAtTarget(string name) // Start 함수에서 쓸 함수 별도로 선언
+    {
+        if (name is not null)
+        {
+            transform.position = target.position + additionalVector;
+        }
+
+    }
     
 }

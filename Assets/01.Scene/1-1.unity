@@ -1230,6 +1230,7 @@ MonoBehaviour:
   target: {fileID: 1639864500}
   additionalVector: {x: 5, y: -1, z: -10}
   moveDuration: 0.5
+  isMove: 1
 --- !u!1 &336814174
 GameObject:
   m_ObjectHideFlags: 0
@@ -2614,6 +2615,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 765983329725348849, guid: 4c1eab2b4ab0f944b91e435821ae0ef7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 949370012089474288, guid: 4c1eab2b4ab0f944b91e435821ae0ef7, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8270453525030668312, guid: 4c1eab2b4ab0f944b91e435821ae0ef7, type: 3}
@@ -4789,7 +4794,7 @@ GameObject:
   - component: {fileID: 1639864503}
   - component: {fileID: 1639864505}
   - component: {fileID: 1639864504}
-  - component: {fileID: 1639864506}
+  - component: {fileID: 1639864508}
   - component: {fileID: 1639864507}
   m_Layer: 0
   m_Name: Dalt_Black
@@ -4953,7 +4958,7 @@ MonoBehaviour:
   explosionSound: {fileID: 8300000, guid: 7e5e291f283dded4cb36cedf3abd8ee9, type: 3}
   triggerSound: {fileID: 8300000, guid: f82647e6218505949b9a038503aac203, type: 3}
   cancelSound: {fileID: 8300000, guid: 02bb62f0fd347de41ac6aa721fb7733e, type: 3}
-  soundPlayer: {fileID: 0}
+  soundEffectPlayer: {fileID: 0}
   DOTweenDuration: 0.25
   DOTweenPunch: {x: 0, y: 0, z: 60}
   DOTweenVibrato: 100
@@ -4990,19 +4995,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1639864506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1639864498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0ddc102b49f89f4a8700e7c0cc9128c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  optionPanel: {fileID: 0}
 --- !u!82 &1639864507
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5099,6 +5091,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1639864508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639864498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ea26e3d0cacdc44392b2886f1839922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
 --- !u!1 &1678942573
 GameObject:
   m_ObjectHideFlags: 0

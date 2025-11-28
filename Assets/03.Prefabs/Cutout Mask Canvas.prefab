@@ -117,7 +117,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2866853364957776771}
   - component: {fileID: 7541659406030154549}
-  - component: {fileID: 6237662925768398115}
+  - component: {fileID: 949370012089474288}
   m_Layer: 5
   m_Name: BackGround Image
   m_TagString: Untagged
@@ -152,7 +152,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3926275444775924889}
   m_CullTransparentMesh: 1
---- !u!114 &6237662925768398115
+--- !u!114 &949370012089474288
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,12 +161,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3926275444775924889}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f25dda6741a4fab4c9acd6799b04da07, type: 3}
+  m_Script: {fileID: 11500000, guid: bf1ff92d80911e14bab520daed5cac55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
