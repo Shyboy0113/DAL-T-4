@@ -1,12 +1,11 @@
 using System;
 using UnityEngine;
 
-// 'ÇÃ·¹ÀÌ¾î°¡ Å¸ÀÏÀ» ¹ş¾î³µ´Ù'´Â ÀÌº¥Æ®
-// OnPlayerExitedTile static ÀÌº¥Æ® º¸À¯
+// OnPlayerExitedTile static eventë¥¼ ì •ì˜í•˜ëŠ” í´ë˜ìŠ¤
 
 public class TileColliderTrigger : MonoBehaviour
 {
-    // ÇÃ·¹ÀÌ¾î°¡ Å¸ÀÏ ¸ÊÀ» ¹ş¾î³µÀ» ¶§ÀÇ ÀÌº¥Æ®
+    // í”Œë ˆì´ì–´ê°€ íƒ€ì¼ì„ ë²—ì–´ë‚¬ì„ ë•Œ ì‘ë™í•˜ëŠ” ì´ë²¤íŠ¸
     public static event Action OnPlayerExitedTile;
     
     private void OnTriggerExit2D(Collider2D collision)
