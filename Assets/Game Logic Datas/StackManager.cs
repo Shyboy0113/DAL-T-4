@@ -101,6 +101,12 @@ public class StackManager : MonoBehaviour
 
     #endregion
     
+    #region Command Pattern
+
+    //ICommand 인터페이스를 상속받은 커맨드를 전부 모아놓은 버퍼
+    private Queue<ICommand> _commandBuffer = new Queue<ICommand>();
+
+    #endregion
 
     private void Awake()
     {
@@ -172,36 +178,31 @@ public class StackManager : MonoBehaviour
     
     private void Update()
     {
-        Debug.Log(_activatedTilemap + " + " + _deactivatedTilemap);
-        
         // 게임이 진행 중일 때만 입력을 받도록 GameManager 상태를 확인합니다.
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
 
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && GameManager.Instance.currentStageData.canUseAlt)
-        {
-            // 시계 방향 회전 효과음 재생
+        // 1. 입력 수집 (Producer)
+        if (Input.GetKeyDown(KeyCode.LeftAlt)) 
+            _commandBuffer.Enqueue(new ClockwiseRotateCommand(this));
             soundEffectPlayer.PlaySoundEffect(rotateSound);
-            
-            ProcessAltInput();
-            GameManager.Instance.pushedNumberALT++; // 카운트는 GameManager가 관리
-        }
-
-        if (Input.GetKeyDown(KeyCode.F4) && GameManager.Instance.currentStageData.canUseF4)
-        {
-            // 움직일 때의 효과음 재생
-            soundEffectPlayer.PlaySoundEffect(moveSound);
-            ProcessF4Input(); 
-            GameManager.Instance.pushedNumberF4++;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Tab) && GameManager.Instance.currentStageData.canUseTab)
-        {
-            soundEffectPlayer.PlaySoundEffect(moveSound); // 반시계 방향 회전 효과음
-            ProcessTabInput(); 
-            GameManager.Instance.pushedNumberTAB++;
-        }
         
-     
+        if (Input.GetKeyDown(KeyCode.Tab)) 
+            _commandBuffer.Enqueue(new CounterClockwiseRotateCommand(this));
+            soundEffectPlayer.PlaySoundEffect(moveSound);
+
+        if (Input.GetKeyDown(KeyCode.F4)) 
+            _commandBuffer.Enqueue(new MoveCommand(this));
+            soundEffectPlayer.PlaySoundEffect(moveSound);
+
+        // 2. 명령 실행 (Consumer)
+        // 예: 큐에 명령이 있고, 현재 애니메이션 중이 아닐 때만 하나씩 꺼내서 실행
+        if (_commandBuffer.Count > 0 && !DOTween.IsTweening(arrow.transform))
+        {
+            ICommand cmd = _commandBuffer.Dequeue();
+            cmd.Execute();
+        }
+    
+        // 3. Alt + Tab 트리거 체크
         if (CheckBackTile()) 
         {
             // 1. 파티클의 Main 모듈을 가져옵니다.
@@ -336,31 +337,7 @@ public class StackManager : MonoBehaviour
         changePanelCanvasGroup.blocksRaycasts = false;
     }
 
-    public void ProcessAltInput()
-    {
-        HandleInput(KeyType.Alt); // ALT 입력
-        _playerDirection = (PlayerDirection)(((int)_playerDirection + 1) % 4);
-        RotateArrow(); // 정방향 회전
-
-    }
-    public void ProcessTabInput()
-    {
-        HandleInput(KeyType.Tab); // Tab 입력
-        
-        _playerDirection = (PlayerDirection)(((int)_playerDirection + 3) % 4); // direction -1 + 4 = direction +3
-        RotateArrow(); // 역방향 회전
-        
-    }
-    
-    public void ProcessF4Input()
-    {
-        HandleInput(KeyType.F4); // F4 입력
-        MovePlayer();
-        
-        OnPlayerMoved?.Invoke(); // 플레이어가 움직였다는 이벤트 발동 (MainCameraMovement에서 수신)
-    }
-
-    void HandleInput(KeyType keyType)
+      public void HandleInput(KeyType keyType)
     {
         
         // 1. 여기서 스택을 먼저 체크하고 가득 찼으면 리셋합니다.
@@ -391,6 +368,11 @@ public class StackManager : MonoBehaviour
             StartCoroutine(FadeSwitchPanel());
         }
     }
+    
+    public void ExecuteMoveEvent()
+    {
+        OnPlayerMoved?.Invoke(); // 플레이어가 움직였다는 이벤트 발동 (MainCameraMovement에서 수신)
+    }
 
     bool CheckGameOver()
     {
@@ -415,7 +397,13 @@ public class StackManager : MonoBehaviour
         OnInputQueueChanged?.Invoke();
     }
 
-    void MovePlayer()
+    public void UpdateDirection(int rotation)
+    {
+        _playerDirection = (PlayerDirection)(((int)_playerDirection + rotation) % 4);
+    }
+
+    // ICommand 중 MoveCommand를 위한 메서드
+    public void MovePlayer()
     {
         Vector2 moveDirection = _playerDirection switch
         {
@@ -425,13 +413,12 @@ public class StackManager : MonoBehaviour
             PlayerDirection.Up => Vector2.up,
             _ => Vector2.zero
         };
-        
-        Debug.Log(moveDirection + " 이동");
-        
+                
         _rigidbody2D.AddForce(moveDirection * forceAmount, ForceMode2D.Impulse);
     }
 
-    void RotateArrow()
+    // ICommand 중 ClockwiseRotateCommand/CounterClockwiseRotateCommand를 위한 메서드
+    public void RotateArrow()
     {
         float angle = _playerDirection switch
         {
@@ -514,6 +501,6 @@ public class StackManager : MonoBehaviour
         {
             //파괴시, StackManager의 연결 해제
             GameManager.Instance.UnregisterStackManager();
-        } 
+        }
     }
 }
