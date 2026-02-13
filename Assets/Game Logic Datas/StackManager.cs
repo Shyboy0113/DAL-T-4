@@ -442,8 +442,8 @@ public class StackManager : MonoBehaviour
             _ => 0f
         };
 
-        //arrow.transform.rotation = Quaternion.Euler(0, 0, angle);
-        arrow.transform.DORotate(new Vector3(0, 0, angle), DOTweenDuration).SetEase(Ease.OutElastic); //일반 rotation을 Dotween으로 교체
+        arrow.transform.DOKill(); //기존에 실행 중인 트윈이 있다면 중지
+        arrow.transform.DORotate(new Vector3(0, 0, angle), DOTweenDuration, RotateMode.FastBeyond360).SetEase(Ease.OutElastic); //일반 rotation을 Dotween으로 교체
         
         // Z축으로 90도만큼 '펀치'를 날렸다가 돌아옵니다.
         // punch: 펀치의 강도 (회전할 각도)
