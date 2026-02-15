@@ -77,6 +77,9 @@ public class StackManager : MonoBehaviour
     [SerializeField]
     private ParticleSystem particle; // 파티클 시스템
     
+    // 회전중인지를 판단하는 bool 값
+    private bool _isRotating = false;
+    
     #region TileMap
 
     // 인스펙터에서 두 타일맵을 연결할 변수
@@ -178,25 +181,34 @@ public class StackManager : MonoBehaviour
     
     private void Update()
     {
+        // 회전 애니메이션 작동중일 땐 스킵
+        if (_isRotating) return;
+        
         // 게임이 진행 중일 때만 입력을 받도록 GameManager 상태를 확인합니다.
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
 
         // 1. 입력 수집 (Producer)
-        if (Input.GetKeyDown(KeyCode.LeftAlt)) 
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
             _commandBuffer.Enqueue(new ClockwiseRotateCommand(this));
             soundEffectPlayer.PlaySoundEffect(rotateSound);
-        
-        if (Input.GetKeyDown(KeyCode.Tab)) 
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
             _commandBuffer.Enqueue(new CounterClockwiseRotateCommand(this));
             soundEffectPlayer.PlaySoundEffect(moveSound);
+        }
 
-        if (Input.GetKeyDown(KeyCode.F4)) 
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
             _commandBuffer.Enqueue(new MoveCommand(this));
             soundEffectPlayer.PlaySoundEffect(moveSound);
+        }
 
         // 2. 명령 실행 (Consumer)
         // 예: 큐에 명령이 있고, 현재 애니메이션 중이 아닐 때만 하나씩 꺼내서 실행
-        if (_commandBuffer.Count > 0 && !DOTween.IsTweening(arrow.transform))
+        if (_commandBuffer.Count > 0 && !_isRotating)
         {
             ICommand cmd = _commandBuffer.Dequeue();
             cmd.Execute();
@@ -429,8 +441,15 @@ public class StackManager : MonoBehaviour
             _ => 0f
         };
 
-        arrow.transform.DOKill(); //기존에 실행 중인 트윈이 있다면 중지
-        arrow.transform.DORotate(new Vector3(0, 0, angle), DOTweenDuration, RotateMode.FastBeyond360).SetEase(Ease.OutElastic); //일반 rotation을 Dotween으로 교체
+        _isRotating = true;
+
+        arrow.transform
+            .DORotate(new Vector3(0, 0, angle), DOTweenDuration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutElastic)
+            .OnComplete(() =>
+            {
+                _isRotating = false;
+            });
         
         // Z축으로 90도만큼 '펀치'를 날렸다가 돌아옵니다.
         // punch: 펀치의 강도 (회전할 각도)
