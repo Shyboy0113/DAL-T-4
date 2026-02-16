@@ -30,12 +30,12 @@ public class MainCameraMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        StackManager.OnPlayerMoved += MoveToTarget;
+        GameEvents.PlayerMoved += MoveToTarget;
     }
 
     private void OnDestroy()
     {
-        StackManager.OnPlayerMoved -= MoveToTarget;
+        GameEvents.PlayerMoved -= MoveToTarget;
     }
 
     void MoveToTarget()

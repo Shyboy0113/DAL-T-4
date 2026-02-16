@@ -31,12 +31,12 @@ public class ResetManagement : MonoBehaviour
     
     private void OnEnable()
     {
-        StackManager.OnStageCleared += NextStage;
+        GameEvents.StageCleared += NextStage;
     }
 
     private void OnDestroy()
     {
-        StackManager.OnStageCleared -= NextStage;
+        GameEvents.StageCleared -= NextStage;
     }
 
     private void Start()

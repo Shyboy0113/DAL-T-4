@@ -11,12 +11,12 @@ public class FadeClearText : MonoBehaviour
     
     private void OnEnable()
     {
-        StackManager.OnStageCleared += FadeIn;
+        GameEvents.StageCleared += FadeIn;
     }
 
     private void OnDestroy()
     {
-        StackManager.OnStageCleared -= FadeIn;
+        GameEvents.StageCleared -= FadeIn;
     }
 
     private void Awake()

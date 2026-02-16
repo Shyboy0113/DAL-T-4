@@ -5,7 +5,6 @@ using UnityEngine;
 
 //DoTween 사용
 using DG.Tweening;
-using UnityEngine.Serialization;
 
 //TileMap 사용
 using UnityEngine.Tilemaps;
@@ -29,10 +28,7 @@ public class StackManager : MonoBehaviour
     private PlayerDirection _playerDirection = PlayerDirection.Right;
     
     
-    //전역 접근이 가능하도록 하는 이벤트
-    public static event Action OnPlayerMoved;
-    public static event Action OnStageCleared;
-    public static event Action OnPlayerDied;
+    // UI 이벤트
     public event Action OnInputQueueChanged; // SequenceUI의 Update 함수 비용 줄이기
     
     private int _stack = 0;
@@ -79,6 +75,17 @@ public class StackManager : MonoBehaviour
     
     // 회전중인지를 판단하는 bool 값
     private bool _isRotating = false;
+
+    #region InputLock
+
+    private bool _isInputLocked = false;
+    
+    private void SetInputLock(bool isLocked)
+    {
+        _isInputLocked = isLocked;
+    }
+    
+    #endregion
     
     #region TileMap
 
@@ -139,15 +146,17 @@ public class StackManager : MonoBehaviour
     private void OnEnable()
     {
         //이벤트 추가
-        OnPlayerDied += StopParticle;
-        OnStageCleared += StopParticle;
+        GameEvents.PlayerDied += StopParticle;
+        GameEvents.StageCleared += StopParticle;
+        GameEvents.InputLockChanged += SetInputLock;
     }
 
     private void OnDisable()
     {
         //이벤트 추가
-        OnPlayerDied -= StopParticle;
-        OnStageCleared -= StopParticle;
+        GameEvents.PlayerDied -= StopParticle;
+        GameEvents.StageCleared -= StopParticle;
+        GameEvents.InputLockChanged -= SetInputLock;
     }
 
     private void Start()
@@ -182,7 +191,7 @@ public class StackManager : MonoBehaviour
     private void Update()
     {
         // 회전 애니메이션 작동중일 땐 스킵
-        if (_isRotating) return;
+        if (_isRotating || _isInputLocked) return;
         
         // 게임이 진행 중일 때만 입력을 받도록 GameManager 상태를 확인합니다.
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
@@ -208,7 +217,7 @@ public class StackManager : MonoBehaviour
 
         // 2. 명령 실행 (Consumer)
         // 예: 큐에 명령이 있고, 현재 애니메이션 중이 아닐 때만 하나씩 꺼내서 실행
-        if (_commandBuffer.Count > 0 && !_isRotating)
+        if (_commandBuffer.Count > 0 && !_isRotating && !_isInputLocked)
         {
             ICommand cmd = _commandBuffer.Dequeue();
             cmd.Execute();
@@ -347,6 +356,10 @@ public class StackManager : MonoBehaviour
         // (어차피 알파값이 0이라 보이지 않으므로 필수는 아님)
         changePanelCanvasGroup.interactable = false;
         changePanelCanvasGroup.blocksRaycasts = false;
+
+        // 입력 가능하게
+        GameEvents.RaiseInputLockChanged(false);
+
     }
 
       public void HandleInput(KeyType keyType)
@@ -376,14 +389,12 @@ public class StackManager : MonoBehaviour
             // 맵 전환 직후, 플레이어 위치의 타일 유효성 검사 실행!
             CheckForGroundAfterSwitch();
             
+            // 입력 막기
+            GameEvents.RaiseInputLockChanged(true);
+            
             // 코루틴 시작
             StartCoroutine(FadeSwitchPanel());
         }
-    }
-    
-    public void ExecuteMoveEvent()
-    {
-        OnPlayerMoved?.Invoke(); // 플레이어가 움직였다는 이벤트 발동 (MainCameraMovement에서 수신)
     }
 
     bool CheckGameOver()
@@ -475,7 +486,7 @@ public class StackManager : MonoBehaviour
         // 효과음 실행
         soundEffectPlayer.PlaySoundEffect(explosionSound);
         
-        OnPlayerDied?.Invoke(); //플레이어가 죽었다는 방송을 내보낸다
+        GameEvents.RaisePlayerDied(); //플레이어가 죽었다는 방송을 내보낸다
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -510,7 +521,7 @@ public class StackManager : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         
-        OnStageCleared?.Invoke(); //게임이 클리어 됐다는 방송을 내보냄
+        GameEvents.RaiseStageCleared(); //게임이 클리어 됐다는 방송을 내보냄
     }
 
     private void OnDestroy()

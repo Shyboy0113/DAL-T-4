@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         // StackManager가 보내는 방송을 구독합니다.
-        StackManager.OnStageCleared += GameClear;
-        StackManager.OnPlayerDied += HandleGameOver;
+        GameEvents.StageCleared += GameClear;
+        GameEvents.PlayerDied += HandleGameOver;
         
         //이벤트 구독 추가
         TileColliderTrigger.OnPlayerExitedTile += TileOut;
@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         // 오브젝트가 비활성화될 때 구독을 해제합니다. (메모리 누수 방지)
-        StackManager.OnStageCleared -= GameClear;
-        StackManager.OnPlayerDied -= HandleGameOver;
+        GameEvents.StageCleared -= GameClear;
+        GameEvents.PlayerDied -= HandleGameOver;
         
         //이벤트 구독 해제
         TileColliderTrigger.OnPlayerExitedTile -= TileOut;
