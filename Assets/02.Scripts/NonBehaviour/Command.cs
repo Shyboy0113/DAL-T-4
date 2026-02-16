@@ -1,5 +1,5 @@
 
-using TMPro;
+// 키 입력 시퀀스를 담당하는 코드 모음 (인터페이스 및 커맨드 등)
 
 public interface ICommand
 {
@@ -52,6 +52,6 @@ public class MoveCommand : ICommand
     {
         _sm.HandleInput(KeyType.F4); // F4 입력
         _sm.MovePlayer();
-        _sm.ExecuteMoveEvent(); // 플레이어가 움직였다는 이벤트 발동 (MainCameraMovement에서 수신)
+        GameEvents.RaisePlayerMoved(); // 플레이어가 움직였다는 이벤트 발동 (MainCameraMovement에서 수신)
     }
 }
