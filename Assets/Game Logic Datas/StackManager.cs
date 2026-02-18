@@ -6,9 +6,6 @@ using UnityEngine;
 //DoTween 사용
 using DG.Tweening;
 
-//TileMap 사용
-using UnityEngine.Tilemaps;
-
 public enum KeyType
 {
     None = 0,
@@ -19,14 +16,19 @@ public enum KeyType
 
 public class StackManager : MonoBehaviour
 {
+    #region Enum
+    
     //플레이어의 회전 방향을 Enum(문자)로 표시
     public enum PlayerDirection
     {
         Right,Down,Left,Up
     }
     
-    private PlayerDirection _playerDirection = PlayerDirection.Right;
+    #endregion
     
+    #region Fields
+    
+    private PlayerDirection _playerDirection = PlayerDirection.Right;
     
     // UI 이벤트
     public event Action OnInputQueueChanged; // SequenceUI의 Update 함수 비용 줄이기
@@ -38,11 +40,9 @@ public class StackManager : MonoBehaviour
     private List<int> _inputQueue = new List<int>(new int[MaxQueueSize]);
 
     private Rigidbody2D _rigidbody2D;
-    [SerializeField]
-    private float forceAmount = 1f;
-
-    [SerializeField]
-    private Animator _animatior;
+    
+    [SerializeField] private float forceAmount = 1f;
+    [SerializeField] private Animator _animatior;
     public GameObject arrow;
     
     //방향 전환 및 이동시 효과음 발동
@@ -54,27 +54,20 @@ public class StackManager : MonoBehaviour
 
     private bool _isTriggerd = false;
     
-    [SerializeField]
-    private SoundEffectPlayer soundEffectPlayer;
+    [SerializeField] private SoundEffectPlayer soundEffectPlayer;
     
     //DOTween 전용 변동 속도
     public float DOTweenDuration;
     public Vector3 DOTweenPunch;
     public int DOTweenVibrato;
     
-    //Alt + Tab 전용 로직 bool
-    [SerializeField]
-    private bool _isSwitched;
-    
-    // 카메라 Layer Culling Mask 전환을 위한 메인 카메라
-    private Camera _mainCamera;
-
     // 파티클 시스템
-    [SerializeField]
-    private ParticleSystem particle; // 파티클 시스템
+    [SerializeField] private ParticleSystem particle; // 파티클 시스템
     
     // 회전중인지를 판단하는 bool 값
     private bool _isRotating = false;
+    
+    #endregion
 
     #region InputLock
 
@@ -87,28 +80,72 @@ public class StackManager : MonoBehaviour
     
     #endregion
     
-    #region TileMap
-
-    // 인스펙터에서 두 타일맵을 연결할 변수
-    public Tilemap tilemapFirst;
-    public Tilemap tilemapSecond;
-    
-    private TilemapCollider2D _colliderFirst;
-    private TilemapCollider2D _colliderSecond;
-
-    private Tilemap _activatedTilemap; // 현재 활성화된 타일맵을 저장할 변수
-    private Tilemap _deactivatedTilemap; //현재 비활성화된 타일맵을 저장하는 변수
-    
-    public GameObject mainCamera; // 메인 카메라
-    
-    // 파티클용 타일맵 색깔 가져오기
-    
-    private Color _particleTileColor;
-    private Color _deactivatedTileColor;
+    [SerializeField]
+    private MapManager mapManager;
     
     [SerializeField]
     private CanvasGroup changePanelCanvasGroup;
 
+    #region IceMode
+
+    private float _slideSpeed = 15f;
+    
+    private Vector2 _lastMoveDirection; // 마지막으로 움직인 방향을 기록
+    private bool _isOnIce = false;
+
+    private Coroutine _slideCoroutine;
+
+    public void EnableIceMode(bool enable)
+    {
+        _isOnIce = enable;
+
+        if (enable)
+        {
+            // 얼음 타일에 '닿자마자' 마지막 이동 방향으로 미끄러짐을 시작합니다
+            if (_slideCoroutine == null)
+            {
+                _slideCoroutine = StartCoroutine(Slide(_lastMoveDirection));
+                SetInputLock(true); // 이동 중 입력 잠금
+            }
+        }
+        else
+        {
+            // STOP 타일에 닿으면 미끄러짐을 즉시 멈추고 속도를 0으로 만듭니다
+            if (_slideCoroutine != null)
+            {
+                StopCoroutine(_slideCoroutine);
+                _slideCoroutine = null;
+            }
+            _rigidbody2D.velocity = Vector2.zero; // 선단시티처럼 타일 위에서 딱 멈추게 함
+            SetInputLock(false); // Stop에 닿았을 경우 입력 가능해짐
+        }
+    }
+
+    
+    private IEnumerator Slide(Vector2 direction)
+    {
+        while (_isOnIce)
+        {
+            _rigidbody2D.velocity = direction * _slideSpeed;
+            yield return new WaitForFixedUpdate();
+            
+            // 타일을 벗어났는지 확인
+            CheckForGround();
+
+            // 4. 게임 오버(폭발) 혹은 클리어 상태가 되면 미끄러짐 루프를 즉시 탈출
+            if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared)
+            {
+                _rigidbody2D.velocity = Vector2.zero; // 물리적 움직임 완전 정지
+                yield break; // 코루틴 종료
+            }
+        }
+    }
+        
+    private void UnlockInputAfterMove()
+    {
+        if (!_isOnIce) SetInputLock(false);
+    }
+    
     #endregion
     
     #region Command Pattern
@@ -118,6 +155,8 @@ public class StackManager : MonoBehaviour
 
     #endregion
 
+    #region Lifecycle
+    
     private void Awake()
     {
         // GameManager에 자신을 등록합니다.
@@ -127,19 +166,13 @@ public class StackManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("GameManager instance not found! Make sure GameManager has a lower execution order.");
+            Debug.LogError("GameManager instance isn't registered!");
         }
         
         _animatior = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
 
-        _colliderFirst = tilemapFirst.GetComponent<TilemapCollider2D>();
-        _colliderSecond = tilemapSecond.GetComponent<TilemapCollider2D>();
-
         soundEffectPlayer = GetComponent<SoundEffectPlayer>();
-        
-        _mainCamera = Camera.main;
-        Debug.Log(_mainCamera);
         
     }
 
@@ -151,14 +184,6 @@ public class StackManager : MonoBehaviour
         GameEvents.InputLockChanged += SetInputLock;
     }
 
-    private void OnDisable()
-    {
-        //이벤트 추가
-        GameEvents.PlayerDied -= StopParticle;
-        GameEvents.StageCleared -= StopParticle;
-        GameEvents.InputLockChanged -= SetInputLock;
-    }
-
     private void Start()
     {
         // 파티클 일단 끄기
@@ -167,25 +192,11 @@ public class StackManager : MonoBehaviour
         // 트리거도 false
         _isTriggerd = false;
     
-        // 게임 시작 시 첫 번째 맵을 활성화
-        _activatedTilemap = tilemapFirst;
-        _deactivatedTilemap = tilemapSecond;
-
-        // 비활성화된 타일맵의 색깔만 저장해둡니다.
-        _deactivatedTileColor = tilemapSecond.color; 
-        
         // 게임 시작 시 CanvasGroup의 알파값을 0으로, 비활성화 상태로 만듭니다.
         changePanelCanvasGroup.alpha = 0;
         changePanelCanvasGroup.interactable = false; // 클릭 등 상호작용 비활성화
         changePanelCanvasGroup.blocksRaycasts = false; // UI 뒤의 오브젝트가 클릭되는 것을 막지 않음
-
-        _isSwitched = false;
-
-        _colliderSecond.enabled = false; //2번째 맵 콜라이더를 끈다.
         
-        // 카메라 시야에서 보이지 않도록 규정
-        _mainCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Map 2")); // Map 2 Layer를 카메라의 Culling Mask에서 제거
-        _mainCamera.cullingMask |= 1 << LayerMask.NameToLayer("Map 1"); // Map 1 Layer를 카메라의 Culling Mask에서 추가
     }
     
     private void Update()
@@ -206,7 +217,7 @@ public class StackManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             _commandBuffer.Enqueue(new CounterClockwiseRotateCommand(this));
-            soundEffectPlayer.PlaySoundEffect(moveSound);
+            soundEffectPlayer.PlaySoundEffect(rotateSound);
         }
 
         if (Input.GetKeyDown(KeyCode.F4))
@@ -226,17 +237,17 @@ public class StackManager : MonoBehaviour
         // 3. Alt + Tab 트리거 체크
         if (CheckBackTile()) 
         {
-            // 1. 파티클의 Main 모듈을 가져옵니다.
+            // 파티클의 Main 모듈을 가져옴
             var main = particle.main;
-        
-            // 2. 불필요한 비교 없이, 비활성화된 타일의 색상으로 바로 설정합니다.
-            main.startColor = _deactivatedTileColor;
+            
+            if ( mapManager.IsFirstRoot()) main.startColor = new Color(144/255f,57/255f,205/255f); //보라색
+            else main.startColor = Color.white;
 
-            // 3. 파티클이 재생 중이 아닐 때만 Play()를 호출하여 효율을 높입니다.
+            // 3. 파티클이 재생 중이 아닐 때만 Play 호출
             if (!particle.isPlaying)
             {
                 // 트리거 됐을 경우, 효과음 재생
-                soundEffectPlayer.PlaySoundEffect(triggerSound);
+                if(!_isTriggerd) soundEffectPlayer.PlaySoundEffect(triggerSound);
                 
                 particle.Play();
                 _isTriggerd = true;
@@ -256,85 +267,81 @@ public class StackManager : MonoBehaviour
         }
         
     }
+    
+    private void OnDisable()
+    {
+        //이벤트 추가
+        GameEvents.PlayerDied -= StopParticle;
+        GameEvents.StageCleared -= StopParticle;
+        GameEvents.InputLockChanged -= SetInputLock;
+    }
+    
+    private void OnDestroy()
+    {
+        // 유니티 에디터에서 랜덤으로 OnDestroy를 실행해서, 가끔 NullReferenceException 오류가 뜸
+        if (GameManager.Instance)
+        {
+            //파괴시, StackManager의 연결 해제
+            GameManager.Instance.UnregisterStackManager();
+        }
+    }
+    
+    #endregion
 
     public bool CheckBackTile()
     {
-        // 1. 플레이어의 월드 좌표(Vector3)를 타일맵의 셀 좌표(Vector3Int)로 변환합니다.
-        Vector3Int cellPosition = _deactivatedTilemap.WorldToCell(transform.position);
-        
-        Debug.Log(cellPosition);
-        
-        return _deactivatedTilemap.HasTile(cellPosition);
+        Transform inactiveMapRoot = mapManager.GetInactiveMapRoot();
+        if (inactiveMapRoot == null) return false;
+
+        // 플레이어 위치(transform.position)에 겹쳐 있는 모든 2D 충돌체 감지
+        Collider2D[] hitColliders = Physics2D.OverlapPointAll(transform.position);
+
+        foreach (var col in hitColliders)
+        {
+            // 감지된 충돌체가 '비활성화된 맵(백타일)'의 자식인지 확인
+            // 이 방식은 Z축이 달라도, 계층 구조가 깊어도 정확히 찾아냅니다.
+            if (col.transform.IsChildOf(inactiveMapRoot))
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
-    // 맵 전환을 처리하는 메서드
-    public void SwitchMap()
+    private void CheckForGround()
     {
-        Vector3 newPlayerPosition;
-    
-        // 현재 활성화된 맵을 기준으로 다른 맵으로 전환
-        if (_activatedTilemap == tilemapFirst)
-        {
-            _colliderFirst.enabled = false;
-            _colliderSecond.enabled = true;
-            
-            _activatedTilemap = tilemapSecond;
-            _deactivatedTilemap = tilemapFirst; //비활성화된 타일맵 표기
-            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, tilemapSecond.gameObject.transform.position.z - 10f);
-            
-            // Z 위치만 새로운 타일맵에 맞게 설정
-            newPlayerPosition = new Vector3(transform.position.x, transform.position.y, tilemapSecond.gameObject.transform.position.z);
-            
-            // 카메라 시야에서 보이지 않도록 규정
-            _mainCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Map 1")); // Map 1 Layer를 카메라의 Culling Mask에서 제거
-            _mainCamera.cullingMask |= 1 << LayerMask.NameToLayer("Map 2"); // Map 2 Layer를 카메라의 Culling Mask에서 추가
-
-        }
-        else
-        {
-            _colliderFirst.enabled = true;
-            _colliderSecond.enabled = false;
-            
-            _activatedTilemap = tilemapFirst;
-            _deactivatedTilemap = tilemapSecond; //비활성화된 타일맵 할당
-            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y,tilemapFirst.gameObject.transform.position.z - 10f);
+        // 중요: 물리 엔진에 변경된 트랜스폼 정보를 즉시 반영
+        Physics2D.SyncTransforms();
         
-            // Z 위치만 새로운 타일맵에 맞게 설정
-            newPlayerPosition = new Vector3(transform.position.x, transform.position.y, tilemapFirst.gameObject.transform.position.z);
-            
-            // 카메라 시야에서 보이지 않도록 규정
-            _mainCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Map 2")); // Map 2 Layer를 카메라의 Culling Mask에서 제거
-            _mainCamera.cullingMask |= 1 << LayerMask.NameToLayer("Map 1"); // Map 1 Layer를 카메라의 Culling Mask에서 추가
-            
+        Transform activeMapRoot = mapManager.GetActiveMapRoot();
+
+        if (activeMapRoot == null)
+        {
+            Debug.Log("No active map root found!");
+            PlayExplosion();
+            return;
         }
-        
-        // 맵이 전환되었으므로, 새로 비활성화된 타일맵에서 색상 값을 다시 가져와 갱신합니다.
-        _deactivatedTileColor = _deactivatedTilemap.color;
 
-        // 플레이어 위치 (Z축) 변경
-        transform.position = newPlayerPosition;
-        _isSwitched = true;
+        bool hasGround = false;
 
-    }
-    
-    private void CheckForGroundAfterSwitch()
-    {
-        // 1. 플레이어의 현재 월드 좌표를 가져옵니다.
-        Vector3 playerPosition = transform.position;
+        // 1. 현재 내 발밑(위치)에 있는 모든 2D 콜라이더를 가져옵니다.
+        Collider2D[] hitColliders = Physics2D.OverlapPointAll(transform.position);
 
-        // 2. 월드 좌표를 현재 활성화된 타일맵의 셀(그리드) 좌표로 변환합니다.
-        Vector3Int cellPosition = _activatedTilemap.WorldToCell(playerPosition);
+        foreach (var col in hitColliders)
+        {
+            // 2. 이 콜라이더가 '현재 활성화된 맵 루트'의 자식인지 확인합니다.
+            // 이 방식은 계층 구조가 아무리 깊어도(Grid 안에 있어도) 찾아냅니다.
+            if (col.transform.IsChildOf(activeMapRoot))
+            {
+                hasGround = true;
+                break;
+            }
+        }
 
-        // 3. 변환된 셀 좌표에 타일이 존재하는지 확인합니다.
-        bool hasGround = _activatedTilemap.HasTile(cellPosition);
-
-        // 4. 만약 타일이 없다면, 사망 처리를 합니다.
         if (!hasGround)
         {
-            Debug.Log("맵 전환 후 발밑에 타일이 없습니다! 사망 처리!");
-            
-            PlayExplosion(); // 사망 이벤트 발동
-             
+            Debug.Log("No Ground! Exploding...");
+            PlayExplosion();
         }
     }
 
@@ -344,13 +351,13 @@ public class StackManager : MonoBehaviour
         changePanelCanvasGroup.alpha = 1f;
 
         // 0.5초 대기
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.5f);
     
         // 2. CanvasGroup에 DOFade를 한 번만 호출하여 전체를 페이드 아웃
         changePanelCanvasGroup.DOFade(0f, 1.0f);
     
         // 1초 대기 (페이드 아웃 완료까지)
-        yield return new WaitForSeconds(1.0f);
+        //yield return new WaitForSeconds(1.0f);
 
         // 3. 필요하다면 여기서 상호작용을 막을 수 있습니다.
         // (어차피 알파값이 0이라 보이지 않으므로 필수는 아님)
@@ -359,6 +366,8 @@ public class StackManager : MonoBehaviour
 
         // 입력 가능하게
         GameEvents.RaiseInputLockChanged(false);
+
+        yield return null;
 
     }
 
@@ -376,7 +385,7 @@ public class StackManager : MonoBehaviour
 
         if (CheckGameOver())
         {
-            gameObject.GetComponent<BoxCollider2D>().enabled = false;
+            gameObject.GetComponent<Collider2D>().enabled = false;
 
             PlayExplosion();
             
@@ -384,10 +393,15 @@ public class StackManager : MonoBehaviour
         else if (CheckMapChange())
         {
             // 맵 전환
-            SwitchMap();
+            GameEvents.RaiseTileMapChanged();
+
+            //_isTriggerd = false;
             
-            // 맵 전환 직후, 플레이어 위치의 타일 유효성 검사 실행!
-            CheckForGroundAfterSwitch();
+            // Alt + Tab 로직을 작동했을 경우, 큐를 초기화해줘야함
+            ResetQueue();
+            
+            // 맵 전환 직후 아주 미세한 지연 후 바닥 체크 (물리 엔진 갱신 대기)
+            Invoke(nameof(CheckForGround), 0.02f);
             
             // 입력 막기
             GameEvents.RaiseInputLockChanged(true);
@@ -405,16 +419,14 @@ public class StackManager : MonoBehaviour
     
     bool CheckMapChange()
     {
-        return (_inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.Tab && !_isSwitched)
-               || (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.Tab && !_isSwitched);
+        return (_inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.Tab)
+               || (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.Tab);
     }
 
     void ResetQueue()
     {
         _inputQueue = new List<int>(new int[MaxQueueSize]);
         _stack = 0;
-
-        _isSwitched = false;
         
         //큐가 리셋 될 경우에도 발동
         OnInputQueueChanged?.Invoke();
@@ -422,7 +434,7 @@ public class StackManager : MonoBehaviour
 
     public void UpdateDirection(int rotation)
     {
-        _playerDirection = (PlayerDirection)(((int)_playerDirection + rotation) % 4);
+        _playerDirection = (PlayerDirection)(((int)_playerDirection + rotation + 4) % 4);
     }
 
     // ICommand 중 MoveCommand를 위한 메서드
@@ -436,14 +448,33 @@ public class StackManager : MonoBehaviour
             PlayerDirection.Up => Vector2.up,
             _ => Vector2.zero
         };
-                
-        _rigidbody2D.AddForce(moveDirection * forceAmount, ForceMode2D.Impulse);
+        
+        _lastMoveDirection = moveDirection; // 방향 기억
+        
+        //Ice타일 반영
+        if (_isOnIce)
+        {   
+            // 이미 얼음 위에서 다시 이동 명령을 내린 경우 (방향 전환 등), 기존 미끄러짐을 교체
+            if(_slideCoroutine !=null) StopCoroutine(_slideCoroutine);
+            _slideCoroutine = StartCoroutine(Slide(moveDirection));
+            SetInputLock(true);
+        }
+        else
+        {
+            _rigidbody2D.AddForce(moveDirection * forceAmount, ForceMode2D.Impulse);
+            SetInputLock(true);
+            Invoke(nameof(UnlockInputAfterMove),0.2f);
+        }
+        
+        //맵 밖으로 벗어났는지 체크
+        Invoke(nameof(CheckForGround), 0.1f);
+        
     }
 
     // ICommand 중 ClockwiseRotateCommand/CounterClockwiseRotateCommand를 위한 메서드
-    public void RotateArrow()
+    public void RotateArrow(bool immediate = false)
     {
-        float angle = _playerDirection switch
+        float targetAngle = _playerDirection switch
         {
             PlayerDirection.Right => 0f,
             PlayerDirection.Down => 270f,
@@ -452,23 +483,22 @@ public class StackManager : MonoBehaviour
             _ => 0f
         };
 
-        _isRotating = true;
-
-        arrow.transform
-            .DORotate(new Vector3(0, 0, angle), DOTweenDuration, RotateMode.FastBeyond360)
-            .SetEase(Ease.OutElastic)
-            .OnComplete(() =>
-            {
-                _isRotating = false;
-            });
-        
-        // Z축으로 90도만큼 '펀치'를 날렸다가 돌아옵니다.
-        // punch: 펀치의 강도 (회전할 각도)
-        // duration: 전체 애니메이션 시간
-        // vibrato: 흔들림 횟수 (많을수록 더 덜렁거림)
-        // elasticity: 탄성 (0~1 사이 값, 1에 가까울수록 더 많이 튕김)
-        transform.DOPunchRotation(punch: DOTweenPunch, duration: DOTweenDuration, vibrato: DOTweenVibrato, elasticity: 0.5f);
-        
+        if (immediate)
+        {
+            // 즉시 회전 (맵 회전 직후용)
+            arrow.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+        }
+        else
+        {
+            // 기존 애니메이션 방식
+            _isRotating = true;
+            arrow.transform
+                .DORotate(new Vector3(0, 0, targetAngle), DOTweenDuration)
+                .SetEase(Ease.OutElastic)
+                .OnComplete(() => { _isRotating = false; });
+            
+            transform.DOPunchRotation(DOTweenPunch, DOTweenDuration, DOTweenVibrato, 0.5f);
+        }
     }
 
     public int CheckInputQueue(int slot)
@@ -478,8 +508,11 @@ public class StackManager : MonoBehaviour
 
     public void PlayExplosion()
     {
-        Debug.Log("게임 오버!");
-        //GameManager.Instance.isGameOver = true;
+        // 이미 폭발 애니메이션이 재생 중이라면 중복 실행 방지
+        if (_animatior.GetCurrentAnimatorStateInfo(0).IsName("Explosion")) return;
+        
+        _rigidbody2D.velocity = Vector2.zero;
+        
         _animatior.Play("Explosion");
         arrow.SetActive(false);
         
@@ -489,19 +522,17 @@ public class StackManager : MonoBehaviour
         GameEvents.RaisePlayerDied(); //플레이어가 죽었다는 방송을 내보낸다
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void ReachedDestination()
     {
-        if (collision.CompareTag("Destination"))
-        {
-            Debug.Log("게임을 클리어하셨습니다.");
+        if (GameManager.Instance.isCleared) return; // 중복 실행 방지
+        
+        _animatior.Play("Clear");
+        arrow.SetActive(false);
             
-            _animatior.Play("Clear");
-            arrow.SetActive(false);
-            
-            GameManager.Instance.isCleared = true;
-            
-            StartCoroutine(StageClear(1.0f));
-        }
+        GameManager.Instance.isCleared = true;
+        
+        // 1초 뒤 코루틴 실행
+        StartCoroutine(StageClear(1.0f));
     }
 
     private void StopParticle()
@@ -523,14 +554,18 @@ public class StackManager : MonoBehaviour
         
         GameEvents.RaiseStageCleared(); //게임이 클리어 됐다는 방송을 내보냄
     }
-
-    private void OnDestroy()
+    
+    public void FreezePlayerPhysics(bool freeze)
     {
-        // 유니티 에디터에서 랜덤으로 OnDestroy를 실행해서, 가끔 NullReferenceException 오류가 뜸
-        if (GameManager.Instance)
-        {
-            //파괴시, StackManager의 연결 해제
-            GameManager.Instance.UnregisterStackManager();
-        }
+        _rigidbody2D.velocity = Vector2.zero;
+        _rigidbody2D.angularVelocity = 0f;
+        _rigidbody2D.simulated = !freeze;
     }
+
+    public bool IsRotating()
+    {
+        return _isRotating;
+    }
+
+
 }
