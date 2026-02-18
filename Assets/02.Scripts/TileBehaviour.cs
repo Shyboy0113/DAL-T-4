@@ -98,6 +98,16 @@ public class TileBehaviour : BaseTile
         {
             spriteRenderer.sprite = tileSprites[(int)tileType];
         }
+
+        if (tileType == TileType.StartTeleport)
+        {
+            teleportTarget = GameObject.FindObjectOfType<TileBehaviour>(); //씬에 존재하는 타일 중에서 EndTeleport 타입을 찾아서 할당
+        }
+        else
+        {
+            teleportTarget = null; // StartTeleport가 아닐 경우, 타겟 초기화
+        }
+
     }
 
     // 플레이어가 타일을 나갈 때 상태 리셋
