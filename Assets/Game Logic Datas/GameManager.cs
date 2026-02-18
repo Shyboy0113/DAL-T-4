@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
         GameEvents.PlayerDied += HandleGameOver;
         
         //이벤트 구독 추가
-        TileColliderTrigger.OnPlayerExitedTile += TileOut;
+        GameEvents.PlayerExitedTile += TileOut;
         
     }
 
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
         GameEvents.PlayerDied -= HandleGameOver;
         
         //이벤트 구독 해제
-        TileColliderTrigger.OnPlayerExitedTile -= TileOut;
+        GameEvents.PlayerExitedTile -= TileOut;
         
     }
 
