@@ -1,6 +1,3 @@
-
-// 키 입력 시퀀스를 담당하는 코드 모음 (인터페이스 및 커맨드 등)
-
 public interface ICommand
 {
     void Execute();
@@ -9,49 +6,37 @@ public interface ICommand
 public class ClockwiseRotateCommand : ICommand
 {
     private readonly StackManager _sm;
-    public ClockwiseRotateCommand(StackManager sm)
-    {
-        _sm = sm;
-    }
+    public ClockwiseRotateCommand(StackManager sm) => _sm = sm;
 
     public void Execute()
     {
-        
-        _sm.HandleInput(KeyType.Alt); // ALT 입력
-        _sm.UpdateDirection(1); // 시계 방향이므로 1을 전달하여 방향 업데이트
-        _sm.RotateArrow(); // 정방향 회전
+        _sm.HandleInput(KeyType.Alt);
+        _sm.UpdateDirection(1); 
+        _sm.RotateArrow(); 
     }
 }
-    
 
 public class CounterClockwiseRotateCommand : ICommand
 {
     private readonly StackManager _sm;
-    public CounterClockwiseRotateCommand(StackManager sm)
-    {
-        _sm = sm;
-    }
+    public CounterClockwiseRotateCommand(StackManager sm) => _sm = sm;
 
     public void Execute()
     {
-        _sm.HandleInput(KeyType.Tab); // Tab 입력
-        _sm.UpdateDirection(-1);// 반시계 방향이므로 -1을 전달하여 방향 업데이트
-        _sm.RotateArrow(); // 역방향 회전
+        _sm.HandleInput(KeyType.Tab);
+        _sm.UpdateDirection(-1);
+        _sm.RotateArrow();
     }
 }
 
 public class MoveCommand : ICommand
 {
     private readonly StackManager _sm;
-    public MoveCommand(StackManager sm)
-    {
-        _sm = sm;
-    }
+    public MoveCommand(StackManager sm) => _sm = sm;
 
     public void Execute()
     {
-        _sm.HandleInput(KeyType.F4); // F4 입력
+        _sm.HandleInput(KeyType.F4);
         _sm.MovePlayer();
-        GameEvents.RaisePlayerMoved(); // 플레이어가 움직였다는 이벤트 발동 (MainCameraMovement에서 수신)
     }
 }
