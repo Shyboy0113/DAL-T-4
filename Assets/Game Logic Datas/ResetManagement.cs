@@ -53,6 +53,14 @@ public class ResetManagement : MonoBehaviour
         
     }
 
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.R) && !_isRestart)
+        {
+            Restart();
+        }
+    }
+
     public void Restart()
     {
         // FadeOut 발동
