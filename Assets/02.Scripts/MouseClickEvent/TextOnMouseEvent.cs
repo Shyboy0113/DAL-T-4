@@ -11,19 +11,19 @@ public class TextOnMouseEvent : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private void Start()
     {
         _text = GetComponent<TMP_Text>();
-        _originalScale = transform.localScale;  // ¿ø·¡ ½ºÄÉÀÏ ÀúÀå
-        _originalColor = _text.color;  // ¿ø·¡ »ö»ó ÀúÀå
+        _originalScale = transform.localScale;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        _originalColor = _text.color;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        transform.localScale = _originalScale * 1.1f;  // ÀüÃ¼ Å©±â 1.1¹è Áõ°¡
-        _text.color = Color.yellow;  // »ö»óÀ» ³ë¶õ»öÀ¸·Î º¯°æ
+        transform.localScale = _originalScale * 1.1f;  // ï¿½ï¿½Ã¼ Å©ï¿½ï¿½ 1.1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        _text.color = Color.yellow;  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        transform.localScale = _originalScale;  // ¿ø·¡ Å©±â·Î º¹±Í
-        _text.color = _originalColor;  // ¿ø·¡ »ö»óÀ¸·Î º¹±Í
+        transform.localScale = _originalScale;  // ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        _text.color = _originalColor;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 }
