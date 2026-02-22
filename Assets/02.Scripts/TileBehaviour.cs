@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections; // 코루틴 사용
-using System; // [Flags] 사용
+using System;
+using System.Collections.Generic; // [Flags] 사용
 
 public enum TileType
 {
@@ -9,9 +10,9 @@ public enum TileType
     
     // 맵 회전 판정
     QuarterClockwiseRotation,
-    HalfClockRotation,
+    HalfClockwiseRotation,
     QuarterCounterClockwiseRotation,
-    HalfCounterClockRotation,
+    HalfCounterClockwiseRotation,
 
     // 텔레포트 판정
     StartTeleport,
@@ -56,19 +57,35 @@ public enum TileColor
     White = Red | Green | Blue
 }
 
+/*
+TileSprite 배치 순서
+0	None	빈 타일 혹은 기본 바닥
+1	QuarterClockwiseRotation	90도 시계 방향 회전 타일
+2	HalfClockRotation	180도 회전 타일
+3	QuarterCounterClockwiseRotation	90도 반시계 방향 회전 타일
+4	HalfCounterClockRotation	180도 반시계 방향 회전 타일
+5	StartTeleport	텔레포트 시작 (ID가 0일 때 기본 이미지)
+6	EndTeleport	텔레포트 도착 (ID가 0일 때 기본 이미지)
+7	Breakable	파괴 가능 타일 (breakableSprites 배열이 우선됨)
+8	Ice	얼음 타일 (미끄러짐)
+9	Stop	정지 타일
+10	FirstDestination	첫 번째 목적지
+11	SecondDestination	두 번째 목적지
+12	StepOnToggle	발판형 토글 스위치
+13	ToggleTargeted	토글 대상 타일
+14	TrapToggle	함정 토글 타일
+15	ActiveToggle	행동 횟수 토글
+16	MoveToggle	이동 횟수 토글
+17	RotationToggle	회전 횟수 토글
+18	ColorToggle	컬러 토글 스위치
+19	ConditionalToggle	조건부 토글 타일
+*/
+
 public class TileBehaviour : BaseTile
 {
-
     [Header("Scriptable Object Data")]
+    [SerializeField] private List<SOTileData> allDataAssets; // 모든 스크립터블 오브젝트가 포함돼있는 리스트
     [SerializeField] private SOTileData tileData; // ScriptableObject로 타일 데이터 관리
-
-    // --- 데이터 값 결정 로직 (Property) ---
-    private int CurrentMaxActivationCount => overrideStats ? overrideMaxActivationCount : (tileData ? tileData.baseMaxActivationCount : maxActivationCount);
-    private int CurrentBreakHitCount => overrideStats ? overrideBreakHitCount : (tileData ? tileData.baseBreakHitCount : breakHitCount);
-    private float CurrentBreakDelay => tileData ? tileData.baseBreakDelay : breakDelay;
-    private TileColor CurrentTileColor => overrideStats ? overrideColor : (tileData ? tileData.baseColor : TileColor.White);
-    private int CurrentToggleActivationCount => tileData ? tileData.baseToggleActivationCount : toggleActivationCount;
-
 
     [Header("Individual Overrides")]
     [SerializeField] private bool overrideStats = false;
@@ -76,8 +93,15 @@ public class TileBehaviour : BaseTile
     [SerializeField] private int overrideBreakHitCount = 2;
     [SerializeField] private TileColor overrideColor = TileColor.White;
 
+   // --- 데이터 값 결정 로직 (Property) ---
+    private int CurrentMaxActivationCount => overrideStats ? overrideMaxActivationCount : (tileData ? tileData.baseMaxActivationCount : maxActivationCount);
+    private int CurrentBreakHitCount => overrideStats ? overrideBreakHitCount : (tileData ? tileData.baseBreakHitCount : breakHitCount);
+    private float CurrentBreakDelay => tileData ? tileData.baseBreakDelay : breakDelay;
+    private TileColor CurrentTileColor => overrideStats ? overrideColor : (tileData ? tileData.baseColor : TileColor.White);
+    private int CurrentToggleActivationCount => tileData ? tileData.baseToggleActivationCount : toggleActivationCount;
+    
     [Header("Tile Settings")]
-    [SerializeField] private TileType manualTileType;
+    [SerializeField] private TileType manualTileType; 
     public TileType currentTileType => tileData != null ? tileData.tileType : manualTileType; // 외부에서 읽기 전용으로 접근
 
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -106,14 +130,96 @@ public class TileBehaviour : BaseTile
     private int _currentHit = 0;
 
     [Header("Toggle")]
-    [SerializeField] private bool isToggled = true;
+    [SerializeField] private bool isToggled = false;
     [SerializeField] private Sprite toggleOffSprite;
 
     [SerializeField] private int toggleActivationCount = 2;
     [SerializeField] private StackManager player; // stackCount 참조용
+
+    public bool IsReactiveTile()
+    {
+        return currentTileType == TileType.ToggleTargeted || 
+           //currentTileType == TileType.StepOnToggle ||
+           currentTileType == TileType.ActiveToggle ||
+           currentTileType == TileType.MoveToggle ||
+           currentTileType == TileType.RotationToggle ||
+           //currentTileType == TileType.ColorToggle ||
+           currentTileType == TileType.TrapToggle;
+    }
     
+    [Header("Animations")]
+    [SerializeField] private Animator animator;
+
+    private bool IsAnimatedTile()
+    {
+        return currentTileType == TileType.ToggleTargeted || 
+            currentTileType == TileType.StepOnToggle ||
+            currentTileType == TileType.ActiveToggle ||
+            currentTileType == TileType.MoveToggle ||
+            currentTileType == TileType.RotationToggle ||
+            currentTileType == TileType.ColorToggle ||
+            currentTileType == TileType.TrapToggle;
+    }
+
+    private Color GetUnityColor(TileColor tileColor)
+    {
+        return tileColor switch
+        {
+            TileColor.Black   => Color.black,
+            TileColor.Blue    => Color.blue,
+            TileColor.Green   => Color.green,
+            TileColor.Red     => Color.red,
+            TileColor.Yellow  => Color.yellow,
+            TileColor.Cyan    => Color.cyan,
+            TileColor.Magenta => Color.magenta,
+            TileColor.White   => Color.white,
+            _                 => Color.white
+        };
+    }
+
+    #region Teleport Logic
     [Header("Teleport")]
     [SerializeField] private TileBehaviour teleportTarget;
+    [SerializeField] private int overrideTeleportID = 0;
+
+    private int CurrentTeleportID => overrideStats ? overrideTeleportID : (tileData? tileData.baseTeleportID : 0);
+
+        private void FindTeleportTargetByID()
+    {
+        int myID = CurrentTeleportID;
+        if (myID == 0) return; // ID가 0이면 무시하거나 수동 연결 대기
+
+        // 맵상의 모든 TileBehaviour를 탐색 (FindObjectsSortMode는 성능을 위해 None)
+        TileBehaviour[] allTiles = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None);
+        TileBehaviour foundTarget = null;
+        int matchCount = 0;
+
+        foreach (var tile in allTiles)
+        {
+            // 타입이 EndTeleport이고 ID가 일치하는지 확인
+            if (tile.currentTileType == TileType.EndTeleport && tile.CurrentTeleportID == myID)
+            {
+                foundTarget = tile;
+                matchCount++;
+            }
+        }
+
+        // --- Fat Finger 디버깅 로직 ---
+        if (matchCount > 1)
+        {
+            // 에러 로그에 해당 오브젝트를 첨부하여 하이라이트되게 함
+            Debug.LogError($"<color=red>[Teleport Error]</color> 중복된 <b>EndTeleport ID</b> 발견! (ID: {myID}). 현재 맵에 {matchCount}개가 존재합니다.", gameObject);
+        }
+        else if (foundTarget == null)
+        {
+            Debug.LogWarning($"<color=yellow>[Teleport Warning]</color> ID {myID}에 해당하는 <b>EndTeleport</b>를 찾지 못했습니다.", gameObject);
+        }
+
+        // 찾은 타겟을 할당 (중복일 경우 마지막에 찾은 것으로 일단 할당됨)
+        teleportTarget = foundTarget;
+    }
+
+    #endregion
 
     private Tilemap _tilemap;
 
@@ -122,10 +228,45 @@ public class TileBehaviour : BaseTile
         _tilemap = GetComponentInParent<Tilemap>();
         _effectSound = GetComponentInParent<AudioSource>();
         
+        if (animator == null) animator = GetComponent<Animator>();
+        animator.enabled = IsAnimatedTile();
+        
         if (player == null) player = FindObjectOfType<StackManager>();
 
-        UpdateSprite();
+        // StartTeleport 타일일 경우, SOTileData 내부의 teleportID가 동일한 EndTeleport 타일을 자동으로 탐색
+        if (currentTileType == TileType.StartTeleport)
+        {
+            FindTeleportTargetByID();
+        }
+
+        UpdateVisuals();
+
     }
+
+    #if UNITY_EDITOR
+    private void OnValidate()
+    {
+
+        // 리스트가 비어있으면 무시
+        if (allDataAssets == null || allDataAssets.Count == 0) return;
+        
+        // 현재 manualTileType과 일치하는 데이터를 리스트에서 찾음
+        SOTileData matchedData = allDataAssets.Find(data => data != null && data.tileType == manualTileType);
+
+        // 찾은 데이터가 현재 tileData와 다르다면 자동으로 할당
+        if (matchedData != null && tileData != matchedData)
+        {
+            tileData = matchedData;
+            
+            // 데이터가 바뀌었으므로 시각적 요소(Sprite, Animation)도 즉시 갱신
+            UpdateVisuals(); 
+            
+            // 에디터에서 변경사항이 저장되도록 표시
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+    }
+
+    #endif
 
     private void OnEnable()
     {
@@ -164,6 +305,8 @@ public class TileBehaviour : BaseTile
 
     private void HandleColorToggle(TileColor color)
     {
+        if (currentTileType == TileType.ColorToggle) return; // 스위치는 신호를 받아도 변하지 않음
+
         if ((CurrentTileColor & color) != 0) // 비트 플래그 검사
         {
             ToggleState();
@@ -189,32 +332,88 @@ public class TileBehaviour : BaseTile
     {
         isToggled = !isToggled;
 
-        UpdateSprite();
+        UpdateVisuals();
 
         if (GetComponent<Collider2D>() is Collider2D col) col.enabled = isToggled;
         if (currentTileType == TileType.RotationToggle && !isToggled && _isPlayerOnMe && player != null) player.PlayExplosion();
     }
 
+    // 애니메이션 추가로 생성된 코드
+    private void UpdateVisuals()
+    {
+
+        UpdateSprite();
+
+        // 애니메이션을 사용하는 타일일 경우
+        if (animator != null && animator.enabled)
+        {
+            string stateName = currentTileType.ToString();
+            if (!isToggled) stateName = "Reverse" + stateName;
+
+            // Transition 없이 즉시 해당 애니메이션의 0초 지점으로 이동
+            animator.Play(stateName, 0, 0f);
+        }
+    }
+
     private void UpdateSprite()
     {
         if (spriteRenderer == null) return;
+
+        // 🎨 색상 적용 조건: 신호를 보내는 'ColorToggle' 이거나, 신호를 받는 'ToggleTargeted' 일 때
+        if (currentTileType == TileType.ColorToggle || currentTileType == TileType.ToggleTargeted)
+        {
+            spriteRenderer.color = GetUnityColor(CurrentTileColor); // 결정된 색상 적용
+        }
+        else
+        {
+            spriteRenderer.color = Color.white; // 그 외 일반 버튼이나 타일은 기본색
+        }
+
+        // Toggle 로직
         if (currentTileType == TileType.ToggleTargeted || currentTileType == TileType.ColorToggle)
         {
             spriteRenderer.sprite = isToggled ? tileSprites[(int)currentTileType] : toggleOffSprite;
             return;
         }
-        if (currentTileType == TileType.Breakable && breakableSprites?.Length > 0)
-            spriteRenderer.sprite = breakableSprites[Mathf.Clamp(_currentHit, 0, breakableSprites.Length - 1)];
-        else if (tileSprites != null && (int)currentTileType < tileSprites.Length)
-            spriteRenderer.sprite = tileSprites[(int)currentTileType];        
-    }
 
+        // breakable 로직
+        if (currentTileType == TileType.Breakable && breakableSprites?.Length > 0)
+        {    
+            spriteRenderer.sprite = breakableSprites[Mathf.Clamp(_currentHit, 0, breakableSprites.Length - 1)];
+        }
+        else if (tileSprites != null && (int)currentTileType < tileSprites.Length)
+        {
+            spriteRenderer.sprite = tileSprites[(int)currentTileType];        
+        }
+
+        // Teleport 로직
+        if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
+        {
+            int id = CurrentTeleportID;
+
+            if (id>0 && id < tileSprites.Length)
+            {
+                spriteRenderer.sprite = tileSprites[(int)currentTileType + id];
+                
+            }
+            else
+            {
+                spriteRenderer.sprite = tileSprites[(int)currentTileType];
+            }
+
+            return;
+        }
+
+    }
 
     protected override void OnPlayerEnter(StackManager player)
     {
         _isPlayerOnMe = true;
-        if (CurrentMaxActivationCount != -1 && _currentActivationCount >= maxActivationCount) return;
+        if (CurrentMaxActivationCount != -1 && _currentActivationCount >= CurrentMaxActivationCount) return;
+        
         if (_isWaitExit) return;
+        _isWaitExit = true;
+
         _currentActivationCount++;
         
         if (IsRotationTile() || currentTileType == TileType.Ice || currentTileType == TileType.Stop || currentTileType == TileType.StartTeleport)
@@ -228,7 +427,7 @@ public class TileBehaviour : BaseTile
             if (rotationSound) _effectSound.PlayOneShot(rotationSound);
             break;
             
-            case TileType.HalfClockRotation:
+            case TileType.HalfClockwiseRotation:
             RotateTile(-180f);
             if (rotationSound) _effectSound.PlayOneShot(rotationSound);
             break;
@@ -238,7 +437,7 @@ public class TileBehaviour : BaseTile
             if (rotationSound) _effectSound.PlayOneShot(rotationSound);
             break;
 
-            case TileType.HalfCounterClockRotation: 
+            case TileType.HalfCounterClockwiseRotation: 
             RotateTile(180f);
             if (rotationSound) _effectSound.PlayOneShot(rotationSound);
             break;
@@ -282,9 +481,11 @@ public class TileBehaviour : BaseTile
             break;
 
             case TileType.ActiveToggle:
+            if (!isToggled) player.PlayExplosion();
             break;
 
             case TileType.MoveToggle:
+            if (!isToggled) player.PlayExplosion();
             break;            
 
             case TileType.RotationToggle: 
@@ -292,6 +493,7 @@ public class TileBehaviour : BaseTile
             break;
 
             case TileType.ColorToggle:
+            GameEvents.RaiseColorToggleTriggered(CurrentTileColor);
             break;
 
             case TileType.ConditionalToggle:
@@ -311,8 +513,8 @@ public class TileBehaviour : BaseTile
     }
 
     private bool IsRotationTile(){    
-        return currentTileType == TileType.HalfClockRotation ||
-               currentTileType == TileType.HalfCounterClockRotation ||
+        return currentTileType == TileType.HalfClockwiseRotation ||
+               currentTileType == TileType.HalfCounterClockwiseRotation ||
                currentTileType == TileType.QuarterClockwiseRotation ||
                currentTileType == TileType.QuarterCounterClockwiseRotation;
     }
