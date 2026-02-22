@@ -399,7 +399,7 @@ public class StackManager : MonoBehaviour
             StartCoroutine(FadeSwitchPanel()); // 패널 변경 이벤트 시작
 
             // 맵 전환 직후 아주 미세한 지연 후 바닥 체크 (물리 엔진 갱신 대기)
-            Invoke(nameof(CheckForGround), 0.02f);
+            Invoke(nameof(CheckForGround), 1.0f);
 
             GameEvents.RaiseInputLockChanged(false); // 입력 잠금 해제 이벤트
         }
