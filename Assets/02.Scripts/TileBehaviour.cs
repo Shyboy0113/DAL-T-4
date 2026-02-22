@@ -104,8 +104,12 @@ public class TileBehaviour : BaseTile
     [SerializeField] private TileType manualTileType; 
     public TileType currentTileType => tileData != null ? tileData.tileType : manualTileType; // 외부에서 읽기 전용으로 접근
 
-    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite[] tileSprites;
+
+    // ColorTile일 경우 검정색일 때 버튼이 사라지는 문제 해결
+    [Header("Renderers")]
+    [SerializeField] private SpriteRenderer bgRenderer;   // 하얀 배경용 (항상 흰색)
+    [SerializeField] private SpriteRenderer iconRenderer; // 가운데 버튼/아이콘용 (색상 변경)
 
     [Header("Activation & Stats")]
     [SerializeField] private int maxActivationCount = -1;
@@ -165,7 +169,7 @@ public class TileBehaviour : BaseTile
     {
         return tileColor switch
         {
-            TileColor.Black   => Color.black,
+            TileColor.Black   => new Color(50/255f, 50/255f, 50/255f, 1f),
             TileColor.Blue    => Color.blue,
             TileColor.Green   => Color.green,
             TileColor.Red     => Color.red,
@@ -246,24 +250,20 @@ public class TileBehaviour : BaseTile
     #if UNITY_EDITOR
     private void OnValidate()
     {
-
-        // 리스트가 비어있으면 무시
-        if (allDataAssets == null || allDataAssets.Count == 0) return;
-        
-        // 현재 manualTileType과 일치하는 데이터를 리스트에서 찾음
-        SOTileData matchedData = allDataAssets.Find(data => data != null && data.tileType == manualTileType);
-
-        // 찾은 데이터가 현재 tileData와 다르다면 자동으로 할당
-        if (matchedData != null && tileData != matchedData)
+        // [자동 할당] manualTileType에 맞는 SOTileData를 리스트에서 찾아 할당
+        if (allDataAssets != null && allDataAssets.Count > 0)
         {
-            tileData = matchedData;
-            
-            // 데이터가 바뀌었으므로 시각적 요소(Sprite, Animation)도 즉시 갱신
-            UpdateVisuals(); 
-            
-            // 에디터에서 변경사항이 저장되도록 표시
-            UnityEditor.EditorUtility.SetDirty(this);
+            SOTileData matchedData = allDataAssets.Find(data => data != null && data.tileType == manualTileType);
+            if (matchedData != null && tileData != matchedData)
+            {
+                tileData = matchedData;
+                UnityEditor.EditorUtility.SetDirty(this);
+            }
         }
+
+        // [즉시 갱신] 인스펙터의 수치나 타입이 바뀔 때마다 스프라이트와 색상을 다시 그림
+        UpdateVisuals();
+
     }
 
     #endif
@@ -341,7 +341,6 @@ public class TileBehaviour : BaseTile
     // 애니메이션 추가로 생성된 코드
     private void UpdateVisuals()
     {
-
         UpdateSprite();
 
         // 애니메이션을 사용하는 타일일 경우
@@ -357,53 +356,41 @@ public class TileBehaviour : BaseTile
 
     private void UpdateSprite()
     {
-        if (spriteRenderer == null) return;
+        if (bgRenderer == null || iconRenderer == null) return;
 
-        // 🎨 색상 적용 조건: 신호를 보내는 'ColorToggle' 이거나, 신호를 받는 'ToggleTargeted' 일 때
-        if (currentTileType == TileType.ColorToggle || currentTileType == TileType.ToggleTargeted)
+        // 1. 공통 배경 설정
+        bgRenderer.sprite = tileSprites[0]; // 0번을 기본 배경으로 사용
+        bgRenderer.color = Color.white;
+
+        // 2. 아이콘 색상 설정
+        iconRenderer.color = (currentTileType == TileType.ColorToggle || IsReactiveTile()) 
+                            ? GetUnityColor(CurrentTileColor) 
+                            : Color.white;
+
+        // 3. 상황에 맞는 아이콘 스프라이트 선택 (불필요한 중복 제거 및 통합)
+        Sprite nextIcon = null;
+
+        if (currentTileType == TileType.Breakable && breakableSprites?.Length > 0)
         {
-            spriteRenderer.color = GetUnityColor(CurrentTileColor); // 결정된 색상 적용
+            nextIcon = breakableSprites[Mathf.Clamp(_currentHit, 0, breakableSprites.Length - 1)];
+        }
+        else if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
+        {
+            int id = CurrentTeleportID;
+            int spriteIdx = (int)currentTileType + (id > 0 ? id : 0);
+            nextIcon = (spriteIdx < tileSprites.Length) ? tileSprites[spriteIdx] : tileSprites[(int)currentTileType];
+        }
+        else if (currentTileType == TileType.ToggleTargeted)
+        {
+            nextIcon = isToggled ? tileSprites[(int)currentTileType] : toggleOffSprite;
         }
         else
         {
-            spriteRenderer.color = Color.white; // 그 외 일반 버튼이나 타일은 기본색
+            nextIcon = tileSprites[(int)currentTileType];
         }
 
-        // Toggle 로직
-        if (currentTileType == TileType.ToggleTargeted || currentTileType == TileType.ColorToggle)
-        {
-            spriteRenderer.sprite = isToggled ? tileSprites[(int)currentTileType] : toggleOffSprite;
-            return;
-        }
-
-        // breakable 로직
-        if (currentTileType == TileType.Breakable && breakableSprites?.Length > 0)
-        {    
-            spriteRenderer.sprite = breakableSprites[Mathf.Clamp(_currentHit, 0, breakableSprites.Length - 1)];
-        }
-        else if (tileSprites != null && (int)currentTileType < tileSprites.Length)
-        {
-            spriteRenderer.sprite = tileSprites[(int)currentTileType];        
-        }
-
-        // Teleport 로직
-        if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
-        {
-            int id = CurrentTeleportID;
-
-            if (id>0 && id < tileSprites.Length)
-            {
-                spriteRenderer.sprite = tileSprites[(int)currentTileType + id];
-                
-            }
-            else
-            {
-                spriteRenderer.sprite = tileSprites[(int)currentTileType];
-            }
-
-            return;
-        }
-
+        // 4. 최종 적용
+        iconRenderer.sprite = nextIcon;
     }
 
     protected override void OnPlayerEnter(StackManager player)
