@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5937775037576796057}
   - component: {fileID: 1481428125126924597}
   - component: {fileID: 3339745399120780901}
+  - component: {fileID: 8483628763082414033}
   m_Layer: 6
   m_Name: TilePrefab
   m_TagString: Untagged
@@ -47,24 +48,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5838b1b652cf2234ba479ad80071a5eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileType: 0
+  allDataAssets:
+  - {fileID: 11400000, guid: 7b4ce66101976884892dbb9343d18309, type: 2}
+  - {fileID: 11400000, guid: 0e2a3bc359f8a3145824e0280d2e43ff, type: 2}
+  - {fileID: 11400000, guid: 5923a741380c9c048bb3566e3ffd9aec, type: 2}
+  - {fileID: 11400000, guid: 7634a9102da02d4419630a4ab6e33fa0, type: 2}
+  - {fileID: 11400000, guid: 2bdf739e702eac7489febb4ad0586772, type: 2}
+  - {fileID: 11400000, guid: c7bf68f73079ed6409a7bf296e88a432, type: 2}
+  - {fileID: 11400000, guid: 325012ca20586b645b5a20f2fa308600, type: 2}
+  - {fileID: 11400000, guid: c0bef3d78c536fd4c831a52d8fcc71e0, type: 2}
+  - {fileID: 11400000, guid: 54e5ea5f308f29e49bbd9d4b28e0507e, type: 2}
+  - {fileID: 11400000, guid: cd0c3a09875b736418adddf0c5849b82, type: 2}
+  - {fileID: 11400000, guid: c60c868e1d97a9e42a323bde803b98d2, type: 2}
+  - {fileID: 11400000, guid: cdb579040bd97194eab8023e7ad6492a, type: 2}
+  - {fileID: 11400000, guid: 7422d15c136646345b9a8156de02f737, type: 2}
+  - {fileID: 11400000, guid: 360f4e30471d3b94c9241f0caeb119c1, type: 2}
+  - {fileID: 11400000, guid: fd929f917ee898642bacbc0449047a1d, type: 2}
+  - {fileID: 11400000, guid: 5b4cf34c4048ee447a5356b3cf2b981e, type: 2}
+  - {fileID: 11400000, guid: 846db9a937b16024cae2e9461db79665, type: 2}
+  - {fileID: 11400000, guid: 64994b45d953ffb43aae9241e4bcf84d, type: 2}
+  - {fileID: 11400000, guid: 12d8d184f4bfbb241ad101f891efee2b, type: 2}
+  tileData: {fileID: 11400000, guid: 7b4ce66101976884892dbb9343d18309, type: 2}
+  overrideStats: 0
+  overrideMaxActivationCount: -1
+  overrideBreakHitCount: 2
+  overrideColor: -1
+  manualTileType: 0
   spriteRenderer: {fileID: 1481428125126924597}
   tileSprites:
   - {fileID: 21300000, guid: 2f0fd9bbe2a75af43861a313a3e47467, type: 3}
-  - {fileID: 21300000, guid: f0ce2e4208263694c90605736cfecaec, type: 3}
   - {fileID: 21300000, guid: 56df28303e309c44c8c5f5169316d8af, type: 3}
   - {fileID: 21300000, guid: c7cdc78a6321c4c419f56b150b3fb4ad, type: 3}
   - {fileID: 21300000, guid: 7669a85a88abfe64b8f56d597a4e3199, type: 3}
   - {fileID: 21300000, guid: ec1ae068a2341ab4faa6cbcb2061a8ac, type: 3}
-  - {fileID: 21300000, guid: 26a6211cc45417a4db921d859a712c08, type: 3}
-  - {fileID: 21300000, guid: b20d30e3505689e48bef56d887c4db44, type: 3}
   - {fileID: 21300000, guid: f2af15fccdd2def459f7951f35fac10e, type: 3}
   - {fileID: 21300000, guid: 0e141d726758c044696530003d59db4d, type: 3}
   - {fileID: 21300000, guid: fd8c0b2698ccffd4381340c2a5001a30, type: 3}
+  - {fileID: 21300000, guid: 26a6211cc45417a4db921d859a712c08, type: 3}
+  - {fileID: 21300000, guid: b20d30e3505689e48bef56d887c4db44, type: 3}
   - {fileID: 21300000, guid: 10c23f8196303b145b91461fd1f0bdbe, type: 3}
   - {fileID: 21300000, guid: 63ac0ef9dd4d5704dbb3ff17c9d97823, type: 3}
+  - {fileID: 21300000, guid: b8cdf20374a64a44ba47beeff624f7c7, type: 3}
+  - {fileID: 21300000, guid: 7910324fb2c66cb41b9da9b1af664a9e, type: 3}
+  - {fileID: 21300000, guid: 4afe34a93e8cf7745a6cf167eda7a12a, type: 3}
+  - {fileID: 21300000, guid: cd78dcd87e3102b439e7623016a44421, type: 3}
+  - {fileID: 21300000, guid: 224a6ad60cdb9924aa963c4a50a6c4e0, type: 3}
+  - {fileID: 21300000, guid: 2dd25aedacf88c84493e163312938989, type: 3}
+  - {fileID: 21300000, guid: 7f4aef830935d9641ba58b17881ad397, type: 3}
+  - {fileID: 21300000, guid: 4ac8e7ea0544f9849998edbe4534d4e6, type: 3}
   maxActivationCount: -1
-  customRotationAngle: 90
+  toggleSound: {fileID: 0}
   rotationSound: {fileID: 8300000, guid: 1c1baf53e73a70a458a1dbea2768b151, type: 3}
   crackSound: {fileID: 8300000, guid: 0fd2b5920bf112347a0aa74d9e2f78b4, type: 3}
   breakSound: {fileID: 8300000, guid: 2f881375b96639f49856bef4a9a3221f, type: 3}
@@ -74,7 +107,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: beb7b245bbe7398428be67e9ba549f69, type: 3}
   breakHitCount: 2
   breakDelay: 0.5
+  isToggled: 0
+  toggleOffSprite: {fileID: 0}
+  toggleActivationCount: 2
+  player: {fileID: 0}
+  animator: {fileID: 0}
   teleportTarget: {fileID: 0}
+  overrideTeleportID: 0
 --- !u!82 &5937775037576796057
 AudioSource:
   m_ObjectHideFlags: 0
@@ -268,3 +307,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!95 &8483628763082414033
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6008541588933117872}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 990c0844d72299b42a56a78fae981901, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
