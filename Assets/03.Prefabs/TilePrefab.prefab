@@ -288,7 +288,7 @@ MonoBehaviour:
   bgRenderer: {fileID: 4596620451026543370}
   iconRenderer: {fileID: 4951251146867796789}
   maxActivationCount: -1
-  toggleSound: {fileID: 0}
+  toggleSound: {fileID: 8300000, guid: 21ce263de1312d247a2ecb44238a23f3, type: 3}
   rotationSound: {fileID: 8300000, guid: 1c1baf53e73a70a458a1dbea2768b151, type: 3}
   crackSound: {fileID: 8300000, guid: 0fd2b5920bf112347a0aa74d9e2f78b4, type: 3}
   breakSound: {fileID: 8300000, guid: 2f881375b96639f49856bef4a9a3221f, type: 3}

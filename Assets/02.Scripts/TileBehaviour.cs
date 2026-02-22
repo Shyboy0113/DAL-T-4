@@ -161,7 +161,7 @@ public class TileBehaviour : BaseTile
             currentTileType == TileType.ActiveToggle ||
             currentTileType == TileType.MoveToggle ||
             currentTileType == TileType.RotationToggle ||
-            currentTileType == TileType.ColorToggle ||
+            //currentTileType == TileType.ColorToggle ||
             currentTileType == TileType.TrapToggle;
     }
 
