@@ -451,12 +451,18 @@ public class TileBehaviour : BaseTile
             break;
 
             case TileType.FirstDestination:
-            player.ReachedDestination();
-            break;
+                if (player.IsFirstTile())
+                {
+                    player.ReachedDestination();
+                }
+                break;
 
-            case TileType.SecondDestination: 
-            player.ReachedDestination();
-            break;
+            case TileType.SecondDestination:
+                if (!player.IsFirstTile())
+                {
+                    player.ReachedDestination();
+                }
+                break;
 
             case TileType.StepOnToggle:
             GameEvents.RaiseToggleTriggered(-1); // -1일 경우 
