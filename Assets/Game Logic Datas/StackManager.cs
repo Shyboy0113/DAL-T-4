@@ -556,4 +556,9 @@ public class StackManager : MonoBehaviour
         _rigidbody2D.simulated = !freeze;
     }
 
+    public bool IsFirstTile() // TileBehaviour의 FirstDestination/SecondDestination의 OnPlayerEnter에서 사용
+    {
+        return mapManager.IsFirstRoot();
+    }
+
 }
