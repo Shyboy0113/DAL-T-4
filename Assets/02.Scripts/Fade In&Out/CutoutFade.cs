@@ -26,30 +26,22 @@ public class CutoutFade : MonoBehaviour
     
     private void Start()
     {
-        
-        // 씬 시작 시 FadeIn 연출 (이 부분은 그대로 둬도 좋습니다)
-        StartCoroutine(IFadeIn());
-        
         //if (background != null) background.sizeDelta = new Vector2(Screen.width , Screen.height);
         if (background != null) background.sizeDelta = new Vector2(1920 , 1080);
         
     }
-
-    IEnumerator IFadeIn()
-    {
-        // 씬 로드 후 약간의 딜레이를 위함
-        yield return new WaitForSeconds(0.5f);
-        FadeIn();
-    }
     
     // UI의 크기를 0에서 해상도의 2배로 확장시켜 화면을 덮습니다.
-    public void FadeIn()
+    public void FadeIn(Action onFadeComplete = null)
     {
         // FadeIn은 특별한 콜백이 필요 없으므로 그대로 둡니다.
         rectTransform.sizeDelta = Vector2.zero;
         //Vector2 targetSize = new Vector2(Screen.width * 2, Screen.height * 2);
         Vector2 targetSize = new Vector2(1920 * 2, 1080 * 2);
-        rectTransform.DOSizeDelta(targetSize, fadeDuration).SetEase(easeType);
+        rectTransform.DOSizeDelta(targetSize, fadeDuration).SetEase(easeType).OnComplete(() =>
+        {
+            onFadeComplete?.Invoke();
+        });
     }
 
     public void ResizeResolution()
@@ -73,17 +65,5 @@ public class CutoutFade : MonoBehaviour
                 // 이 블록 안의 코드는 애니메이션이 '정말로' 끝났을 때 실행됩니다.
                 onFadeComplete?.Invoke();
             });
-    }
-
-    public void ClearFadeOut() //스테이지를 클리어 했을 때의 FadeOut
-    {
-        StartCoroutine(IFadeOut());
-    }
-
-    IEnumerator IFadeOut()
-    {
-        yield return new WaitForSeconds(1.5f);
-        
-        FadeOut();
     }
 }
