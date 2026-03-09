@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Windows;
+using Input = UnityEngine.Input;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,8 +11,6 @@ public class GameManager : MonoBehaviour
         GameEvents.StageCleared += GameClear;
         GameEvents.PlayerDied += HandleGameOver;
         
-        //이벤트 구독 추가
-        GameEvents.PlayerExitedTile += TileOut;
         
     }
 
@@ -22,9 +19,6 @@ public class GameManager : MonoBehaviour
         // 오브젝트가 비활성화될 때 구독을 해제합니다. (메모리 누수 방지)
         GameEvents.StageCleared -= GameClear;
         GameEvents.PlayerDied -= HandleGameOver;
-        
-        //이벤트 구독 해제
-        GameEvents.PlayerExitedTile -= TileOut;
         
     }
 
@@ -57,6 +51,10 @@ public class GameManager : MonoBehaviour
     public bool isGameOver = false;
     public bool isCleared = false;
 
+    public bool canUseF4 = true;
+    public bool canUseLeftALT = true;
+    public bool canUseTAB = false;
+    
     // 도전 과제용 데이터
     public float currentTime;
     public int pushedNumberALT;
@@ -68,6 +66,12 @@ public class GameManager : MonoBehaviour
     public GameObject pausePanel;
     private bool _pausePanelActivity;
 
+    public void GetCurrentStageData(MapDataLoader mapDataLoader)
+    {
+        // 현재 맵 데이터 불러오기
+        currentStageData = mapDataLoader.GetStageData(chapter, stage);
+    }
+    
     void Awake()
     {
         // 싱글톤 구현
@@ -166,14 +170,6 @@ public class GameManager : MonoBehaviour
         pushedNumberALT = 0;
         pushedNumberF4 = 0;
         pushedNumberTAB = 0;
-    }
-
-    public void TileOut()
-    {
-        if (_stackManager)
-        {
-            _stackManager.PlayExplosion();
-        }
     }
 
     private void OnDestroy()

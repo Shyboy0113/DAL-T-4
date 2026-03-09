@@ -1,7 +1,6 @@
-using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using DG.Tweening;
 
 /*
 싱글톤에 기존 찌꺼기 데이터들이 남아있지 않게 초기 설정해주는 스크립트입니다.
@@ -11,82 +10,159 @@ using DG.Tweening;
 */
 
 public class ResetManagement : MonoBehaviour
-{    
+{   
+    [SerializeField] private StageLoader stageLoader; // 맵 생성 담당 스크립트
     [SerializeField] private CutoutFade cutoutFade; //Fade용
+    [SerializeField] private StackManager player;
 
-    // 재시작 버튼을 눌렀을 경우에 bool 값
-    private bool _isRestart;
+    [SerializeField] private CanvasGroup changePanelCanvasGroup;
+    [SerializeField] private GameObject howToPlayPanel;
     
-    // 스테이지에 할당되는 BGM 할당
-    [SerializeField] private AudioClip audioClip; //각 스테이지별로 할당되는 오디오클립(mp3)
+    private bool _isRestart = false;
+    private bool _isProcessing = false; // 초기화 로직이 중복 실행되는 것 방지
 
-    [Header("인스펙터 창에서 직접 입력해야 하는 것")]
+    [SerializeField] private float time = 1.5f;
     
-    // 스테이지 정보
-    [SerializeField] private string currentStageName;
-    [SerializeField] private string nextStageName;
-
-    // 마지막 스테이지인지에 대한 여부
-    public bool isEndStage;
-    
-    private void OnEnable()
+    private void Awake()
     {
-        GameEvents.StageCleared += NextStage;
-    }
-
-    private void OnDestroy()
-    {
-        GameEvents.StageCleared -= NextStage;
+        // 플레이어 초기화
+        if (player == null) player = FindObjectOfType<StackManager>();
     }
 
     private void Start()
     {
-        // bool 값 초기화
-        _isRestart = false;
-        isEndStage = false;
+        stageLoader.LoadStage(GameManager.Instance.chapter, GameManager.Instance.stage);
         
-        GameManager.Instance.ResetData();
-        GameManager.Instance.isCleared = false;
-        
-        //만약 SoundManager가 있을 경우, BGM 갱신
-        if(SoundManager.Instance is not null) SoundManager.Instance.RenewalBGM(audioClip, currentStageName);
-        
-    }
-
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.R) && !_isRestart)
+        cutoutFade.FadeIn(() =>
         {
-            Restart();
-        }
-    }
-
-    public void Restart()
-    {
-        // FadeOut 발동
-        cutoutFade.FadeOut();
+            GameEvents.RaiseInputLockChanged(false); 
+            
+        });
         
-        _isRestart = true; //재시작 bool을 true로 설정
-        Invoke("ChangeStage",1.0f);
-    }
-
-    public void NextStage()
-    {
-        cutoutFade.ClearFadeOut();
-        
-        Invoke("ChangeStage",5.0f);
+        GameManager.Instance.isCleared = false;
+        GameManager.Instance.ResetData();
     }
     
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.R) && !_isProcessing && !_isRestart)
+        {
+            RestartStage();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            ToggleMapUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ToggleHowToPlayPanel();
+        }
+    }
+    
+    private void OnEnable()
+    {
+        GameEvents.StageCleared += ChangeStage;
+    }
+    
+    private void OnDisable()
+    {
+        GameEvents.StageCleared -= ChangeStage;
+    }
+
+    public void ToggleHowToPlayPanel()
+    {
+        howToPlayPanel.SetActive(!howToPlayPanel.activeSelf);
+    }
+    
+    public void ToggleMapUI()
+    {
+        changePanelCanvasGroup.gameObject.SetActive(!changePanelCanvasGroup.gameObject.activeSelf);
+    }
+
+    public void RestartStage()
+    {
+        if (GameManager.Instance.isCleared) return;
+        
+        _isRestart = true;
+        ChangeStage();
+    }
+
     public void ChangeStage()
     {
-        // 씬을 로드하기 직전에 모든 DOTween 애니메이션을 깔끔하게 제거합니다.
-        DOTween.KillAll(); //이걸 안 하면 Dotween 기존 Scene에서의 Dotween 찌꺼기가 그대로 남아있음
+        if (_isProcessing) return; //이미 실행 중이면 무시
+        _isProcessing = true;
         
-        // 만약 재시작 버튼이라면 대기 후, 재시작
-        if (_isRestart) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        // 씬 이동 코드 추가
-        else if(isEndStage) SceneManager.LoadScene("StageSelect"); // buildIndex 바로 다음
-        else SceneManager.LoadScene(nextStageName);
+        GameEvents.RaiseInputLockChanged(true); // _isInputLocked true로 설정
         
+        if (_isRestart) StartCoroutine(IWait(0f));
+        else StartCoroutine(IWait(time));
+
+    }
+
+    private IEnumerator IWait(float time)
+    {
+        yield return new WaitForSeconds(time);
+        
+        //DOTween.KillAll();
+        
+        cutoutFade.FadeOut(() =>
+        {
+            StartCoroutine(IChangeStage());
+        });
+    }
+    
+    private IEnumerator IChangeStage()
+    {
+        if (!_isRestart)
+        {
+            int nextChapter = GameManager.Instance.chapter;
+            int nextStage = GameManager.Instance.stage + 1;
+
+            // 다음 스테이지가 존재하지 않는다면 (마지막 스테이지)
+            if (!stageLoader.LoadStage(nextChapter, nextStage))
+            {
+                nextChapter++;
+                nextStage = 1;
+
+                // 다음 챕터도 존재하지 않는다면 (게임 클리어)
+                if (!stageLoader.LoadStage(nextChapter, nextStage))
+                {
+                    // 추후 게임 클리어 관련 업적이나 축하 메세지 로직 추가
+                    SceneManager.LoadScene("StageSelect");
+                }
+            }
+
+            GameManager.Instance.chapter = nextChapter;
+            GameManager.Instance.stage = nextStage;
+        }
+        else
+        {
+            int chapter = GameManager.Instance.chapter;
+            int stage = GameManager.Instance.stage;
+            
+            stageLoader.LoadStage(chapter, stage);
+        }
+        
+        // 플레이어 초기화
+        player.InitPlayer();
+        GameEvents.RaiseInputLockChanged(true);
+        
+        GameEvents.RaiseStageRestarted(); //FadeText.Reset() 실행됨
+        
+        cutoutFade.FadeIn(() =>
+        {
+            // 데이터 리셋
+            GameManager.Instance.ResetData();
+            GameEvents.RaiseInputLockChanged(false);
+            
+            _isProcessing = false;
+            _isRestart = false;
+            
+        });
+        
+        yield return null;
+
     }
 }

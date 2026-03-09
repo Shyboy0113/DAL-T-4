@@ -4,7 +4,10 @@ using UnityEngine;
 
 public static class GameEvents
 {
+    //public static Directory<string, Action> action =
+    
     public static event Action StageCleared;
+    public static event Action StageRestarted;
     public static event Action PlayerDied;
     public static event Action<bool> InputLockChanged;
     public static event Action TileMapChanged;
@@ -14,13 +17,70 @@ public static class GameEvents
 
     // 플레이어가 타일을 벗어났을 때 작동하는 이벤트
 
-    public static event Action PlayerExitedTile;
-
+    public static event Action<bool> IsRotating;
+    
     public static event Action<int> ToggleTriggered; // StepOnToggle용
     public static event Action<int> PlayerActed;     // ActiveToggle용 (이동/회전 합산)
     public static event Action<int> PlayerMoved;     // MoveToggle용
     public static event Action<int> PlayerRotated;   // RotationToggle용
 
+    #region Command Pattern
+
+    public static event Action UndoTriggered; // Undo 발생 신호
+    public static event Action RedoTriggered;
+    public static event Action SaveStateBeforeAction;
+
+    // (undoCount , redoCount)
+    public static event Action<int, int> UndoRedoCountChanged;
+    
+    public static void RaiseUndoTriggered()
+    {
+        UndoTriggered?.Invoke();
+    }
+
+    public static void RaiseRedoTriggered()
+    {
+        RedoTriggered?.Invoke();
+    }
+
+    public static void RaiseSaveStateBeforeAction()
+    {
+        SaveStateBeforeAction?.Invoke();
+    }
+    
+    public static void RaiseUndoRedoCountChanged(int undoCount, int redoCount)
+    {
+        UndoRedoCountChanged?.Invoke(undoCount, redoCount);
+    }
+
+    #endregion
+
+    public static event Action<float> TileIconRotated;
+
+
+    #region Player/Enemy Turn
+
+    public static event Action<Vector3> OnEnemyTurnStarted;
+    public static event Action OnPlayerTurnStarted;
+
+    public static void RaiseEnemyTurnStarted(Vector3 playerPosition)
+    {
+        OnEnemyTurnStarted?.Invoke(playerPosition);
+    }
+    
+    public static void RaisePlayerTurnStarted()
+    {
+        OnPlayerTurnStarted?.Invoke();
+    }
+    
+    #endregion
+    
+    
+    public static void RaiseTileIconRotated(float angle)
+    {
+        TileIconRotated?.Invoke(angle);
+    }
+    
     public static void RaiseColorToggleTriggered(TileColor color)
     {
         ColorToggleTriggered?.Invoke(color);
@@ -71,8 +131,15 @@ public static class GameEvents
         TileMapRotated?.Invoke(cell, angle);
     }
 
-    public static void RaisePlayerExitedTile()
+    public static void RaiseStageRestarted()
     {
-        PlayerExitedTile?.Invoke();
+        StageRestarted?.Invoke();
     }
+    
+    public static void RaiseIsRotating(bool toggle)
+    {
+        IsRotating?.Invoke(toggle);
+    }
+
+    
 }
