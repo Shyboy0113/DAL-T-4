@@ -25,10 +25,10 @@ public class UndoRedoButtonUI : MonoBehaviour
 
     private void Start()
     {
-        StackManager sm = FindObjectOfType<StackManager>();
-        if (sm != null)
+        BehaviourManager behaviourManager = FindObjectOfType<BehaviourManager>();
+        if (behaviourManager != null)
         {
-            UpdateButtonState(sm.UndoCount, sm.RedoCount);
+            UpdateButtonState(behaviourManager.UndoCount, behaviourManager.RedoCount);
         }
     }
 

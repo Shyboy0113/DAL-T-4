@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 
 
-//°ÔÀÓ¸Å´ÏÀú¿¡¼­ »ç¿ëÇØ¾ßÇÏ±â ¶§¹®¿¡, StageData´Â ¹ÛÀ¸·Î »©³Â½À´Ï´Ù.
+//ï¿½ï¿½ï¿½Ó¸Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, StageDataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â½ï¿½ï¿½Ï´ï¿½.
 [System.Serializable]
 public class StageData
 {
@@ -29,7 +29,6 @@ public class StageData
 
 public class MapDataLoader : MonoBehaviour
 {
-    /////////////ÁßÃ¸ Å¬·¡½º///////////////////
     [System.Serializable]
     public class ChapterData
     {
@@ -42,8 +41,6 @@ public class MapDataLoader : MonoBehaviour
         public List<ChapterData> chapters;
     }
 
-    //////////////ÁßÃ¸ Å¬·¡½º//////////////////
-
     public GameData gameData;
 
     void Awake()
@@ -51,7 +48,6 @@ public class MapDataLoader : MonoBehaviour
         LoadGameData();
     }
     
-    //JSON ÆÄÀÏ¿¡¼­ ¸Ê µ¥ÀÌÅÍ ÀüÃ¼¸¦ ºÒ·¯¿É´Ï´Ù.
     void Previous_LoadGameData()
     {
         string path = Path.Combine(Application.dataPath, "Datas(Json...etc)", "mapData.json");
@@ -64,14 +60,12 @@ public class MapDataLoader : MonoBehaviour
         }
         else
         {
-            Debug.LogError("JSON ÆÄÀÏÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError("JSON Error!");
         }
     }
     
     void LoadGameData()
     {
-        // °æ·Î¸¦ ÁöÁ¤ÇÏ´Â ´ë½Å, Resources.Load¸¦ »ç¿ëÇÕ´Ï´Ù.
-        // È®ÀåÀÚ(.json)´Â ¾²Áö ¾Ê½À´Ï´Ù.
         TextAsset textAsset = Resources.Load<TextAsset>("mapData");
 
         if (textAsset != null)
@@ -82,11 +76,11 @@ public class MapDataLoader : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Resources Æú´õ¿¡¼­ mapData.json ÆÄÀÏÀ» Ã£À» ¼ö ¾ø½À´Ï´Ù.");
+            Debug.LogError("Resources mapData Error!");
         }
     }
 
-    //JSON ÆÄÀÏ·Î ºÒ·¯¿Â ¸Ê µ¥ÀÌÅÍ¿¡¼­, Æ¯Á¤ Ã©ÅÍÀÇ ½ºÅ×ÀÌÁö Á¤º¸¸¦ ºÒ·¯¿À´Â ÇÔ¼ö
+    
     public StageData GetStageData(int chapter, int stage)
     {
         foreach (var ch in gameData.chapters)

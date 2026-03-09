@@ -37,7 +37,7 @@ public class MapManager : MonoBehaviour
     private Transform _activatedRoot;
     private Transform _deactivatedRoot;
 
-    [SerializeField] private StackManager player;
+    [SerializeField] private PlayerBehaviour player;
 
     public bool IsFirstRoot()
     {
@@ -49,7 +49,7 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         _mainCamera = Camera.main;
-        player = FindObjectOfType<StackManager>();
+        player = FindObjectOfType<PlayerBehaviour>();
     }
 
     public void InitializeNewStage(GameObject stageRoot)

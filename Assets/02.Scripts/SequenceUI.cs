@@ -8,15 +8,15 @@ public class SequenceUI : MonoBehaviour
     private TMP_Text[] _tmp_Text = new TMP_Text[3];
 
     [SerializeField]
-    private StackManager _stackManager;
+    private PlayerBehaviour _playerBehaviour;
     
     private void UpdateUI()
     {
-        if (_stackManager is not null)
+        if (_playerBehaviour is not null)
         {
             for (int i = 0; i < 3; i++)
             {
-                int key = _stackManager.CheckInputQueue(i);
+                int key = _playerBehaviour.CheckInputQueue(i);
                 _tmp_Text[i].text = InputText(i, key);
             }
         }
@@ -42,21 +42,21 @@ public class SequenceUI : MonoBehaviour
 
     private void OnEnable()
     {
-        _stackManager = FindObjectOfType<StackManager>();
+        _playerBehaviour = FindObjectOfType<PlayerBehaviour>();
         
-        if (_stackManager != null)
+        if (_playerBehaviour != null)
         {
             // ◀️ StackManager의 이벤트에 UpdateUI 메서드를 구독
-            _stackManager.OnInputQueueChanged += UpdateUI;
+            _playerBehaviour.OnInputQueueChanged += UpdateUI;
             UpdateUI(); // ◀️ 시작할 때 한 번 초기화
         }
     }
 
     private void OnDestroy()
     {
-        if (_stackManager != null)
+        if (_playerBehaviour != null)
         {
-            _stackManager.OnInputQueueChanged -= UpdateUI;
+            _playerBehaviour.OnInputQueueChanged -= UpdateUI;
         }
     }
 

@@ -47,7 +47,7 @@ public class StageLoader : MonoBehaviour
 
     private void ResetPlayerStatus()
     {
-        var player = FindObjectOfType<StackManager>();
+        var player = FindObjectOfType<PlayerBehaviour>();
         if (player != null)
         {
             player.InitPlayer();

@@ -13,29 +13,44 @@ public enum KeyType { None = 0, Alt = 1, F4 = 2, Tab = 3 } // 입력 큐에 저�
 
 public enum PlayerDirection { Right, Down, Left, Up } //플레이어의 회전 방향을 Enum(문자)로 표시
 
-public class StackManager : MonoBehaviour
+public class PlayerBehaviour : MonoBehaviour
 {
-    #region Fields
+    #region Behaviour & References
+    [SerializeField] private BehaviourManager behaviourManager;
+    [SerializeField] private SoundEffectPlayer soundEffectPlayer;
+    
+    [SerializeField] private MapManager mapManager;
+    #endregion
+    
+    #region Fields & Stats
     private PlayerDirection _playerDirection = PlayerDirection.Right;
     
     // UI 이벤트
-
     public event Action OnInputQueueChanged; // SequenceUI의 Update 함수 비용 줄이기
     private int _stack = 0;
-
-    // 최대로 쌓을 수 있는 큐 스택을 상수로 선언
-
-    private const int MaxQueueSize = 3;
+    
+    private const int MaxQueueSize = 3; // 최대로 쌓을 수 있는 큐 스택을 상수로 선언
     private List<int> _inputQueue = new List<int>(new int[MaxQueueSize]);
-
-    // Rigidbody2D Logic
+    [SerializeField] private List<KeyType> _inputHistory = new List<KeyType>();
+    
+    public void UpdateSequenceCanvas(int amount)
+    {
+        _stack = Mathf.Clamp(_stack + amount, 0, MaxQueueSize);
+        if (amount < 0 && _stack < _inputQueue.Count) _inputQueue[_stack] = 0;
+        OnInputQueueChanged?.Invoke();
+    }
+    
+    [Header("Physical Effects")]
     private Rigidbody2D _rigidbody2D;
     [SerializeField] private float forceAmount = 1f;
-    
     private Collider2D _collider2D;
-
     public GameObject arrow; //플레이어에 달려있는 회전 방향 표시용 화살표
-
+    
+    public void StopVelocity()
+    {
+        _rigidbody2D.velocity = Vector2.zero;
+    }
+    
     // Animator
     [SerializeField] private Animator _animatior;
 
@@ -61,10 +76,9 @@ public class StackManager : MonoBehaviour
         rotationCount = Mathf.Max(0, rotationCount + count);
     }
     
-    [SerializeField] private SoundEffectPlayer soundEffectPlayer;
-
-    //DOTween 전용 변동 속도
-
+    #endregion
+    
+    #region DOTween & Effects
     public float DOTweenDuration;
     public Vector3 DOTweenPunch;
     public int DOTweenVibrato;
@@ -72,20 +86,17 @@ public class StackManager : MonoBehaviour
     //ALT + TAB trigger
     [SerializeField] private ParticleSystem particle; // 파티클 시스템
     private bool _isTriggerd = false; // Alt + Tab 트리거가 발동된 상태인지 추적하는 변수 (파티클과 효과음 제어용)
-
     #endregion
 
     #region InputLock
     private bool _isInputLocked = false;
-    private void SetInputLock(bool isLocked) => _isInputLocked = isLocked;
-
-    #endregion
-
-    [SerializeField] private MapManager mapManager;
     private bool _isRotating = false; // 회전중인지를 판단하는 bool 값
-    public bool IsRotating() => _isRotating; // 외부에서 회전 중인지 확인할 수 있는 public 메서드
-
+    private bool _isEnemyActing = false;
     private bool _isMapBusy = false;
+    private void SetInputLock(bool isLocked) => _isInputLocked = isLocked;
+    public bool IsRotating() => _isRotating; // 외부에서 회전 중인지 확인할 수 있는 public 메서드
+    
+    #endregion
     
     #region FadePanel
 
@@ -103,12 +114,10 @@ public class StackManager : MonoBehaviour
     #region IceMode
     private float _slideSpeed = 5f;
     private Vector2 _lastMoveDirection; // 마지막으로 움직인 방향을 기록
-
     private bool _isOnIce = false;
-    public bool IsOnIce() => _isOnIce;
-
     private Coroutine _slideCoroutine;
 
+    public bool IsOnIce() => _isOnIce;
     public void EnableIceMode(bool enable)
     {
         _isOnIce = enable;
@@ -200,36 +209,31 @@ public class StackManager : MonoBehaviour
     //ICommand 인터페이스를 상속받은 커맨드를 전부 모아놓은 버퍼
     private Queue<ICommand> _commandBuffer = new Queue<ICommand>(); //커맨드는 queue로 구현
 
-    private Stack<ICommand> _undoStack = new Stack<ICommand>(); // undo는 stack으로 구현
-    private Stack<ICommand> _redoStack = new Stack<ICommand>(); // redo용 stack
-    //redo란? ctrl + y 기능으로, ctrl + z로 undo한 기능들을 다시 되돌릴 수 있게하는 기능
+    public void SyncHistoryOnUndo()
+    {
+        if (_inputHistory.Count > 0)
+        {
+            _inputHistory.RemoveAt(_inputHistory.Count - 1);
+            RebuildUI();
+        }
+    }
 
-    [SerializeField] private List<KeyType> _inputHistory = new List<KeyType>();
-
-    // 입력횟수 % MaxQueueSize가 0일 경우,
-    // 입력 UI에 입력횟수.Length-3 입력횟수.Length-2 입력횟수.Length-1 UI에 출력
-    
-    // 입력횟수 % MaxQueueSize가 0이 아닐 경우 - 1일 때
-    // 입력횟수 - (입력횟수 % MaxQueueSize)부터 1개 출력
-    // [입력횟수 - (입력횟수 % MaxQueueSize)] - [공백] - [공백]
-    
-    // 입력횟수 % MaxQueueSize가 0이 아닐 경우 - 2일 때
-    // [입력횟수 - (입력횟수 % MaxQueueSize)] - [입력횟수 - (입력횟수 % MaxQueueSize)-1] - [공백]
-    
-    // 예시 - 입력7번, f4-f4-f4-alt-alt-alt-f4
-    // f4-f4-f4-alt-alt-alt까진 무시되고, 나머지 f4만 계산됨, 나머지 UI는 공백
-    // [f4]-[공백]-[공백]으로 출력됨
-    
-    //Undo와 Redo시에만 위 방법으로 계산하고, 일반 큐로 입력할 경우 Redo 삭제
-    
-    //Redo시에는 Redo용 Stack에서 값을 빼서, _inputHistory에도 집어넣어줘야 함
-    // 추가로 위의 UI 계산 로직을 적용시켜야 함
-    //Undo시에는 _inputHistory의 뒷 리스트 값을 삭제해줘야 함. 추가로 위의 UI 계산 로직
-    
+    // [추가] BehaviourManager가 Redo를 수행할 때 호출할 UI 동기화 함수
+    public void SyncHistoryOnRedo(KeyType key)
+    {
+        _inputHistory.Add(key);
+        RebuildUI();
+    }
     
     private void RecordInput(KeyType key)
     {
         _inputHistory.Add(key);
+    }
+
+    private void RedoRecordInput(KeyType key)
+    {
+        _inputHistory.Add(key);
+        RebuildUI();
     }
 
     private void RebuildUI()
@@ -267,98 +271,40 @@ public class StackManager : MonoBehaviour
     }
     
     public bool isUndoRedo = false;
-    public void ToggleUndoRedo() => isUndoRedo = false;
-    
-    public int UndoCount => _undoStack.Count;
-    public int RedoCount => _redoStack.Count;
-    
-    public void UndoCommand()
-    {
-        if (_undoStack.Count <= 0) return;
-        if (isUndoRedo) return;
 
-        isUndoRedo = true;
-        
-        ICommand lastCommand = _undoStack.Pop();
-        lastCommand.Undo();
-        
-        // 게임오버 상태 복구
+    public void UndoState()
+    {
+        // 게임오버 및 비주얼 복구
         GameManager.Instance.isGameOver = false;
         _collider2D.enabled = true;
         arrow.SetActive(true);
         _animatior.Play("Idle");
-        
-        //Undo시, Redo용 Stack에 저장
-        _redoStack.Push(lastCommand);
-        
+
+        // UI 히스토리에서 마지막 입력 제거 및 재건축
         if (_inputHistory.Count > 0)
         {
             _inputHistory.RemoveAt(_inputHistory.Count - 1);
+            RebuildUI();
         }
-        
-        RebuildUI();
-        
-        GameEvents.RaiseUndoRedoCountChanged(_undoStack.Count, _redoStack.Count);
-        
+    
         Physics2D.SyncTransforms();
-        
-        GameEvents.RaiseUndoTriggered();
-        soundEffectPlayer.PlaySoundEffect(cancelSound);
-        
-        Invoke(nameof(ToggleUndoRedo), 0.05f);
     }
 
-    public void StopVelocity()
+    public void RedoState(KeyType key)
     {
-        _rigidbody2D.velocity = Vector2.zero;
-    }
+        // 게임오버 상태일 수 있으므로 복구
+        GameManager.Instance.isGameOver = false;
+        _collider2D.enabled = true;
+        arrow.SetActive(true);
+        _animatior.Play("Idle");
 
-    public void RedoCommand()
-    {
-        if (_redoStack.Count <= 0) return;
-
-        isUndoRedo = true;
-        
-        // Redo에 대한 Undo용 이벤트 호출
-        GameEvents.RaiseSaveStateBeforeAction();
-
-        ICommand redoCommand = _redoStack.Pop();
-        redoCommand.Execute(); //Undo한 Action 재실행
-        
-        _undoStack.Push(redoCommand); // Undo 스택으로 복귀
-        
-        // redo 입력 복구
-        if (redoCommand is MoveCommand)
-            _inputHistory.Add(KeyType.F4);
-        else if (redoCommand is ClockwiseRotateCommand)
-            _inputHistory.Add(KeyType.Alt);
-        else if (redoCommand is CounterClockwiseRotateCommand)
-            _inputHistory.Add(KeyType.Tab);
-        
+        // 히스토리에 다시 추가 후 UI 재건축
+        _inputHistory.Add(key);
         RebuildUI();
-        
-        GameEvents.RaiseRedoTriggered();
-        GameEvents.RaiseUndoRedoCountChanged(_undoStack.Count, _redoStack.Count);
-        soundEffectPlayer.PlaySoundEffect(cancelSound);
-        
-        Invoke(nameof(ToggleUndoRedo), 0.05f);
-        
-    }
-
-    public void UpdateSequenceCanvas(int amount)
-    {
-        _stack = Mathf.Clamp(_stack + amount, 0, MaxQueueSize);
-
-        if (amount < 0 && _stack < _inputQueue.Count) _inputQueue[_stack] = 0;
-        OnInputQueueChanged?.Invoke();
+    
+        Physics2D.SyncTransforms();
     }
     
-    #endregion
-
-    #region Player/Enemy Turn
-
-    private bool _isEnemyActing = false;
-
     #endregion
 
     #region Lifecycle
@@ -406,20 +352,15 @@ public class StackManager : MonoBehaviour
         _isInputLocked = true;
     }
 
+    public bool CheckSkip()
+    {
+        return (_isRotating || _isInputLocked || _isMapBusy || _isEnemyActing);
+    }
+    
     private void Update()
     {
         // 회전 애니메이션 작동중일 땐 스킵
-        if (_isRotating || _isInputLocked || _isMapBusy || _isEnemyActing) return;
-        
-        if ((Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Z) && _undoStack.Count > 0)
-        {
-            UndoCommand();
-        }
-        
-        if ((Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Y) && _redoStack.Count > 0)
-        {
-            RedoCommand();
-        }
+        if (CheckSkip()) return;
         
         // 게임이 진행 중일 때만 입력을 받도록 GameManager 상태를 확인합니다.
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
@@ -455,23 +396,8 @@ public class StackManager : MonoBehaviour
         // 예: 큐에 명령이 있고, 현재 애니메이션 중이 아닐 때만 하나씩 꺼내서 실행
         if (_commandBuffer.Count > 0 && !_isRotating && !_isInputLocked && !GameManager.Instance.isCleared)
         {
-            _redoStack.Clear(); // 새로운 행동을 할 경우, 기존 Redo 초기화
-            
-            // 모든 타일에 현재 상태를 저장하라는 이벤트 방송(Undo용)
-            GameEvents.RaiseSaveStateBeforeAction();
-            
             ICommand cmd = _commandBuffer.Dequeue();
-            cmd.Execute();
-            
-            // 되돌리기용 커맨드 저장
-            _undoStack.Push(cmd);
-            
-            // undo/redo Button 활성화 체크용 방송 송출
-            GameEvents.RaiseUndoRedoCountChanged(_undoStack.Count, _redoStack.Count);
-            
-            // 플레이어 액션 완료 후 적 턴 호출
-            SetInputLock(true); // 입력 잠금
-            GameEvents.RaiseEnemyTurnStarted(transform.position); // 적 턴 변화
+            behaviourManager.ExecuteCommand(cmd);
 
         }
 
@@ -777,7 +703,7 @@ public class StackManager : MonoBehaviour
 
     public void InitPlayer()
     {
-        // 1. 물리 및 상태 초기화
+        // 물리 및 상태 초기화
         _rigidbody2D.velocity = Vector2.zero;
         _isRotating = false;
         
@@ -788,15 +714,16 @@ public class StackManager : MonoBehaviour
         _stack = 0;
 
         _collider2D.enabled = true;
+        
+        // 파티클 초기화
+        StopParticle();
     
-        // 2. 카운트 초기화
+        // 카운트 초기화
         moveCount = 0;
         rotationCount = 0;
         
         _inputHistory.Clear(); // Undo/Redo용 inputHistory 초기화
         ResetQueue(); // Command Queue 초기화
-        _undoStack.Clear(); // Undo Stack 초기화
-        _redoStack.Clear(); // Redo stack 초기화
 
         // 3. 방향 초기화 (기본 우측)
         _playerDirection = PlayerDirection.Right;

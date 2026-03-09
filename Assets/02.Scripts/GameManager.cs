@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField]
-    private StackManager _stackManager;
+    private PlayerBehaviour _playerBehaviour;
     [SerializeField]
     private MapDataLoader _mapDataLoader;    
     [SerializeField]
@@ -118,16 +118,16 @@ public class GameManager : MonoBehaviour
     }
 
     #region StackManager 외부 등록
-    public void RegisterStackManager(StackManager stackManager)
+    public void RegisterStackManager(PlayerBehaviour playerBehaviour)
     {
         //StackManager 클래스에서 GameManager.Instance에 직접 자기를 등록
-        _stackManager = stackManager;
+        _playerBehaviour = playerBehaviour;
         
     }
 
     public void UnregisterStackManager()
     {
-        _stackManager = null;
+        _playerBehaviour = null;
     }
     #endregion
 

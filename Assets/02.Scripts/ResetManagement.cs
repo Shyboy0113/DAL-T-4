@@ -13,7 +13,8 @@ public class ResetManagement : MonoBehaviour
 {   
     [SerializeField] private StageLoader stageLoader; // 맵 생성 담당 스크립트
     [SerializeField] private CutoutFade cutoutFade; //Fade용
-    [SerializeField] private StackManager player;
+    
+    [SerializeField] private BehaviourManager behaviourManager;
 
     [SerializeField] private CanvasGroup changePanelCanvasGroup;
     [SerializeField] private GameObject howToPlayPanel;
@@ -23,12 +24,6 @@ public class ResetManagement : MonoBehaviour
 
     [SerializeField] private float time = 1.5f;
     
-    private void Awake()
-    {
-        // 플레이어 초기화
-        if (player == null) player = FindObjectOfType<StackManager>();
-    }
-
     private void Start()
     {
         stageLoader.LoadStage(GameManager.Instance.chapter, GameManager.Instance.stage);
@@ -105,8 +100,6 @@ public class ResetManagement : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         
-        //DOTween.KillAll();
-        
         cutoutFade.FadeOut(() =>
         {
             StartCoroutine(IChangeStage());
@@ -146,7 +139,7 @@ public class ResetManagement : MonoBehaviour
         }
         
         // 플레이어 초기화
-        player.InitPlayer();
+        behaviourManager.Init();
         GameEvents.RaiseInputLockChanged(true);
         
         GameEvents.RaiseStageRestarted(); //FadeText.Reset() 실행됨
