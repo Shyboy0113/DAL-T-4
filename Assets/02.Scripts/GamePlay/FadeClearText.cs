@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
@@ -12,17 +11,23 @@ public class FadeClearText : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.StageCleared += FadeIn;
+        GameEvents.StageRestarted += Reset;
     }
 
     private void OnDestroy()
     {
         GameEvents.StageCleared -= FadeIn;
+        GameEvents.StageRestarted -= Reset;
     }
 
     private void Awake()
     {
         text = GetComponent<TextMeshProUGUI>(); //컴포넌트 가져오기
-        
+    }
+
+    public void Reset()
+    {
+        text.rectTransform.localScale = Vector3.zero;
     }
 
     public void FadeIn()
