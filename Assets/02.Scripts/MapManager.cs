@@ -1,8 +1,23 @@
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
+
 public class MapManager : MonoBehaviour
 {
+    
+    private struct MapState
+    {
+        public Vector3 pivotPosition;
+        public float zRotation;
+        
+        //자식들의 월드 좌표 저장
+        public Vector3 firstRootPosition;
+        public Vector3 secondRootPosition;
+    }
+    
+    private Stack<MapState> _undoMapHistory = new Stack<MapState>();
+    private Stack<MapState> _redoMapHistory = new Stack<MapState>();
     
     private Camera _mainCamera;
 
@@ -12,7 +27,7 @@ public class MapManager : MonoBehaviour
 
     [Header ("Rotation Logic")]    
     [SerializeField] private Transform mapPivot;
-    [SerializeField] private float rotateDuration = 0.6f;
+    [SerializeField] private float rotateDuration;
     
     [SerializeField] private GameObject mapFirstRoot;
     [SerializeField] private GameObject mapSecondRoot;
@@ -21,6 +36,8 @@ public class MapManager : MonoBehaviour
     
     private Transform _activatedRoot;
     private Transform _deactivatedRoot;
+
+    [SerializeField] private StackManager player;
 
     public bool IsFirstRoot()
     {
@@ -32,20 +49,25 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         _mainCamera = Camera.main;
-        Initialize();
+        player = FindObjectOfType<StackManager>();
     }
 
-    public void ResetData()
+    public void InitializeNewStage(GameObject stageRoot)
     {
-        mapPivot = GameObject.Find("MapPivot").transform;
-        mapFirstRoot = GameObject.Find("Tilemap_First");
-        mapSecondRoot = GameObject.Find("Tilemap_Second");
-    }
+        StageLinker linker = stageRoot.GetComponent<StageLinker>();
 
-    private void Initialize()
-    {
-        ResetData();
+        if (linker != null)
+        {
+            mapPivot = linker.mapPivot;
+            mapFirstRoot = linker.mapFirstRoot;
+            mapSecondRoot = linker.mapSecondRoot;
         
+            Initialize();
+        }
+    }
+
+    private void Initialize() // StackLoader에서 InitializeNewStage와 Initialize를 호출함
+    {
         _isFirst = true; // 명시적 초기화
         _currentRoot = mapFirstRoot; // 초기 Root 설정
         
@@ -68,9 +90,6 @@ public class MapManager : MonoBehaviour
 
     private void ActivateFirst()
     {
-        //mapFirstRoot.SetActive(true);
-        //mapSecondRoot.SetActive(false);
-        
         _activatedRoot = mapFirstRoot.transform;
         _deactivatedRoot = mapSecondRoot.transform;
 
@@ -81,9 +100,6 @@ public class MapManager : MonoBehaviour
 
     private void ActivateSecond()
     {
-        //mapFirstRoot.SetActive(false);
-        //mapSecondRoot.SetActive(true);
-        
         _activatedRoot = mapSecondRoot.transform;
         _deactivatedRoot = mapFirstRoot.transform;
 
@@ -125,23 +141,29 @@ public class MapManager : MonoBehaviour
     {
         GameEvents.TileMapChanged += ChangeTileMap;
         GameEvents.TileMapRotated += RotateAroundCell;
+
+        GameEvents.SaveStateBeforeAction += SaveMapState;
+        GameEvents.UndoTriggered += RestoreMapState;
+        GameEvents.RedoTriggered += ApplyRedoMapState;
     }
 
     private void OnDisable()
     {
         GameEvents.TileMapChanged -= ChangeTileMap;
         GameEvents.TileMapRotated -= RotateAroundCell;
+        
+        GameEvents.SaveStateBeforeAction -= SaveMapState;
+        GameEvents.UndoTriggered -= RestoreMapState;
+        GameEvents.RedoTriggered -= ApplyRedoMapState;
     }
 
     public void RotateAroundCell(Vector3Int cellPosition, float angle)
     {
-        if (_isRotating) return;
-
+        if (_isRotating || player == null || player.isUndoRedo) return;
+        
         _isRotating = true;
+        GameEvents.RaiseIsRotating(true);
         GameEvents.RaiseInputLockChanged(true);
-
-        StackManager player = FindObjectOfType<StackManager>();
-        if (player == null) return;
 
         // 1. 피벗 위치 계산 및 플레이어 위치 강제 정렬 (Snapping)
         // 회전 전 플레이어를 타일 정중앙으로 옮겨 '애매하게 걸친 상태'를 방지합니다.
@@ -171,13 +193,7 @@ public class MapManager : MonoBehaviour
             .SetEase(Ease.InOutQuad)
             .OnComplete(() =>
             {
-                // 4. 회전 완료 후 방향 동기화
-                // 맵이 돌아간 만큼 플레이어의 내부 방향 데이터도 업데이트합니다.
-                int rotationIndexOffset = Mathf.RoundToInt(-angle / 90f);
-                player.UpdateDirection(rotationIndexOffset);
-            
-                // 화살표 방향 즉시 갱신
-                player.RotateArrow(); 
+                GameEvents.RaiseTileIconRotated(-angle);
 
                 player.FreezePlayerPhysics(false);
             
@@ -185,7 +201,73 @@ public class MapManager : MonoBehaviour
                 DOVirtual.DelayedCall(0.05f, () => {
                     _isRotating = false;
                     GameEvents.RaiseInputLockChanged(false);
+                    GameEvents.RaiseIsRotating(false);
                 });
             });
     }
+
+    private void SaveMapState()
+    {
+        if (player == null || player.isUndoRedo) return;
+        
+        _undoMapHistory.Push(new MapState
+        {
+            pivotPosition = mapPivot.position,
+            zRotation = mapPivot.eulerAngles.z,
+            firstRootPosition = mapFirstRoot.transform.position,
+            secondRootPosition = mapSecondRoot.transform.position
+        });
+
+        _redoMapHistory.Clear();
+        
+    }
+
+    private void RestoreMapState()
+    {
+        if (_undoMapHistory.Count <= 0) return;
+        
+        _redoMapHistory.Push(new MapState
+        {
+            pivotPosition = mapPivot.position,
+            zRotation = mapPivot.eulerAngles.z,
+            firstRootPosition = mapFirstRoot.transform.position,
+            secondRootPosition = mapSecondRoot.transform.position
+        });
+        
+        MapState lastState = _undoMapHistory.Pop();
+        
+        mapPivot.position = lastState.pivotPosition;
+        mapPivot.rotation = Quaternion.Euler(0,0,lastState.zRotation);
+        
+        mapFirstRoot.transform.position = lastState.firstRootPosition;
+        mapSecondRoot.transform.position = lastState.secondRootPosition;
+        
+        Physics2D.SyncTransforms(); // 물리 엔진 동기화
+        
+    }
+    
+    private void ApplyRedoMapState()
+    {
+        if (_redoMapHistory.Count <= 0) return;
+
+        // 다시하기 전의 '과거' 상태를 Undo 스택에 다시 넣고, 미래를 적용합니다.
+        _undoMapHistory.Push(new MapState
+        {
+            pivotPosition = mapPivot.position,
+            zRotation = mapPivot.eulerAngles.z,
+            firstRootPosition = mapFirstRoot.transform.position,
+            secondRootPosition = mapSecondRoot.transform.position
+        });
+        
+        MapState state = _redoMapHistory.Pop();
+        
+        // 실제 트랜스폼 복구 로직 (가장 안정적인 월드 좌표 방식)
+        mapPivot.position = state.pivotPosition;
+        mapPivot.rotation = Quaternion.Euler(0, 0, state.zRotation);
+        mapFirstRoot.transform.position = state.firstRootPosition;
+        mapSecondRoot.transform.position = state.secondRootPosition;
+        
+        Physics2D.SyncTransforms();
+    }
+    
 }
