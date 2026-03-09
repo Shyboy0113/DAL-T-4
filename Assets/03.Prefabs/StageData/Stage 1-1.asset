@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab9ce091a50fdc34bbe98cb1fa21e5b7, type: 3}
+  m_Name: Stage 1-1
+  m_EditorClassIdentifier: 
+  stageDescription: "F4 \uC870\uC791\uBC95\uC5D0 \uB300\uD55C \uC124\uBA85 \uC2A4\uD14C\uC774\uC9C0"
+  stagePrefab: {fileID: 2685018636728712195, guid: 3a19795f6c165d443811157669fad069, type: 3}
+  chapterNum: 1
+  stageNum: 1
+  audioClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
+  canUseF4: 1
+  canUseLeftALT: 1
+  canUseTAB: 0
