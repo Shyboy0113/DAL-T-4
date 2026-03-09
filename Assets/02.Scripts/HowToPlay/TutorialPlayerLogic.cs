@@ -30,6 +30,9 @@ public class TutorialPlayerLogic : MonoBehaviour
 
     private void OnEnable()
     {
+        //Close 버튼으로 패널을 비활성화 했을 때, dotween이 중간에 끊켜 transform이 z축으로 약간 회전돼있는 상태 방지 
+        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        
         PlaySelectedTutorial();
     }
 
