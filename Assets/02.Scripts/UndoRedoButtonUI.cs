@@ -23,19 +23,14 @@ public class UndoRedoButtonUI : MonoBehaviour
         if (_canvasGroup == null) _canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
-    private void Start()
-    {
-        BehaviourManager behaviourManager = FindObjectOfType<BehaviourManager>();
-        if (behaviourManager != null)
-        {
-            UpdateButtonState(behaviourManager.UndoCount, behaviourManager.RedoCount);
-        }
-    }
-
     private void OnEnable()
     {
         GameEvents.UndoRedoCountChanged += UpdateButtonState;
-        
+
+        // 씬 시작 또는 재활성화 시 항상 비활성 상태로 초기화
+        // Start()에서 BehaviourManager를 직접 조회하던 방식은 실행 순서에 따라
+        // 타이밍이 불안정했으므로 제거합니다.
+        UpdateButtonState(0, 0);
     }
 
     private void OnDisable()

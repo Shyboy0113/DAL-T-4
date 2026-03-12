@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "DAL-T-4.sln"
+    "dotnet.defaultSolution": "DAL-T-4.sln",
+    "dotnet.preferCSharpExtension": true
 }

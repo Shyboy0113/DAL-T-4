@@ -8,16 +8,6 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private float delayTime; // 적의 공격/이동 애니메이션 끝날 때까지 대기
     
     public bool IsAnyEnemyActing { get; private set; } // BehaviourManager가 확인
-    
-    private void OnEnable()
-    {
-        GameEvents.OnEnemyTurnStarted += StartAllEnemiesTurn;
-    }
-
-    private void OnDisable()
-    {
-        GameEvents.OnEnemyTurnStarted -= StartAllEnemiesTurn;
-    }
 
     public void InitEnemies()
     {

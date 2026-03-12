@@ -476,6 +476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5838b1b652cf2234ba479ad80071a5eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  behaviourManager: {fileID: 0}
   allDataAssets:
   - {fileID: 11400000, guid: 7b4ce66101976884892dbb9343d18309, type: 2}
   - {fileID: 11400000, guid: 0e2a3bc359f8a3145824e0280d2e43ff, type: 2}
@@ -546,6 +547,7 @@ MonoBehaviour:
   animator: {fileID: 541753132118741300}
   teleportTarget: {fileID: 0}
   overrideTeleportID: 0
+  mapManager: {fileID: 0}
 --- !u!82 &5937775037576796057
 AudioSource:
   m_ObjectHideFlags: 0

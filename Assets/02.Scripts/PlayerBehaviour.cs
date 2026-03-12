@@ -52,7 +52,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     
     // Animator
-    [SerializeField] private Animator _animatior;
+    [SerializeField] private Animator _animator;
 
     //방향 전환 및 이동시 효과음 발동
     [SerializeField] private AudioClip rotateSound;
@@ -92,7 +92,7 @@ public class PlayerBehaviour : MonoBehaviour
     private bool _isInputLocked = false;
     private bool _isRotating = false; // 회전중인지를 판단하는 bool 값
     private bool _isEnemyActing = false;
-    private bool _isMapBusy = false;
+    private bool _isMapBusy = false;    
     private void SetInputLock(bool isLocked) => _isInputLocked = isLocked;
     public bool IsRotating() => _isRotating; // 외부에서 회전 중인지 확인할 수 있는 public 메서드
     
@@ -114,6 +114,9 @@ public class PlayerBehaviour : MonoBehaviour
     #region IceMode
     private float _slideSpeed = 5f;
     private Vector2 _lastMoveDirection; // 마지막으로 움직인 방향을 기록
+    public Vector2 GetLastMoveDirection() => _lastMoveDirection;
+    public void SetLastMoveDirection(Vector2 dir) => _lastMoveDirection = dir;
+
     private bool _isOnIce = false;
     private Coroutine _slideCoroutine;
 
@@ -203,6 +206,27 @@ public class PlayerBehaviour : MonoBehaviour
         if (!_isOnIce) SetInputLock(false);
     }
 
+    // Invoke 타겟 - 이동 후 물리/타일 반응이 끝난 뒤 호출됨
+    // Ice 모드 중에는 발동을 차단합니다.
+    // 슬라이드 중에는 행동이 "완료"되지 않으며,
+    // Stop 타일에 닿을 때 StopIceAndFinish()가 대신 ActionFinished를 발동합니다.
+    private void RaiseActionFinished()
+    {
+        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+        if (_isOnIce) return;      // 아직 슬라이드 중이면 차단
+        if (isUndoRedo) return;    // Redo 중엔 차단 - BehaviourManager.RedoTurn이 직접 처리
+        GameEvents.RaisePlayerActionFinished();
+    }
+
+    // Stop 타일에 닿았을 때 TileBehaviour에서 호출됩니다.
+    // Ice 중 차단됐던 ActionFinished를 슬라이드 종료 시점에 발동합니다.
+    public void StopIceAndFinish()
+    {
+        EnableIceMode(false);
+        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+        GameEvents.RaisePlayerActionFinished();
+    }
+
     #endregion
 
     #region Command Pattern
@@ -278,7 +302,7 @@ public class PlayerBehaviour : MonoBehaviour
         GameManager.Instance.isGameOver = false;
         _collider2D.enabled = true;
         arrow.SetActive(true);
-        _animatior.Play("Idle");
+        _animator.Play("Idle");
 
         // UI 히스토리에서 마지막 입력 제거 및 재건축
         if (_inputHistory.Count > 0)
@@ -296,7 +320,7 @@ public class PlayerBehaviour : MonoBehaviour
         GameManager.Instance.isGameOver = false;
         _collider2D.enabled = true;
         arrow.SetActive(true);
-        _animatior.Play("Idle");
+        _animator.Play("Idle");
 
         // 히스토리에 다시 추가 후 UI 재건축
         _inputHistory.Add(key);
@@ -322,7 +346,7 @@ public class PlayerBehaviour : MonoBehaviour
             Debug.LogError("GameManager instance isn't registered!");
         }
 
-        _animatior = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         soundEffectPlayer = GetComponent<SoundEffectPlayer>();
         _collider2D = GetComponent<Collider2D>();
@@ -337,10 +361,15 @@ public class PlayerBehaviour : MonoBehaviour
         GameEvents.PlayerDied += StopParticle;
         GameEvents.StageCleared += StopParticle;
         GameEvents.InputLockChanged += SetInputLock;
-        GameEvents.IsRotating += (busy) => _isMapBusy = busy;
+    
 
         GameEvents.OnEnemyTurnStarted += (_) => _isEnemyActing = true;
         GameEvents.OnPlayerTurnStarted += () => _isEnemyActing = false;
+
+        // 맵 회전 시 플레이어와 적의 물리 로직을 활성화/비활성화 (여기선 플레이어의 물리 상태만)       
+        GameEvents.BeforeMapRotated += FreezePlayerPhysicalLogic;
+        GameEvents.AfterMapRotated  += FreezePlayerPhysicalLogic;
+
     }
 
     private void Start()
@@ -441,7 +470,10 @@ public class PlayerBehaviour : MonoBehaviour
         GameEvents.PlayerDied -= StopParticle;
         GameEvents.StageCleared -= StopParticle;
         GameEvents.InputLockChanged -= SetInputLock;
-        GameEvents.IsRotating -= (busy) => _isMapBusy = busy;
+
+        // 맵 회전 시 플레이어와 적의 물리 로직을 활성화/비활성화 (여기선 플레이어의 물리 상태만)
+        GameEvents.BeforeMapRotated -= FreezePlayerPhysicalLogic;
+        GameEvents.AfterMapRotated  -= FreezePlayerPhysicalLogic;
     }
 
     private void OnDestroy()
@@ -591,13 +623,26 @@ public class PlayerBehaviour : MonoBehaviour
         }
         else
         {
+            //Vector2 targetPos = _rigidbody2D.position + moveDirection;
+            //_rigidbody2D.MovePosition(targetPos);
             _rigidbody2D.AddForce(moveDirection * forceAmount, ForceMode2D.Impulse);
+
             SetInputLock(true);
             Invoke(nameof(UnlockInputAfterMove), 0.2f);
         }
         
-        GameEvents.RaisePlayerMoved(moveCount); // 플레이어가 움직였다는 이벤트 발동 (TileBehaviour에서 수신)
-        GameEvents.RaisePlayerActed(totalActionCount); // 플레이어가 행동했다는 이벤트 발동 (TileBehaviour에서 수신)
+        // RaisePlayerMoved / RaisePlayerActed는 여기서 호출하지 않습니다.
+        // 플레이어가 실제로 타일에 Enter한 뒤 TileBehaviour.OnPlayerEnter에서 발생시킵니다.
+
+        // PlayerActionFinished는 타일 OnTriggerEnter(물리 업데이트)보다 늦게 발생해야 합니다.
+        // Undo/Redo 중에는 예약 자체를 하지 않습니다.
+        // (isUndoRedo 플래그로 RaiseActionFinished 내부에서 차단하는 방법은
+        //  IUndoRedo 코루틴이 0.05f 후에 플래그를 해제하고,
+        //  Invoke는 0.15f 후에 발동되므로 차단이 항상 풀린 뒤에 실행되어 무의미합니다.)
+        if (!isUndoRedo)
+        {
+            Invoke(nameof(RaiseActionFinished), 0.15f);
+        }
 
         //맵 밖으로 벗어났는지 체크
         Invoke(nameof(CheckForGround), 0.1f);
@@ -618,23 +663,33 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (immediate)
         {
-            // 즉시 회전 (맵 회전 직후용)
+            // 즉시 회전 (Undo/Redo 또는 맵 회전 직후용) - 이벤트 발생 안 함
             arrow.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
         }
         else
         {
-            // 기존 애니메이션 방식
+            // 회전 애니메이션 완료 후 이벤트 발생
+            // RaisePlayerRotated/Acted는 회전이 실제로 끝난 뒤 발동해야
+            // 토글 타일이 올바른 타이밍에 반응합니다.
             _isRotating = true;
+            bool wasUndoRedo = isUndoRedo; // OnComplete 시점엔 플래그가 이미 해제돼있으므로 캡처
             arrow.transform
                 .DORotate(new Vector3(0, 0, targetAngle), DOTweenDuration)
                 .SetEase(Ease.OutElastic)
-                .OnComplete(() => { _isRotating = false; });
+                .OnComplete(() =>
+                {
+                    _isRotating = false;
+                    if (!wasUndoRedo)
+                    {
+                        GameEvents.RaisePlayerRotated(rotationCount);
+                        GameEvents.RaisePlayerActed(totalActionCount);
+                        GameEvents.RaisePlayerActionFinished(); // 턴 전환 체크 신호
+                    }
+                });
 
             transform.DOPunchRotation(DOTweenPunch, DOTweenDuration, DOTweenVibrato, 0.5f);
         }
         
-        GameEvents.RaisePlayerRotated(rotationCount); // 플레이어가 회전했다는 이벤트 발동 (TileBehaviour에서 수신)
-        GameEvents.RaisePlayerActed(totalActionCount); // 플레이어가 행동했다는 이벤트 발동 (TileBehaviour에서 수신)
         Invoke(nameof(CheckForGround), 0.1f);
     }
 
@@ -646,10 +701,10 @@ public class PlayerBehaviour : MonoBehaviour
     public void PlayExplosion()
     {
         // 이미 폭발 애니메이션이 재생 중이라면 중복 실행 방지
-        if (_animatior.GetCurrentAnimatorStateInfo(0).IsName("Explosion")) return;
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Explosion")) return;
 
         _rigidbody2D.velocity = Vector2.zero;
-        _animatior.Play("Explosion");
+        _animator.Play("Explosion");
         arrow.SetActive(false);
 
         // 효과음 실행
@@ -663,7 +718,7 @@ public class PlayerBehaviour : MonoBehaviour
         _isInputLocked = true;
         _commandBuffer.Clear();
         
-        _animatior.Play("Clear");
+        _animator.Play("Clear");
         arrow.SetActive(false);
 
         // 1초 뒤 코루틴 실행
@@ -689,11 +744,24 @@ public class PlayerBehaviour : MonoBehaviour
         GameEvents.RaiseStageCleared(); //게임이 클리어 됐다는 방송을 내보냄
     }
 
-    public void FreezePlayerPhysics(bool freeze)
+    public void FreezePlayerPhysicalLogic(bool freeze)
     {
-        _rigidbody2D.velocity = Vector2.zero;
-        _rigidbody2D.angularVelocity = 0f;
+        _isMapBusy = freeze;
+
+        if (freeze)
+        {
+            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.angularVelocity = 0f;
+        }
+
+        _collider2D.enabled = !freeze;        
         _rigidbody2D.simulated = !freeze;
+
+        if (!freeze) // 재활성화 됐을 시 물리 적용
+        {
+            //FreezeEnemyPhysicalLogic와는 달리, Physics2D.SyncTransforms()를 선언해버리면 타일이 무한회전해버리는 문제가 발생함
+            Invoke(nameof(CheckForGround), 0.05f);
+        }    
     }
 
     public bool IsFirstTile() // TileBehaviour의 FirstDestination/SecondDestination의 OnPlayerEnter에서 사용
@@ -735,10 +803,11 @@ public class PlayerBehaviour : MonoBehaviour
         Physics2D.SyncTransforms();
         
         // 5. 애니메이션 초기화
-        _animatior.Play("Idle");
+        _animator.Play("Idle");
         
         GameEvents.RaiseUndoRedoCountChanged(0, 0);
         
     }
+    
 
 }
