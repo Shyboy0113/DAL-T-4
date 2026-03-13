@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,16 @@ public class EnemyManager : MonoBehaviour
     
     public bool IsAnyEnemyActing { get; private set; } // BehaviourManager가 확인
 
+    private void Awake()
+    {
+        InsertEnemy(); // Inspector 창에서 적이 할당돼있지 않을 때, 자동으로 할당
+    }
+
+    private void InsertEnemy()
+    {
+        _enemies.AddRange(GetComponentsInChildren<EnemyBehaviour>());
+    }
+    
     public void InitEnemies()
     {
         foreach (var enemy in _enemies)
