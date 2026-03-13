@@ -188,7 +188,7 @@ public class TileCommand : ICommand
     }
     public void Execute()
     {
-        _tile.ApplyAction(_pb, _eb); // 실제 로직 실행
+        _tile.ApplyTileCommand(_pb, _eb); // 실제 로직 실행
     }
     public void Undo()
     {

@@ -217,7 +217,7 @@ public class TileBehaviour : BaseTile
         UpdateCountText(snapshot.hitCount);
     }
     
-    public void ApplyAction(PlayerBehaviour pb = null, EnemyBehaviour eb = null)
+    public void ApplyTileCommand(PlayerBehaviour pb = null, EnemyBehaviour eb = null)
     {
         _isWaitExit = true;
         _currentActivationCount++;
