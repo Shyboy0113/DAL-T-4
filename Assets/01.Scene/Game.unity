@@ -2800,6 +2800,7 @@ MonoBehaviour:
   explosionSound: {fileID: 8300000, guid: 7e5e291f283dded4cb36cedf3abd8ee9, type: 3}
   slideSpeed: 5
   mapManager: {fileID: 1887074968}
+  _isOnIce: 0
 --- !u!82 &566136744
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4627,6 +4628,7 @@ MonoBehaviour:
   explosionSound: {fileID: 8300000, guid: 7e5e291f283dded4cb36cedf3abd8ee9, type: 3}
   slideSpeed: 5
   mapManager: {fileID: 1887074968}
+  _isOnIce: 0
 --- !u!82 &999687975
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5433,6 +5435,7 @@ MonoBehaviour:
   explosionSound: {fileID: 8300000, guid: 7e5e291f283dded4cb36cedf3abd8ee9, type: 3}
   slideSpeed: 5
   mapManager: {fileID: 1887074968}
+  _isOnIce: 0
 --- !u!82 &1229946307
 AudioSource:
   m_ObjectHideFlags: 0
@@ -7945,6 +7948,7 @@ MonoBehaviour:
   explosionSound: {fileID: 8300000, guid: 7e5e291f283dded4cb36cedf3abd8ee9, type: 3}
   slideSpeed: 5
   mapManager: {fileID: 1887074968}
+  _isOnIce: 0
 --- !u!50 &1784008377
 Rigidbody2D:
   serializedVersion: 4

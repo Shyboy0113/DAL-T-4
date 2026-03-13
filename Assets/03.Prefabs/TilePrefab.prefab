@@ -498,12 +498,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 64994b45d953ffb43aae9241e4bcf84d, type: 2}
   - {fileID: 11400000, guid: 12d8d184f4bfbb241ad101f891efee2b, type: 2}
   tileData: {fileID: 11400000, guid: 7b4ce66101976884892dbb9343d18309, type: 2}
-  overrideStats: 1
-  overrideMaxActivationCount: -1
-  overrideBreakHitCount: 2
-  overrideBreakDelay: 0.5
+  maxActivationCount:
+    UseOverride: 0
+    OverrideValue: 0
+  breakHitCount:
+    UseOverride: 0
+    OverrideValue: 0
+  breakDelay:
+    UseOverride: 0
+    OverrideValue: 0
+  toggleActivationCount:
+    UseOverride: 1
+    OverrideValue: 2
   overrideColor: -1
-  overrideToggleActivationCount: 2
+  overrideTeleportID: 1
   manualTileType: 0
   tileSprites:
   - {fileID: 21300000, guid: 2f0fd9bbe2a75af43861a313a3e47467, type: 3}
@@ -511,14 +519,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c7cdc78a6321c4c419f56b150b3fb4ad, type: 3}
   - {fileID: 21300000, guid: 7669a85a88abfe64b8f56d597a4e3199, type: 3}
   - {fileID: 21300000, guid: ec1ae068a2341ab4faa6cbcb2061a8ac, type: 3}
-  - {fileID: 21300000, guid: f2af15fccdd2def459f7951f35fac10e, type: 3}
   - {fileID: 21300000, guid: 0e141d726758c044696530003d59db4d, type: 3}
+  - {fileID: 21300000, guid: f2af15fccdd2def459f7951f35fac10e, type: 3}
   - {fileID: 21300000, guid: fd8c0b2698ccffd4381340c2a5001a30, type: 3}
   - {fileID: 21300000, guid: 26a6211cc45417a4db921d859a712c08, type: 3}
   - {fileID: 21300000, guid: b20d30e3505689e48bef56d887c4db44, type: 3}
   - {fileID: 21300000, guid: 10c23f8196303b145b91461fd1f0bdbe, type: 3}
   - {fileID: 21300000, guid: 63ac0ef9dd4d5704dbb3ff17c9d97823, type: 3}
-  - {fileID: 21300000, guid: b8cdf20374a64a44ba47beeff624f7c7, type: 3}
+  - {fileID: 21300000, guid: 93cb236cdf2097b458cd1a0db74b8d75, type: 3}
   - {fileID: 21300000, guid: 7910324fb2c66cb41b9da9b1af664a9e, type: 3}
   - {fileID: 21300000, guid: 4afe34a93e8cf7745a6cf167eda7a12a, type: 3}
   - {fileID: 21300000, guid: cd78dcd87e3102b439e7623016a44421, type: 3}
@@ -526,9 +534,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2dd25aedacf88c84493e163312938989, type: 3}
   - {fileID: 21300000, guid: b421bcbe0f8a3874ab8b821326634da9, type: 3}
   - {fileID: 21300000, guid: 4ac8e7ea0544f9849998edbe4534d4e6, type: 3}
-  bgRenderer: {fileID: 4596620451026543370}
+  backgroundRenderer: {fileID: 0}
   iconRenderer: {fileID: 4951251146867796789}
-  maxActivationCount: -1
+  currentActivationCount: 2
   toggleSound: {fileID: 8300000, guid: 21ce263de1312d247a2ecb44238a23f3, type: 3}
   rotationSound: {fileID: 8300000, guid: 1c1baf53e73a70a458a1dbea2768b151, type: 3}
   crackSound: {fileID: 8300000, guid: 0fd2b5920bf112347a0aa74d9e2f78b4, type: 3}
@@ -537,17 +545,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 38290fe7ce89f174fa95300c93f07093, type: 3}
   - {fileID: 21300000, guid: 41e601b9a09aa0d4a9e54aa39c98dac1, type: 3}
   - {fileID: 21300000, guid: beb7b245bbe7398428be67e9ba549f69, type: 3}
-  breakHitCount: 2
-  breakDelay: 0.5
   isToggled: 0
   toggleOffSprite: {fileID: 21300000, guid: 7910324fb2c66cb41b9da9b1af664a9e, type: 3}
-  toggleActivationCount: 2
   player: {fileID: 0}
-  countText: {fileID: 8407074332212949285}
   animator: {fileID: 541753132118741300}
-  teleportTarget: {fileID: 0}
-  overrideTeleportID: 0
   mapManager: {fileID: 0}
+  countText: {fileID: 8407074332212949285}
+  teleportTarget: {fileID: 0}
 --- !u!82 &5937775037576796057
 AudioSource:
   m_ObjectHideFlags: 0
