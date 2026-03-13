@@ -106,40 +106,35 @@ public class TileBehaviour : BaseTile
 {
     [SerializeField] private BehaviourManager behaviourManager;
     
-    [Header("Scriptable Object Data")] [SerializeField]
-    private List<SOTileData> allDataAssets; // 모든 스크립터블 오브젝트가 포함돼있는 리스트
-
+    [Header("Scriptable Object Data")]
+    [SerializeField] private List<SOTileData> allDataAssets; // 모든 스크립터블 오브젝트가 포함돼있는 리스트
     [SerializeField] private SOTileData tileData; // ScriptableObject로 타일 데이터 관리
-
-    [Header("Individual Overrides")] [SerializeField]
-    private bool overrideStats = false;
-
-    [SerializeField] private int overrideMaxActivationCount = -1;
-    [SerializeField] private int overrideBreakHitCount = 2;
-    [SerializeField] private float overrideBreakDelay = 0.5f;
-    [SerializeField] private TileColor overrideColor = TileColor.White;
-    [SerializeField] private int overrideToggleActivationCount = 2;
-
+    
     // --- 데이터 값 결정 로직 (Property) ---
-    private int CurrentMaxActivationCount => overrideStats
-        ? overrideMaxActivationCount
-        : (tileData ? tileData.baseMaxActivationCount : maxActivationCount);
+    [Header("Individual Overrides")]
+    [SerializeField] private OverridableInt maxActivationCount;
+    [SerializeField] private OverridableInt breakHitCount;
+    [SerializeField] private OverridableFloat breakDelay;
+    [SerializeField] private OverridableInt toggleActivationCount;
 
-    private int CurrentBreakHitCount =>
-        overrideStats ? overrideBreakHitCount : (tileData ? tileData.baseBreakHitCount : breakHitCount);
+    // TileColor와 TeleportID는 0/White를 기본값으로 간주하여 별도 처리
+    [SerializeField] private TileColor overrideColor = TileColor.White;
+    [SerializeField] private int overrideTeleportID = 0;
+    
+    private int CurrentMaxActivationCount => maxActivationCount.GetValue(tileData ? tileData.baseMaxActivationCount : -1);
+    private int CurrentBreakHitCount      => breakHitCount.GetValue(tileData ? tileData.baseBreakHitCount : 2);
+    private float CurrentBreakDelay       => breakDelay.GetValue(tileData ? tileData.baseBreakDelay : 0.5f);
+    private int CurrentToggleActivationCount => toggleActivationCount.GetValue(tileData ? tileData.baseToggleActivationCount : 2);
 
-    private float CurrentBreakDelay =>
-        overrideStats ? overrideBreakDelay : (tileData ? tileData.baseBreakDelay : breakDelay);
-
+    // TileColor, TeleportID는 override값이 기본값(White/0)이면 SO값 사용
     private TileColor CurrentTileColor =>
-        overrideStats ? overrideColor : (tileData ? tileData.baseColor : TileColor.White);
-
-    private int CurrentToggleActivationCount => overrideStats
-        ? overrideToggleActivationCount
-        : (tileData ? tileData.baseToggleActivationCount : toggleActivationCount);
-
-    [Header("Tile Settings")] [SerializeField]
-    private TileType manualTileType;
+        overrideColor != TileColor.White ? overrideColor : (tileData ? tileData.baseColor : TileColor.White);
+    private int CurrentTeleportID =>
+        overrideTeleportID != 0 ? overrideTeleportID : (tileData ? tileData.baseTeleportID : 0);
+    
+    
+    [Header("Tile Settings")]
+    [SerializeField] private TileType manualTileType;
 
     public TileType currentTileType => tileData != null ? tileData.tileType : manualTileType; // 외부에서 읽기 전용으로 접근
 
@@ -434,10 +429,8 @@ public class TileBehaviour : BaseTile
 
     #region Teleport Logic
 
-    [Header("Teleport")] [SerializeField] private TileBehaviour teleportTarget;
-    [SerializeField] private int overrideTeleportID = 0;
-
-    private int CurrentTeleportID => overrideStats ? overrideTeleportID : (tileData ? tileData.baseTeleportID : 0);
+    [Header("Teleport")]
+    [SerializeField] private TileBehaviour teleportTarget;
 
     private void AutoLinkTeleport()
     {
@@ -539,17 +532,6 @@ public class TileBehaviour : BaseTile
             AutoLinkTeleport();
         }
 
-        if (!overrideStats && tileData != null)
-        {
-            // 체크가 꺼져 있으면 SO의 값을 인스펙터 변수에 동기화 (미리보기 기능)
-            overrideMaxActivationCount = tileData.baseMaxActivationCount;
-            overrideBreakHitCount = tileData.baseBreakHitCount;
-            overrideBreakDelay = tileData.baseBreakDelay;
-            overrideColor = tileData.baseColor;
-            overrideToggleActivationCount = tileData.baseToggleActivationCount;
-            overrideTeleportID = tileData.baseTeleportID;
-        }
-
         // 1. 자동 데이터 할당 로직 (기본 유지)
         if (allDataAssets != null && allDataAssets.Count > 0)
         {
@@ -557,26 +539,6 @@ public class TileBehaviour : BaseTile
             if (matchedData != null && tileData != matchedData)
             {
                 tileData = matchedData;
-                UnityEditor.EditorUtility.SetDirty(this);
-            }
-        }
-
-        // 2. [핵심] SO의 base 값과 현재 인스펙터의 override 값을 대조
-        // 아직 overrideStats가 꺼져 있을 때, 하나라도 값이 다르면 자동으로 켭니다.
-        if (tileData != null && !overrideStats)
-        {
-            bool ipbodified =
-                overrideMaxActivationCount != tileData.baseMaxActivationCount ||
-                overrideBreakHitCount != tileData.baseBreakHitCount ||
-                !Mathf.Approximately(overrideBreakDelay, tileData.baseBreakDelay) || // float 비교
-                overrideColor != tileData.baseColor ||
-                overrideToggleActivationCount != tileData.baseToggleActivationCount ||
-                overrideTeleportID != tileData.baseTeleportID;
-
-            if (ipbodified)
-            {
-                overrideStats = true;
-                // 에디터에서 변경사항을 인지하도록 Dirty 설정
                 UnityEditor.EditorUtility.SetDirty(this);
             }
         }
