@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -58,21 +59,27 @@ public class EnemyBehaviour : MonoBehaviour
         {
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.angularVelocity = 0f;
+            _collider2D.enabled = false;
+            _rigidbody2D.simulated = false;
         }
-
-        _collider2D.enabled = !freeze;        
-        _rigidbody2D.simulated = !freeze;
 
         if (!freeze) // 재활성화 됐을 시 물리 적용
         {
             Physics2D.SyncTransforms();
+            
+            Invoke(nameof(EnablePhysicsLogic),0.05f);
             Invoke(nameof(CheckForGround), 0.05f);
         }    
     }
 
+    private void EnablePhysicsLogic()
+    {
+        if (!IsDead) _collider2D.enabled = true;
+    }
+
     #region Ice & Slide Logic
 
-    private bool _isOnIce = false;
+    [SerializeField] private bool _isOnIce = false;
     public bool IsOnIce() => _isOnIce;
 
     public void EnableIceMode(bool enable)
@@ -190,6 +197,9 @@ public class EnemyBehaviour : MonoBehaviour
         if (_slideCoroutine != null) StopCoroutine(_slideCoroutine);
         _slideCoroutine = null;
         
+        _rigidbody2D.velocity = Vector2.zero;
+        _rigidbody2D.simulated = true;
+        
         transform.position = startPosition;
 
         // 위치 초기화 후 물리 엔진에 즉시 반영
@@ -206,11 +216,23 @@ public class EnemyBehaviour : MonoBehaviour
         
         if (isDead)
         {
+            _isOnIce = false;
+            
+            if (_slideCoroutine != null)
+            {
+                StopCoroutine(_slideCoroutine);
+                _slideCoroutine = null;
+            }
+            
             _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.simulated = false;
+            _collider2D.enabled = false;
             _animator.Play("Explosion");
         }
         else
         {
+            _rigidbody2D.simulated = true;
+            _collider2D.enabled = true;
             _animator.Play("Idle");
         }
 
@@ -235,7 +257,9 @@ public class EnemyBehaviour : MonoBehaviour
     
     private Vector3 CalculateMove(Vector3 targetPosition)
     {
-        Vector3Int startCoordination = Vector3Int.FloorToInt(transform.position);
+        //Vector3Int startCoordination = Vector3Int.FloorToInt(transform.position);
+        Vector3Int startCoordination = Vector3Int.RoundToInt(
+            new Vector3(transform.position.x - 0.5f, transform.position.y - 0.5f, 0));
         
         Vector3Int[] directions = {Vector3Int.up , Vector3Int.down , Vector3Int.left , Vector3Int.right };
 
@@ -287,11 +311,13 @@ public class EnemyBehaviour : MonoBehaviour
     private bool IsWalkable(Vector3Int cellPos)
     {
         Vector2 checkPosition = new Vector2(cellPos.x + 0.5f, cellPos.y + 0.5f);
+        
         // 해당 위치의 모든 콜라이더를 체크
         Collider2D[] hits = Physics2D.OverlapPointAll(checkPosition);
 
         if (hits.Length == 0) return false; // 타일 자체가 없으면 (낭떠러지) 이동 불가
 
+        
         bool hasGround = false;
         TileBehaviour targetTile = null;
         
