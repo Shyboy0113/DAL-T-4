@@ -631,14 +631,9 @@ public class PlayerBehaviour : MonoBehaviour
             Invoke(nameof(UnlockInputAfterMove), 0.2f);
         }
         
-        // RaisePlayerMoved / RaisePlayerActed는 여기서 호출하지 않습니다.
-        // 플레이어가 실제로 타일에 Enter한 뒤 TileBehaviour.OnPlayerEnter에서 발생시킵니다.
-
-        // PlayerActionFinished는 타일 OnTriggerEnter(물리 업데이트)보다 늦게 발생해야 합니다.
-        // Undo/Redo 중에는 예약 자체를 하지 않습니다.
-        // (isUndoRedo 플래그로 RaiseActionFinished 내부에서 차단하는 방법은
-        //  IUndoRedo 코루틴이 0.05f 후에 플래그를 해제하고,
-        //  Invoke는 0.15f 후에 발동되므로 차단이 항상 풀린 뒤에 실행되어 무의미합니다.)
+        GameEvents.RaisePlayerMoved(moveCount);
+        GameEvents.RaisePlayerActed(totalActionCount);
+        
         if (!isUndoRedo)
         {
             Invoke(nameof(RaiseActionFinished), 0.15f);
