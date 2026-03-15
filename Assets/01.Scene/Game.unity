@@ -2005,8 +2005,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2121872522}
-  - {fileID: 1006579535}
   - {fileID: 1754940355}
+  - {fileID: 1006579535}
   - {fileID: 2102928520}
   - {fileID: 1331002203}
   m_Father: {fileID: 719405650}
@@ -2906,6 +2906,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 566136744}
+--- !u!1 &575040890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 575040891}
+  m_Layer: 0
+  m_Name: NonRotation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &575040891
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 575040890}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 646907079}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &580866167
 GameObject:
   m_ObjectHideFlags: 0
@@ -3107,7 +3138,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Tab\n<color=blue>\uBC18\uC2DC\uACC4</color> \uBC29\uD5A5 \uD68C\uC804"
+  m_text: "TAB\n<color=blue>\uBC18\uC2DC\uACC4</color> \uBC29\uD5A5 \uD68C\uC804"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6c619a64feb1458458a4708b1b405786, type: 2}
   m_sharedMaterial: {fileID: 6326743109009008314, guid: 6c619a64feb1458458a4708b1b405786, type: 2}
@@ -3227,7 +3258,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 575040891}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1839735485 &646907083
@@ -4769,7 +4801,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -550, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 400, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1066925938
@@ -5888,6 +5920,7 @@ MonoBehaviour:
   enemyManager: {fileID: 516647610}
   mapManager: {fileID: 1887074968}
   currentTurn: 0
+  actionCount: 0
 --- !u!1 &1331002202
 GameObject:
   m_ObjectHideFlags: 0
@@ -7073,7 +7106,8 @@ MonoBehaviour:
   DOTweenVibrato: 100
   particle: {fileID: 598599173}
   changePanelCanvasGroup: {fileID: 1197692234}
-  isUndoRedo: 0
+  isUndo: 0
+  isRedo: 0
 --- !u!50 &1639864505
 Rigidbody2D:
   serializedVersion: 4
@@ -7765,7 +7799,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -550, y: 0}
   m_SizeDelta: {x: 400, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1762955021

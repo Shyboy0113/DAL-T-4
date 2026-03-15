@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stage 1-1
   m_EditorClassIdentifier: 
   stageDescription: "F4 \uC870\uC791\uBC95\uC5D0 \uB300\uD55C \uC124\uBA85 \uC2A4\uD14C\uC774\uC9C0"
-  stagePrefab: {fileID: 2685018636728712195, guid: 3a19795f6c165d443811157669fad069, type: 3}
+  stagePrefab: {fileID: 2685018636728712195, guid: 0936b2aa8acbe4c4eb80edc698087fbc, type: 3}
   chapterNum: 1
   stageNum: 1
   audioClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
