@@ -100,13 +100,6 @@ public class PlayerBehaviour : MonoBehaviour
     #region FadePanel
 
     [SerializeField] private CanvasGroup changePanelCanvasGroup;
-    
-    IEnumerator FadeSwitchPanel(float time)
-    {
-        changePanelCanvasGroup.alpha = 1f; // 알파(불투명도) 1로 설정 후 즉시 반영
-        changePanelCanvasGroup.DOFade(0f, time); // Fade Out
-        yield return null;
-    }
 
     #endregion
 
@@ -163,6 +156,12 @@ public class PlayerBehaviour : MonoBehaviour
             if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared)
             {
                 _rigidbody2D.velocity = Vector2.zero; // 물리적 움직임 완전 정지
+
+                if (!isUndo)
+                {
+                    GameEvents.RaisePlayerActionFinished();
+                }
+
                 yield break; // 코루틴 종료
             }
         }
@@ -211,9 +210,8 @@ public class PlayerBehaviour : MonoBehaviour
     // Stop 타일에 닿을 때 StopIceAndFinish()가 대신 ActionFinished를 발동합니다.
     private void RaiseActionFinished()
     {
-        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
         if (_isOnIce) return;      // 아직 슬라이드 중이면 차단
-        if (isUndoRedo) return;    // Redo 중엔 차단 - BehaviourManager.RedoTurn이 직접 처리
+        if (isUndo) return;    // isRedo는 더 이상 차단하지 않음 - OnPlayerActionFinished가 처리
         GameEvents.RaisePlayerActionFinished();
     }
 
@@ -222,7 +220,7 @@ public class PlayerBehaviour : MonoBehaviour
     public void StopIceAndFinish()
     {
         EnableIceMode(false);
-        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+        //if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
         GameEvents.RaisePlayerActionFinished();
     }
 
@@ -293,8 +291,9 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
     
-    public bool isUndoRedo = false;
-
+    public bool isUndo = false;
+    public bool isRedo = false;
+    
     public void UndoState()
     {
         // 게임오버 및 비주얼 복구
@@ -634,7 +633,7 @@ public class PlayerBehaviour : MonoBehaviour
             Invoke(nameof(UnlockInputAfterMove), 0.2f);
         }
         
-        if (!isUndoRedo)
+        if (!isUndo && !isRedo) // !(isUndo|| isRedo)
         {
             Invoke(nameof(RaiseActionFinished), 0.15f);
         }
@@ -667,7 +666,7 @@ public class PlayerBehaviour : MonoBehaviour
             // RaisePlayerRotated/Acted는 회전이 실제로 끝난 뒤 발동해야
             // 토글 타일이 올바른 타이밍에 반응합니다.
             _isRotating = true;
-            bool wasUndoRedo = isUndoRedo; // OnComplete 시점엔 플래그가 이미 해제돼있으므로 캡처
+            bool wasUndoRedo = isUndo|| isRedo; // OnComplete 시점엔 플래그가 이미 해제돼있으므로 캡처
             arrow.transform
                 .DORotate(new Vector3(0, 0, targetAngle), DOTweenDuration)
                 .SetEase(Ease.OutElastic)
@@ -697,7 +696,13 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // 이미 폭발 애니메이션이 재생 중이라면 중복 실행 방지
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Explosion")) return;
-
+        
+        isUndo = false;
+        isRedo = false;
+        
+        _isRotating = false;
+        SetInputLock(false);
+        
         _rigidbody2D.velocity = Vector2.zero;
         _animator.Play("Explosion");
         arrow.SetActive(false);
@@ -705,6 +710,20 @@ public class PlayerBehaviour : MonoBehaviour
         // 효과음 실행
         soundEffectPlayer.PlaySoundEffect(explosionSound);
         GameEvents.RaisePlayerDied(); //플레이어가 죽었다는 방송을 내보낸다
+        
+        GameEvents.RaiseInputLockChanged(false);
+        
+        // Ice 타일을 밟고 죽었을 경우, 행동 종료
+        if (_isOnIce)
+        {
+            _isOnIce = false; // Ice 상태 해제
+            if (_slideCoroutine != null)
+            {
+                StopCoroutine(_slideCoroutine);
+                _slideCoroutine = null;
+            }
+        }
+        
     }
 
     public void ReachedDestination()
@@ -773,6 +792,9 @@ public class PlayerBehaviour : MonoBehaviour
         //Ice 모드 초기화
         _isOnIce = false;
         _slideCoroutine = null;
+
+        isUndo = false;
+        isRedo = false;
         
         _stack = 0;
 

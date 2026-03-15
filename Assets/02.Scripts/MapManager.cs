@@ -168,7 +168,7 @@ public class MapManager : MonoBehaviour
 
      public void RotateAroundCell(PlayerBehaviour pb, float angle)
     {
-        if (_isRotating || pb == null || pb.isUndoRedo) return;
+        if (_isRotating || pb == null || pb.isUndo|| pb.isRedo) return;
         
         _isRotating = true;
         GameEvents.RaiseInputLockChanged(true);
@@ -213,7 +213,7 @@ public class MapManager : MonoBehaviour
 
     private void SaveMapState(PlayerBehaviour pb)
     {
-        if (pb == null || pb.isUndoRedo) return;
+        if (pb == null || pb.isUndo|| pb.isRedo) return;
         
         _undoMapHistory.Push(new MapState
         {

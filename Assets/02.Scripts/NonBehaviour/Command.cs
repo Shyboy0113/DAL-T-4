@@ -67,7 +67,7 @@ public class MoveCommand : ICommand
 
     public void Execute()
     {
-        if (_playerBehaviour.isUndoRedo && _nextPositionRecorded)
+        if ((_playerBehaviour.isUndo|| _playerBehaviour.isRedo) && _nextPositionRecorded)
         {
             // Redo: 물리 이동 없이 기록된 위치로 즉시 텔레포트
             // AddForce/Slide를 쓰면 타일들을 물리적으로 지나쳐 OnTriggerEnter가 발생합니다.
@@ -106,6 +106,19 @@ public class MoveCommand : ICommand
         
         _playerBehaviour.EnableIceMode(_wasOnIce);
         _playerBehaviour.StopVelocity();
+    }
+}
+
+public class DeathCommand : ICommand
+{
+    public void Execute()
+    {
+        
+    }
+
+    public void Undo()
+    {
+        
     }
 }
 

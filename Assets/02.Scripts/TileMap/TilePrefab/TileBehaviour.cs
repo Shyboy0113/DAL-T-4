@@ -632,7 +632,7 @@ public class TileBehaviour : BaseTile
         // Undo/Redo 중에는 새 TileCommand를 생성하지 않습니다.
         // Redo 시 PopNonPlayerCommands가 기존 TileCommand를 재실행하므로
         // 여기서 추가 생성하면 중복 실행이 됩니다.
-        if (player != null && player.isUndoRedo) //Undo/Redo 중일 때
+        if (player != null && (player.isUndo || player.isRedo)) //Undo/Redo 중일 때
         {
             if (IsCountableTile())
             {
@@ -782,7 +782,7 @@ public class TileBehaviour : BaseTile
         _isPlayerOnMe = true;
         
         // Undo/Redo 중에는 타일 밟기 로직 무시
-        if (playerBehaviour.isUndoRedo || _isWaitPlayerExit) return;
+        if (playerBehaviour.isUndo || playerBehaviour.isRedo || _isWaitPlayerExit) return;
 
         // trapToggle을 밟았을 때, 플레이어 사망처리
         if (currentTileType == TileType.TrapToggle)
@@ -808,7 +808,7 @@ public class TileBehaviour : BaseTile
     _isEnemyOnMe = true;
     _currentEnemyOnMe = enemy;
     
-    if (player.isUndoRedo || _isWaitEnemyExit || enemy.IsDead) return;
+    if (player.isUndo || player.isRedo || _isWaitEnemyExit || enemy.IsDead) return;
 
     if (currentTileType == TileType.TrapToggle)
     {
@@ -863,7 +863,7 @@ public class TileBehaviour : BaseTile
 
     private void RotateTile(float angle)
     {
-        if (player.isUndoRedo || mapManager.IsRotating) return;
+        if (player.isUndo || player.isRedo  || mapManager.IsRotating) return;
         
         // 현재 플레이어가 밟고 있는 타일의 월드 좌표를 넘겨줌
         GameEvents.RaiseTileMapRotated(player, angle);
@@ -873,7 +873,7 @@ public class TileBehaviour : BaseTile
     {
         yield return new WaitForSeconds(CurrentBreakDelay);
             
-        if (player.isUndoRedo) yield break;
+        if (player.isUndo || player.isRedo ) yield break;
 
         // 이미 Undo로 _currentHit이 복원됐을 수 있으므로 체크 추가
         if (_currentHit < CurrentBreakHitCount) yield break;

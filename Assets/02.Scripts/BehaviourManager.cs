@@ -21,13 +21,13 @@ public class BehaviourManager : MonoBehaviour
     private Stack<ICommand> _redoStack = new Stack<ICommand>();
 
     // 플레이어가 실제로 완료한 행동 횟수 (3의 배수마다 적 턴)
-    private int _actionCount = 0;
+    public int actionCount = 0;
 
     private void Awake()
     {
         _undoStack.Clear();
         _redoStack.Clear();
-        _actionCount = 0;
+        actionCount = 0;
     }
 
     private void OnEnable()
@@ -55,6 +55,8 @@ public class BehaviourManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Z)) UndoTurn();
             if (Input.GetKeyDown(KeyCode.Y)) RedoTurn();
         }
+        
+        Debug.Log(actionCount);
     }
 
     public void ExecuteCommand(ICommand command)
@@ -70,7 +72,7 @@ public class BehaviourManager : MonoBehaviour
         // Undo/Redo 중에는 redoStack을 비우지 않습니다.
         // Redo 중 TileCommand.Execute() → HandleToggle() → ExecuteCommand() 체인이
         // 발생할 수 있으며, 이때 Clear()하면 남은 redoStack이 통째로 날아가는 버그가 있습니다.
-        if (!playerBehaviour.isUndoRedo)
+        if (!playerBehaviour.isUndo && !playerBehaviour.isRedo)
         {
             _redoStack.Clear();
         }
@@ -86,16 +88,18 @@ public class BehaviourManager : MonoBehaviour
     // 플레이어 행동 + 타일 반응이 모두 끝난 시점에 수신
     private void OnPlayerActionFinished()
     {
+        actionCount++;
+        
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
 
         // 이동이 완전히 끝난 위치를 MoveCommand에 기록합니다.
         // Redo 시 AddForce/Slide 대신 이 위치로 텔레포트하여
         // 중간 타일들을 물리적으로 지나치는 OnTriggerEnter를 방지합니다.
         RecordMoveDestination();
+        
+        if (playerBehaviour.isRedo) return;
 
-        _actionCount++;
-
-        if (_actionCount % 3 == 0)
+        if (actionCount % 3 == 0)
         {
             StartCoroutine(TurnSequence());
         }
@@ -140,7 +144,7 @@ public class BehaviourManager : MonoBehaviour
         // 플레이어 커맨드가 스택에 없으면 Undo 불가
         if (!HasPlayerCommand(_undoStack)) return;
 
-        playerBehaviour.isUndoRedo = true;
+        playerBehaviour.isUndo = true;
 
         // 1. 맨 위의 TileCommand들을 Undo (플레이어 행동 직후 쌓인 것)
         PopNonPlayerCommands(_undoStack, _redoStack, undo: true);
@@ -154,9 +158,9 @@ public class BehaviourManager : MonoBehaviour
 
             playerBehaviour.UndoState();
             GameEvents.RaiseUndoTriggered();
-            _actionCount = Mathf.Max(0, _actionCount - 1);
+            actionCount = Mathf.Max(0, actionCount - 1);
             
-            GameEvents.RaisePlayerActed(_actionCount); 
+            GameEvents.RaisePlayerActed(actionCount); 
             GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
             GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount);
             
@@ -168,7 +172,7 @@ public class BehaviourManager : MonoBehaviour
         // 1~2번째 행동을 Undo할 때는 step 1에서 처리할 비플레이어 커맨드가 없습니다.
 
         UpdateUndoRedoUI();
-        StartCoroutine(IUndoRedo(false));
+        StartCoroutine(IUndo());
     }
 
     public void RedoTurn()
@@ -177,7 +181,7 @@ public class BehaviourManager : MonoBehaviour
         if (playerBehaviour.CheckSkip()) return; // 회전/이동/적 턴 중엔 금지
         if (!HasPlayerCommand(_redoStack)) return;
 
-        playerBehaviour.isUndoRedo = true;
+        playerBehaviour.isRedo = true;
 
         // 1. Redo 스택 맨 위 TileCommand들 재실행 (있다면)
         PopNonPlayerCommands(_redoStack, _undoStack, undo: false);
@@ -193,10 +197,9 @@ public class BehaviourManager : MonoBehaviour
             playerBehaviour.RedoState(type);
 
             // RaiseActionFinished는 isUndoRedo=true라 차단됩니다.
-            // _actionCount는 여기서 직접 증가시킵니다.
-            _actionCount++;
+            // actionCount는 여기서 직접 증가시킵니다.
             
-            GameEvents.RaisePlayerActed(_actionCount); 
+            GameEvents.RaisePlayerActed(actionCount); 
             GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
             GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount);
 
@@ -215,7 +218,9 @@ public class BehaviourManager : MonoBehaviour
         }
 
         UpdateUndoRedoUI();
-        StartCoroutine(IUndoRedo(false));
+
+        StartCoroutine(IRedo());
+        
     }
 
     // 스택 맨 위의 비플레이어 커맨드(적/타일)를 대상 스택으로 이동하며 실행/취소
@@ -304,7 +309,7 @@ public class BehaviourManager : MonoBehaviour
     {
         _undoStack.Clear();
         _redoStack.Clear();
-        _actionCount = 0;
+        actionCount = 0;
         currentTurn = TurnState.Player;
         playerBehaviour.InitPlayer();
         enemyManager.InitEnemies();
@@ -320,10 +325,21 @@ public class BehaviourManager : MonoBehaviour
         currentTurn = TurnState.Player;
     }
 
-    private IEnumerator IUndoRedo(bool toggle)
+    private IEnumerator IUndo()
     {
         Physics2D.SyncTransforms();
         yield return new WaitForSeconds(0.05f);
-        playerBehaviour.isUndoRedo = toggle;
+        playerBehaviour.isUndo = false;
+    }
+
+    private IEnumerator IRedo()
+    {
+        Physics2D.SyncTransforms();
+        yield return new WaitForSeconds(0.05f);
+
+        if (!playerBehaviour.IsOnIce())
+        {
+            playerBehaviour.isRedo = false;   
+        }
     }
 }
