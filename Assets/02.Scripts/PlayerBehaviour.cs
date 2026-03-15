@@ -94,7 +94,6 @@ public class PlayerBehaviour : MonoBehaviour
     private bool _isEnemyActing = false;
     private bool _isMapBusy = false;    
     private void SetInputLock(bool isLocked) => _isInputLocked = isLocked;
-    public bool IsRotating() => _isRotating; // 외부에서 회전 중인지 확인할 수 있는 public 메서드
     
     #endregion
     
