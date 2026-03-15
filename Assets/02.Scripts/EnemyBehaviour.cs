@@ -256,6 +256,71 @@ public class EnemyBehaviour : MonoBehaviour
     #region EnemyAI
     
     private Vector3 CalculateMove(Vector3 targetPosition)
+{
+    // 1. Tilemap 또는 로컬 그리드 좌표를 사용하는 것이 가장 안전합니다.
+    // 여기서는 기존 방식을 유지하되, 목적지 도달 가능성을 높이는 로직을 추가합니다.
+    Vector3Int startCoord = Vector3Int.RoundToInt(new Vector3(transform.position.x - 0.5f, transform.position.y - 0.5f, 0));
+    Vector3Int targetCoord = Vector3Int.RoundToInt(new Vector3(targetPosition.x - 0.5f, targetPosition.y - 0.5f, 0));
+
+    if (startCoord == targetCoord) return transform.position;
+
+    Queue<Vector3Int> queue = new Queue<Vector3Int>();
+    Dictionary<Vector3Int, Vector3Int> parentMap = new Dictionary<Vector3Int, Vector3Int>();
+
+    queue.Enqueue(startCoord);
+    parentMap[startCoord] = startCoord;
+
+    bool found = false;
+    int maxSearchSteps = 200;
+    int steps = 0;
+
+    while (queue.Count > 0 && steps < maxSearchSteps)
+    {
+        Vector3Int current = queue.Dequeue();
+        steps++;
+
+        if (current == targetCoord)
+        {
+            found = true;
+            break;
+        }
+
+        Vector3Int[] directions = { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
+        foreach (var dir in directions)
+        {
+            Vector3Int next = current + dir;
+
+            if (!parentMap.ContainsKey(next))
+            {
+                // 수정: 목적지(플레이어 칸)라면 함정이라도 경로에 포함시킵니다.
+                bool isTarget = (next == targetCoord);
+                if (isTarget || IsWalkable(next))
+                {
+                    parentMap[next] = current;
+                    queue.Enqueue(next);
+                }
+            }
+        }
+    }
+
+    if (found)
+    {
+        Vector3Int nextStep = targetCoord;
+        while (parentMap[nextStep] != startCoord)
+        {
+            nextStep = parentMap[nextStep];
+        }
+        
+        // 회전된 맵에서도 정확한 위치를 찾기 위해, 
+        // 0.5를 더한 '상대적 위치'를 현재 부모(MapRoot)의 로컬 좌표에 맞춰 변환하는 것이 좋습니다.
+        return new Vector3(nextStep.x + 0.5f, nextStep.y + 0.5f, transform.position.z);
+    }
+
+    // 경로를 못 찾았을 때의 보험: 플레이어 방향으로 한 칸이라도 가려고 시도 (기존 Greedy 방식)
+    return CalculateGreedyMove(targetPosition); 
+}
+    
+    private Vector3 CalculateGreedyMove(Vector3 targetPosition)
     {
         //Vector3Int startCoordination = Vector3Int.FloorToInt(transform.position);
         Vector3Int startCoordination = Vector3Int.RoundToInt(
