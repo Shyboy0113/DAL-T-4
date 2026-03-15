@@ -17,7 +17,10 @@ public class EnemyManager : MonoBehaviour
 
     private void InsertEnemy()
     {
-        _enemies.AddRange(GetComponentsInChildren<EnemyBehaviour>());
+        if (_enemies.Count == 0)
+        {
+            _enemies.AddRange(GetComponentsInChildren<EnemyBehaviour>());
+        }
     }
     
     public void InitEnemies()

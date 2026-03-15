@@ -43,6 +43,8 @@ public static class GameEvents
         SaveStateBeforeAction?.Invoke();
     }
     
+    // 키 시퀀스 UI에서의 Undo/Redo Button의 SetActive를 결정하는 이벤트
+    // BehaviourManaer에서 총괄
     public static void RaiseUndoRedoCountChanged(int undoCount, int redoCount)
     {
         UndoRedoCountChanged?.Invoke(undoCount, redoCount);

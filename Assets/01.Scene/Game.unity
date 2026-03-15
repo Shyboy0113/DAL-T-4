@@ -2592,11 +2592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 506976f87af14b19bc5c1b3ecf270c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemies:
-  - {fileID: 566136743}
-  - {fileID: 1229946306}
-  - {fileID: 999687974}
-  - {fileID: 1784008376}
+  _enemies: []
   delayTime: 0.1
 --- !u!1 &566136734
 GameObject:

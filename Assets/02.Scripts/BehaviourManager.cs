@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TurnState {Player, Enemy, Processing}
+public enum TurnState {Player, Tile, Enemy}
 
 public class BehaviourManager : MonoBehaviour
 {
@@ -17,9 +17,6 @@ public class BehaviourManager : MonoBehaviour
     [Header("Command History")]
     private Stack<ICommand> _undoStack = new Stack<ICommand>();
     private Stack<ICommand> _redoStack = new Stack<ICommand>();
-    
-    public int UndoCount => _undoStack.Count;
-    public int RedoCount => _redoStack.Count;
 
     // 플레이어가 실제로 완료한 행동 횟수 (3의 배수마다 적 턴)
     private int _actionCount = 0;
@@ -79,7 +76,8 @@ public class BehaviourManager : MonoBehaviour
         // TileCommand는 씬 초기화 시에도 발생하므로 UI 카운트에서 제외
         if (IsPlayerCommand(command) || IsEnemyCommand(command))
         {
-            NotifyUndoRedoUI();
+            // GameEvents.RaiseUndoRedoCountChanged 호출
+            UpdateUndoRedoUI();
         }
     }
 
@@ -157,7 +155,7 @@ public class BehaviourManager : MonoBehaviour
         // 적/타일 커맨드를 먼저 처리하고, step 2에서 플레이어 커맨드를 Undo합니다.
         // 1~2번째 행동을 Undo할 때는 step 1에서 처리할 비플레이어 커맨드가 없습니다.
 
-        NotifyUndoRedoUI();
+        UpdateUndoRedoUI();
         StartCoroutine(IUndoRedo(false));
     }
 
@@ -200,7 +198,7 @@ public class BehaviourManager : MonoBehaviour
             // TurnSequence()를 별도로 호출하면 적이 2번 움직입니다. 호출하지 않습니다.
         }
 
-        NotifyUndoRedoUI();
+        UpdateUndoRedoUI();
         StartCoroutine(IUndoRedo(false));
     }
 
@@ -237,13 +235,19 @@ public class BehaviourManager : MonoBehaviour
         return count;
     }
 
-    private void NotifyUndoRedoUI()
+    #region UndoRedoUI
+
+    private void UpdateUndoRedoUI()
     {
+        // 키 시퀀스 UI에서의 Undo/Redo Button의 SetActive를 결정하는 이벤트
         GameEvents.RaiseUndoRedoCountChanged(
             PlayerCommandCount(_undoStack),
             PlayerCommandCount(_redoStack)
         );
     }
+
+    #endregion
+    
 
     public bool IsPlayerCommand(ICommand command)
     {

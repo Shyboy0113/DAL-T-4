@@ -534,9 +534,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2dd25aedacf88c84493e163312938989, type: 3}
   - {fileID: 21300000, guid: b421bcbe0f8a3874ab8b821326634da9, type: 3}
   - {fileID: 21300000, guid: 4ac8e7ea0544f9849998edbe4534d4e6, type: 3}
-  backgroundRenderer: {fileID: 0}
+  backgroundRenderer: {fileID: 4596620451026543370}
   iconRenderer: {fileID: 4951251146867796789}
-  currentActivationCount: 2
   toggleSound: {fileID: 8300000, guid: 21ce263de1312d247a2ecb44238a23f3, type: 3}
   rotationSound: {fileID: 8300000, guid: 1c1baf53e73a70a458a1dbea2768b151, type: 3}
   crackSound: {fileID: 8300000, guid: 0fd2b5920bf112347a0aa74d9e2f78b4, type: 3}

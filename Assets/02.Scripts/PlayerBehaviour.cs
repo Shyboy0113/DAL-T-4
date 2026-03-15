@@ -64,7 +64,7 @@ public class PlayerBehaviour : MonoBehaviour
     [Header("Puzzle Stats")]
     public int moveCount = 0;
     public int rotationCount = 0;
-    public int totalActionCount => moveCount + rotationCount; // 읽기 전용 속성
+    public int TotalActionCount => moveCount + rotationCount; // 읽기 전용 속성
     
     public void CalculateMoveCount(int count)
     {
@@ -601,6 +601,7 @@ public class PlayerBehaviour : MonoBehaviour
     // ICommand 중 MoveCommand를 위한 메서드
     public void MovePlayer()
     {
+        
         Vector2 moveDirection = _playerDirection switch
         {
             PlayerDirection.Right => Vector2.right,
@@ -612,6 +613,9 @@ public class PlayerBehaviour : MonoBehaviour
 
         _lastMoveDirection = moveDirection; // 방향 기억
 
+        GameEvents.RaisePlayerMoved(moveCount);
+        GameEvents.RaisePlayerActed(TotalActionCount);
+        
         //Ice타일 반영
         if (_isOnIce)
         {
@@ -630,9 +634,6 @@ public class PlayerBehaviour : MonoBehaviour
             SetInputLock(true);
             Invoke(nameof(UnlockInputAfterMove), 0.2f);
         }
-        
-        GameEvents.RaisePlayerMoved(moveCount);
-        GameEvents.RaisePlayerActed(totalActionCount);
         
         if (!isUndoRedo)
         {
@@ -677,7 +678,7 @@ public class PlayerBehaviour : MonoBehaviour
                     if (!wasUndoRedo)
                     {
                         GameEvents.RaisePlayerRotated(rotationCount);
-                        GameEvents.RaisePlayerActed(totalActionCount);
+                        GameEvents.RaisePlayerActed(TotalActionCount);
                         GameEvents.RaisePlayerActionFinished(); // 턴 전환 체크 신호
                     }
                 });
@@ -799,8 +800,6 @@ public class PlayerBehaviour : MonoBehaviour
         
         // 5. 애니메이션 초기화
         _animator.Play("Idle");
-        
-        GameEvents.RaiseUndoRedoCountChanged(0, 0);
         
     }
     

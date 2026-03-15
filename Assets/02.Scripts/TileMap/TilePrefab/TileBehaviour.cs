@@ -7,20 +7,26 @@ using TMPro;
 
 using DG.Tweening;
 
+#region Struct/Enum
+
 [System.Serializable]
 public struct TileStateSnapshot
 {
     public int hitCount;
     public bool isToggled;
-    public int activationCount;
+    public int playerMoveCount;
+    public int playerRotationCount;
+    public int playerTotalActionCount;
     public Quaternion rotation;
     public bool isVisible; // Breakable 타일의 파괴 여부 체크용
 
-    public TileStateSnapshot(int hit, bool toggled, int activation, Quaternion rot, bool visible)
+    public TileStateSnapshot(int hit, bool toggled, int moveCount, int rotationCount, int totalActionCount, Quaternion rot, bool visible)
     {
         hitCount = hit;
         isToggled = toggled;
-        activationCount = activation;
+        playerMoveCount = moveCount;
+        playerRotationCount = rotationCount;
+        playerTotalActionCount = totalActionCount;
         rotation = rot;
         isVisible = visible;
     }
@@ -50,10 +56,10 @@ public enum TileType
     FirstDestination,
     SecondDestination,
     
-    // 토글 판정
-    StepOnToggle, // 플레이어가 '직접' 밟았을 때 ToggleTargeted 타일 토글 처리
+    StepOn, // 플레이어가 '직접' 밟았을 때 ToggleTargeted 타일 토글 처리
     ToggleTargeted, // 토글되는 타일, 토글 상태일 때 밟으면 게임오버
-
+    
+    // 토글 판정
     TrapToggle, //
     ActiveToggle,
     MoveToggle,
@@ -64,30 +70,6 @@ public enum TileType
     ColorToggle,
     ConditionalToggle // 자율적으로 구현
 }
-
-/*
-TileSprite 배치 순서
-0	None	빈 타일 혹은 기본 바닥
-1	QuarterClockwiseRotation	90도 시계 방향 회전 타일
-2	HalfClockRotation	180도 회전 타일
-3	QuarterCounterClockwiseRotation	90도 반시계 방향 회전 타일
-4	HalfCounterClockRotation	180도 반시계 방향 회전 타일
-5	StartTeleport	텔레포트 시작 (ID가 0일 때 기본 이미지)
-6	EndTeleport	텔레포트 도착 (ID가 0일 때 기본 이미지)
-7	Breakable	파괴 가능 타일 (breakableSprites 배열이 우선됨)
-8	Ice	얼음 타일 (미끄러짐)
-9	Stop	정지 타일
-10	FirstDestination	첫 번째 목적지
-11	SecondDestination	두 번째 목적지
-12	StepOnToggle	발판형 토글 스위치
-13	ToggleTargeted	토글 대상 타일
-14	TrapToggle	함정 토글 타일
-15	ActiveToggle	행동 횟수 토글
-16	MoveToggle	이동 횟수 토글
-17	RotationToggle	회전 횟수 토글
-18	ColorToggle	컬러 토글 스위치
-19	ConditionalToggle	조건부 토글 타일
-*/
 
 [Flags] // 비트 플래그 사용
 public enum TileColor
@@ -101,6 +83,7 @@ public enum TileColor
     Magenta = Red | Blue,
     White = Red | Green | Blue
 }
+#endregion
 
 public class TileBehaviour : BaseTile
 {
@@ -141,40 +124,43 @@ public class TileBehaviour : BaseTile
     [SerializeField] private Sprite[] tileSprites;
 
     // ColorTile일 경우 검정색일 때 버튼이 사라지는 문제 해결
-    [Header("Renderers")] [SerializeField] private SpriteRenderer bgRenderer; // 하얀 배경용 (항상 흰색)
+    [Header("Renderers")]
+    [SerializeField] private SpriteRenderer backgroundRenderer; // 하얀 배경용 (항상 흰색)
     [SerializeField] private SpriteRenderer iconRenderer; // 가운데 버튼/아이콘용 (색상 변경)
 
-    [Header("Activation & Stats")] [SerializeField]
-    private int maxActivationCount = -1;
-
-    private int _currentActivationCount = 0;
-    private bool _isWaitExit = false;
+    [Header("Activation & Stats")]
+    private bool _isWaitPlayerExit = false;
+    private bool _isWaitEnemyExit = false;
     private bool _isPlayerOnMe = false;
-
     private bool _isEnemyOnMe = false; // 적이 현재 타일 위에 있는지 여부 체크
     private EnemyBehaviour _currentEnemyOnMe; // 현재 타일 위의 적 참조
 
-    [Header("SFX & Visuals")] private AudioSource _effectSound;
-
+    [Header("SFX & Visuals")]
+    private AudioSource _effectSound;
     [SerializeField] private AudioClip toggleSound;
     [SerializeField] private AudioClip rotationSound;
     [SerializeField] private AudioClip crackSound;
     [SerializeField] private AudioClip breakSound;
 
-    [Header("Breakable")] [SerializeField] private Sprite[] breakableSprites;
-    [SerializeField] private int breakHitCount = 2;
-    [SerializeField] private float breakDelay = 0.5f;
-
+    [Header("Breakable")]
+    [SerializeField] private Sprite[] breakableSprites;
     private int _currentHit = 0;
 
-    [Header("Toggle")] [SerializeField] private bool isToggled = false;
+    [Header("Toggle")]
+    [SerializeField] private bool isToggled = false;
     public bool IsToggled => isToggled;
     
     [SerializeField] private Sprite toggleOffSprite;
-
-    [SerializeField] private int toggleActivationCount = 2;
     [SerializeField] private PlayerBehaviour player; // stackCount 참조용
-
+    
+    [Header("Animations")]
+    [SerializeField] private Animator animator;
+    
+    [Header("Tilemap")]
+    private Tilemap _tilemap;
+    [SerializeField] private MapManager mapManager;
+    
+    // 물리 효과
     private Collider2D _collider;
 
     #region Undo/Redo
@@ -183,7 +169,9 @@ public class TileBehaviour : BaseTile
         return new TileStateSnapshot(
             _currentHit,
             isToggled,
-            _currentActivationCount,
+            player ? player.moveCount : 0,
+            player ? player.rotationCount : 0,
+            player ? player.TotalActionCount : 0,
             transform.rotation,
             iconRenderer.enabled
         );
@@ -193,7 +181,6 @@ public class TileBehaviour : BaseTile
     {
         _currentHit = snapshot.hitCount;
         isToggled = snapshot.isToggled;
-        _currentActivationCount = snapshot.activationCount;
 
         // rotation은 회전 타일(RotationTile)일 때만 복원합니다.
         // 일반 타일에 rotation을 복원하면 맵 전체 회전(mapPivot)과 충돌하여
@@ -205,17 +192,30 @@ public class TileBehaviour : BaseTile
         
         // 비주얼 복구
         iconRenderer.enabled = snapshot.isVisible;
-        bgRenderer.enabled = snapshot.isVisible;
+        backgroundRenderer.enabled = snapshot.isVisible;
         _collider.enabled = snapshot.isVisible;
+
+        _isWaitPlayerExit = false;
+        _isWaitEnemyExit = false;
         
         UpdateVisuals(true);
-        UpdateCountText(snapshot.hitCount);
+
+        int snapshotCount = currentTileType switch
+        {
+            TileType.MoveToggle => snapshot.playerMoveCount,
+            TileType.RotationToggle => snapshot.playerRotationCount,
+            TileType.ActiveToggle => snapshot.playerTotalActionCount,
+            _ => 0
+
+        };
+        
+        UpdateCountText(snapshotCount);
     }
     
     public void ApplyTileCommand(PlayerBehaviour pb = null, EnemyBehaviour eb = null)
     {
-        _isWaitExit = true;
-        _currentActivationCount++;
+        if (pb != null) _isWaitPlayerExit = true;
+        if (eb != null) _isWaitEnemyExit = true;
 
         // 맵 회전 혹은 미끄러짐 로직일 때
         if (IsRotationTile() || currentTileType == TileType.Ice || currentTileType == TileType.Stop)
@@ -225,11 +225,6 @@ public class TileBehaviour : BaseTile
             {
                 target.position = new Vector3(transform.position.x, transform.position.y, target.position.z);
             }
-        }
-
-        if (IsReactiveTile())
-        {
-            isToggled = !isToggled;
         }
         
         // 타일 로직 실행
@@ -304,7 +299,7 @@ public class TileBehaviour : BaseTile
                 }
                 break;
 
-            case TileType.StepOnToggle:
+            case TileType.StepOn:
                 GameEvents.RaiseToggleTriggered(-1); // -1일 경우 
                 if (toggleSound) _effectSound.PlayOneShot(toggleSound);
                 break;
@@ -313,6 +308,7 @@ public class TileBehaviour : BaseTile
             case TileType.ActiveToggle:
             case TileType.MoveToggle:
             case TileType.RotationToggle:
+                isToggled = !isToggled;
                 if (isToggled)
                 {
                     if (_isPlayerOnMe && player != null)
@@ -326,18 +322,9 @@ public class TileBehaviour : BaseTile
                 }
                 break;
             case TileType.TrapToggle:
-                if (!isToggled)
-                {
-                    if (_isPlayerOnMe && player != null)
-                    {
-                        player.PlayExplosion();
-                    }
-                    if (_isEnemyOnMe && _currentEnemyOnMe != null)
-                    {
-                        _currentEnemyOnMe.PlayExplosion();
-                    }
-                }
-                break;
+                isToggled = !isToggled;
+                return; // break대신 return이 호출돼야 맨 아래줄의 UpdateVisuals가 호출 안됨
+            
             case TileType.ColorToggle:
                 GameEvents.RaiseColorToggleTriggered(CurrentTileColor);
                 break;
@@ -346,7 +333,7 @@ public class TileBehaviour : BaseTile
                 break;
         }
 
-        // isToggled는 ApplyAction 상단에서 이미 한 번만 뒤집힙니다.
+        // isToggled는 ApplyTileCommand 상단에서 이미 한 번만 뒤집힙니다.
         // 이전: 하단에 동일한 토글 코드가 중복되어 결과적으로 상태가 원래대로 돌아오는 버그 있었음
         
         UpdateVisuals(false); // 애니메이션 및 콜라이더 갱신
@@ -362,21 +349,18 @@ public class TileBehaviour : BaseTile
     {
         if (countText == null) return;
 
-        // 1. 카운트 타일인 경우 (남은 횟수 표시)
         if (IsCountableTile())
         {
-            // currentCount가 0일 때도 정상적으로 초기 수치가 나오도록 계산
+            if (CurrentToggleActivationCount <= 0) return;
             int safeCount = Mathf.Max(0, count);
             int remaining = CurrentToggleActivationCount - (safeCount % CurrentToggleActivationCount);
+            if (remaining == 0) remaining = CurrentToggleActivationCount;
             countText.text = remaining.ToString();
         }
-        // 2. 텔레포트 타일인 경우 (ID 표시)
         else if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
         {
-            int id = CurrentTeleportID;
-            countText.text = id > 0 ? id.ToString() : "";
+            countText.text = CurrentTeleportID > 0 ? CurrentTeleportID.ToString() : "";
         }
-        // 3. 그 외
         else
         {
             countText.text = "";
@@ -385,31 +369,49 @@ public class TileBehaviour : BaseTile
 
     #endregion
 
-    public bool IsReactiveTile()
+    public bool IsPlayerActionTile()
     {
-        return currentTileType == TileType.ToggleTargeted ||
-               //currentTileType == TileType.StepOnToggle ||
-               currentTileType == TileType.ActiveToggle ||
-               currentTileType == TileType.MoveToggle ||
-               currentTileType == TileType.RotationToggle ||
-               //currentTileType == TileType.ColorToggle ||
-               currentTileType == TileType.TrapToggle;
+        return currentTileType == TileType.ActiveToggle
+               || currentTileType == TileType.MoveToggle
+               || currentTileType == TileType.RotationToggle
+            ;
+    }
+    
+    public bool IsStepOnTile() //StepOn Toggle을 밟았을 때 작동하는 타일
+    {
+        return currentTileType == TileType.ToggleTargeted
+               || currentTileType == TileType.TrapToggle
+               // || currentTileType == TileType.ColorToggle
+               ;
+    }
+    
+    public bool IsAnimationTile()
+    {
+        return currentTileType == TileType.ToggleTargeted
+            || currentTileType == TileType.ActiveToggle
+            || currentTileType == TileType.MoveToggle
+            || currentTileType == TileType.RotationToggle 
+            || currentTileType == TileType.TrapToggle
+            // || currentTileType == TileType.ColorToggle
+            ;
     }
 
     public bool IsCountableTile() // 수치 특정이 되는 타일
     {
         return currentTileType == TileType.ActiveToggle
-               // || currentTileType == TileType.ToggleTargeted 
-               // || rrentTileType == TileType.StepOnToggle
                || currentTileType == TileType.MoveToggle
                || currentTileType == TileType.RotationToggle
-               // || currentTileType == TileType.ColorToggle
-               // || currentTileType == TileType.TrapToggle
             ;
     }
+    
+    private bool IsRotationTile()
+    {
+        return currentTileType == TileType.HalfClockwiseRotation ||
+               currentTileType == TileType.HalfCounterClockwiseRotation ||
+               currentTileType == TileType.QuarterClockwiseRotation ||
+               currentTileType == TileType.QuarterCounterClockwiseRotation;
+    }
 
-    [Header("Animations")] [SerializeField]
-    private Animator animator;
 
     private Color GetUnityColor(TileColor tileColor)
     {
@@ -476,10 +478,6 @@ public class TileBehaviour : BaseTile
 
     #endregion
 
-    private Tilemap _tilemap;
-
-    [SerializeField] private MapManager mapManager;
-
     private void Awake()
     {
         behaviourManager = FindObjectOfType<BehaviourManager>();
@@ -488,7 +486,7 @@ public class TileBehaviour : BaseTile
         _effectSound = GetComponentInParent<AudioSource>();
 
         if (animator == null) animator = GetComponent<Animator>();
-        animator.enabled = IsReactiveTile();
+        animator.enabled = IsAnimationTile();
 
         if (player == null) player = FindObjectOfType<PlayerBehaviour>();
 
@@ -501,15 +499,19 @@ public class TileBehaviour : BaseTile
 
         // isToggled와 콜라이더 동기화
         _collider = GetComponent<Collider2D>();
-        if (IsReactiveTile())
+        if (IsPlayerActionTile() || currentTileType == TileType.ToggleTargeted)
         {
             //None 타일의 isToggled 초기값이 false이고
             //collider2D는 평소에 켜져있어야 하므로 !isToggled
             _collider.enabled = !isToggled;
         }
-        else
+        else if (currentTileType == TileType.TrapToggle) // 함정 토글은 항상 활성화
         {
             _collider.enabled = true;
+        }
+        else
+        {
+            _collider.enabled = true; // 나머지 타일 활성화
         }
     }
 
@@ -560,12 +562,12 @@ public class TileBehaviour : BaseTile
             case TileType.ToggleTargeted:
                 GameEvents.ToggleTriggered += HandleToggle;
                 break;
+            case TileType.TrapToggle:
+                GameEvents.ToggleTriggered += HandleToggle;
+                break;
 
             case TileType.ActiveToggle:
                 GameEvents.PlayerActed += HandleToggle;
-                break;
-            case TileType.TrapToggle:
-                GameEvents.ToggleTriggered += HandleToggle;
                 break;
 
             case TileType.MoveToggle:
@@ -578,6 +580,8 @@ public class TileBehaviour : BaseTile
         }
         
         GameEvents.TileIconRotated += RotateTileIcon;
+        // 맵 회전 후
+        GameEvents.AfterMapRotated += OnAfterMapRotated;
 
     }
 
@@ -586,11 +590,11 @@ public class TileBehaviour : BaseTile
         GameEvents.ColorToggleTriggered -= HandleColorToggle;
         GameEvents.ToggleTriggered -= HandleToggle;
         GameEvents.PlayerActed -= HandleToggle;
-        GameEvents.ToggleTriggered -= HandleToggle;
         GameEvents.PlayerMoved -= HandleToggle;
         GameEvents.PlayerRotated -= HandleToggle;
-        
         GameEvents.TileIconRotated -= RotateTileIcon;
+        // 맵 회전 후
+        GameEvents.AfterMapRotated -= OnAfterMapRotated;
     }
 
     private void HandleColorToggle(TileColor color)
@@ -603,7 +607,7 @@ public class TileBehaviour : BaseTile
             UpdateVisuals(false);
 
             // 일반 Toggle일 때
-            if (isToggled && IsReactiveTile())
+            if (isToggled && IsAnimationTile())
             {
                 if (_isPlayerOnMe && player != null)
                 {
@@ -625,19 +629,17 @@ public class TileBehaviour : BaseTile
         // Redo 시 PopNonPlayerCommands가 기존 TileCommand를 재실행하므로
         // 여기서 추가 생성하면 중복 실행이 됩니다.
         if (player != null && player.isUndoRedo) return;
-
-        if (currentCount == -1 ||
-            (currentCount > 0 && currentCount % CurrentToggleActivationCount == 0))
+        
+        if (currentCount == -1 || // currentCount == -1은 '무조건 작동' 신호
+        (currentCount > 0 && currentCount % CurrentToggleActivationCount == 0))
         {
             // 현재 타일의 스냅샷을 기록함
             behaviourManager.ExecuteCommand(new TileCommand(this));
-
-            // 토글 후 위에 서있는 캐릭터 즉시 폭발 판정
-            CheckOccupantsAfterToggle();
         }
-
+        
         // 타일 변화 후 UI 갱신
         UpdateCountText(currentCount);
+        
     }
 
     private void CheckOccupantsAfterToggle()
@@ -654,7 +656,7 @@ public class TileBehaviour : BaseTile
         }
 
         // 그 외 ReactiveTile: isToggled=true(활성) 일 때 위험
-        if (IsReactiveTile() && isToggled)
+        if ((IsPlayerActionTile() || currentTileType == TileType.ToggleTargeted)&& isToggled)
         {
             if (_isPlayerOnMe && player != null) player.PlayExplosion();
             if (_isEnemyOnMe && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
@@ -669,10 +671,10 @@ public class TileBehaviour : BaseTile
         // 애니메이션을 사용하는 타일일 경우
         if (animator != null && animator.isActiveAndEnabled)
         {
-            if (IsReactiveTile())
+            if (IsAnimationTile())
             {
                 string stateName = currentTileType.ToString();
-
+                
                 if (!isToggled)
                 {
                     stateName = "Reverse" + stateName;
@@ -689,18 +691,19 @@ public class TileBehaviour : BaseTile
             _collider = GetComponent<Collider2D>();
         }
 
-        // IsReactiveTile인 경우에만 isToggled 상태에 따라 콜라이더를 제어합니다.
+        // IsPlayerActionTile인 경우에만 isToggled 상태에 따라 콜라이더를 제어합니다.
         // TrapToggle은 항상 콜라이더가 켜져 있어야 합니다 (함정 감지를 위해).
         // 그 외 일반 타일은 콜라이더를 항상 유지합니다.
-        if (currentTileType == TileType.TrapToggle)
-        {
-            _collider.enabled = true;
-        }
-        else if (IsReactiveTile())
+        
+        if (IsPlayerActionTile() || currentTileType == TileType.ToggleTargeted)
         {
             // isToggled=true(문 열림) → 콜라이더 OFF (통과 가능)
             // isToggled=false(문 닫힘) → 콜라이더 ON (막혀 있음)
             _collider.enabled = !isToggled;
+        }
+        else if (currentTileType == TileType.TrapToggle)
+        {
+            _collider.enabled = true;
         }
         else
         {
@@ -711,14 +714,14 @@ public class TileBehaviour : BaseTile
 
     private void UpdateSprite()
     {
-        if (bgRenderer == null || iconRenderer == null) return;
+        if (backgroundRenderer == null || iconRenderer == null) return;
 
         // 1. 공통 배경 설정
-        bgRenderer.sprite = tileSprites[0]; // 0번을 기본 배경으로 사용
-        bgRenderer.color = Color.white;
+        backgroundRenderer.sprite = tileSprites[0]; // 0번을 기본 배경으로 사용
+        backgroundRenderer.color = Color.white;
 
         // 2. 아이콘 색상 설정
-        iconRenderer.color = (currentTileType == TileType.ColorToggle || IsReactiveTile())
+        iconRenderer.color = (currentTileType == TileType.ColorToggle || IsPlayerActionTile())
             ? GetUnityColor(CurrentTileColor)
             : Color.white;
 
@@ -757,24 +760,34 @@ public class TileBehaviour : BaseTile
         iconRenderer.sprite = nextIcon;
     }
 
+    // 맵 회전 / 텔레포트 / 미끄러짐 / 클리어 / Breakable / StepOn 타일은 아래 함수에서 발동됨
     protected override void OnPlayerEnter(PlayerBehaviour playerBehaviour)
     {
+        // 플레이어 행동 - 타일 로직 발동 - 타일 물리 발동
+        // ActiveToggle, MoveToggle, RotationToggle은 HandleToggle로 처리해야 함
+        
         _isPlayerOnMe = true;
         
         // Undo/Redo 중에는 타일 밟기 로직 무시
-        if (playerBehaviour.isUndoRedo || _isWaitExit) return;
+        if (playerBehaviour.isUndoRedo || _isWaitPlayerExit) return;
 
-        if (CurrentMaxActivationCount != -1 && _currentActivationCount >= CurrentMaxActivationCount) return;
+        // trapToggle을 밟았을 때, 플레이어 사망처리
+        if (currentTileType == TileType.TrapToggle)
+        {
+            if (!isToggled) playerBehaviour.PlayExplosion();
+            return;
+        }
         
+        // HandleToggle 이벤트로 처리되는 타일은 여기서 실행 금지
+        if (IsAnimationTile())
+        {
+            CheckOccupantsAfterToggle(); // _isPlayerOnMe=true인 상태에서 체크
+            return;
+        }
+        
+        // 각 타일의 currentTileType에 맞는 커맨드를 생성 후, 
         TileCommand command = new TileCommand(this, pb : playerBehaviour);
         behaviourManager.ExecuteCommand(command);
-
-        // 타일 물리 반응이 끝난 뒤 토글 이벤트 발생
-        GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
-        GameEvents.RaisePlayerActed(playerBehaviour.totalActionCount);
-
-        // PlayerActionFinished는 PlayerBehaviour.MovePlayer()의 Invoke(RaiseActionFinished, 0.15f)에서 발생합니다.
-        // 타일이 여러 개 겹쳐도 1번만 발생하도록 타일이 아닌 플레이어 쪽에서 관리합니다.
     }
 
     protected override void OnEnemyEnter(EnemyBehaviour enemy)
@@ -782,21 +795,22 @@ public class TileBehaviour : BaseTile
     _isEnemyOnMe = true;
     _currentEnemyOnMe = enemy;
     
-    if (player.isUndoRedo || _isWaitExit || enemy.IsDead) return;
+    if (player.isUndoRedo || _isWaitEnemyExit || enemy.IsDead) return;
 
-    // 적에게 반응하는 타일만 허용 (화이트리스트)
+    if (currentTileType == TileType.TrapToggle)
+    {
+        if( !isToggled) enemy.PlayExplosion();
+        return;
+    }
+    
+    // 적에게 반응하는 타일만 허용
     switch (currentTileType)
     {
         case TileType.Ice:
         case TileType.Stop:
-        case TileType.ToggleTargeted:
-        case TileType.TrapToggle:
-        case TileType.ActiveToggle:
-        case TileType.MoveToggle:
-        case TileType.RotationToggle:
-            break; // 통과
+            break;
         default:
-            return; // 나머지는 무시
+            return;
     }
     
     behaviourManager.ExecuteCommand(new TileCommand(this, eb: enemy));
@@ -810,7 +824,7 @@ public class TileBehaviour : BaseTile
 
             if (!mapManager.IsRotating)
             {
-                _isWaitExit = false;
+                _isWaitPlayerExit = false;
             }
             
             // 맵 전환 등으로 타일이 비활성화된 상태에서 Exit 이벤트가 뒤늦게 발생할 수 있으므로
@@ -825,16 +839,14 @@ public class TileBehaviour : BaseTile
         {
             _isEnemyOnMe = false;
             _currentEnemyOnMe = null;
+            
+            if (!mapManager.IsRotating)
+            {
+                _isWaitEnemyExit = false;
+            }
         }
     }
 
-    private bool IsRotationTile()
-    {
-        return currentTileType == TileType.HalfClockwiseRotation ||
-               currentTileType == TileType.HalfCounterClockwiseRotation ||
-               currentTileType == TileType.QuarterClockwiseRotation ||
-               currentTileType == TileType.QuarterCounterClockwiseRotation;
-    }
 
     private void RotateTile(float angle)
     {
@@ -855,7 +867,7 @@ public class TileBehaviour : BaseTile
             
         // 맵에서 타일을 없애는 대신 시각/물리적으로만 비활성화 (Undo 가능하게)
         iconRenderer.enabled = false;
-        bgRenderer.enabled = false;
+        backgroundRenderer.enabled = false;
         _collider.enabled = false;
             
         if (breakSound) _effectSound.PlayOneShot(breakSound);
@@ -871,5 +883,11 @@ public class TileBehaviour : BaseTile
     private void OnDestroy()
     {
         StopAllCoroutines();
+    }
+    
+    private void OnAfterMapRotated(bool freeze)
+    {
+        if (freeze) return; // false(해제)일 때만 처리
+        _isWaitEnemyExit = false;
     }
 }
