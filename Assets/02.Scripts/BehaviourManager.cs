@@ -11,6 +11,8 @@ public class BehaviourManager : MonoBehaviour
     [SerializeField] private PlayerBehaviour playerBehaviour;
     [SerializeField] private EnemyManager enemyManager;
     
+    [SerializeField] private MapManager mapManager;
+    
     [Header("Turn State")]
     public TurnState currentTurn = TurnState.Player;
 
@@ -119,6 +121,11 @@ public class BehaviourManager : MonoBehaviour
 
     private IEnumerator TurnSequence()
     {
+        if (mapManager != null)
+        {
+            yield return new WaitUntil(() => !mapManager.IsRotating);
+        }
+        
         GameEvents.RaiseEnemyTurnStarted(playerBehaviour.transform.position);
         enemyManager.StartAllEnemiesTurn(playerBehaviour.transform.position);
         yield return new WaitUntil(() => !enemyManager.IsAnyEnemyActing);

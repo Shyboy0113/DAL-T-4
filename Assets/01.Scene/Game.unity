@@ -5886,6 +5886,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBehaviour: {fileID: 1639864504}
   enemyManager: {fileID: 516647610}
+  mapManager: {fileID: 1887074968}
   currentTurn: 0
 --- !u!1 &1331002202
 GameObject:
