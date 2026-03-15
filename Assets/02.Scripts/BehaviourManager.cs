@@ -155,6 +155,11 @@ public class BehaviourManager : MonoBehaviour
             playerBehaviour.UndoState();
             GameEvents.RaiseUndoTriggered();
             _actionCount = Mathf.Max(0, _actionCount - 1);
+            
+            GameEvents.RaisePlayerActed(_actionCount); 
+            GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
+            GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount);
+            
         }
 
         // 참고: 적 커맨드는 플레이어 3번째 행동 이후 스택 맨 위에 쌓입니다.
@@ -190,6 +195,10 @@ public class BehaviourManager : MonoBehaviour
             // RaiseActionFinished는 isUndoRedo=true라 차단됩니다.
             // _actionCount는 여기서 직접 증가시킵니다.
             _actionCount++;
+            
+            GameEvents.RaisePlayerActed(_actionCount); 
+            GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
+            GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount);
 
             GameEvents.RaiseRedoTriggered();
         }

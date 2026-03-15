@@ -603,7 +603,8 @@ public class TileBehaviour : BaseTile
 
         if ((CurrentTileColor & color) != 0) // 비트 플래그 검사
         {
-            isToggled = !isToggled;
+            //isToggled = !isToggled;
+            behaviourManager.ExecuteCommand(new TileCommand(this));
             UpdateVisuals(false);
 
             // 일반 Toggle일 때
@@ -625,10 +626,25 @@ public class TileBehaviour : BaseTile
 
     private void HandleToggle(int currentCount)
     {
+        // 타일 변화 후 UI 갱신
+        UpdateCountText(currentCount);
+        
         // Undo/Redo 중에는 새 TileCommand를 생성하지 않습니다.
         // Redo 시 PopNonPlayerCommands가 기존 TileCommand를 재실행하므로
         // 여기서 추가 생성하면 중복 실행이 됩니다.
-        if (player != null && player.isUndoRedo) return;
+        if (player != null && player.isUndoRedo) //Undo/Redo 중일 때
+        {
+            if (IsCountableTile())
+            {
+                bool shouldBeToggled = (currentCount > 0 && (currentCount / CurrentToggleActivationCount) % 2 != 0);
+                if (isToggled != shouldBeToggled) 
+                {
+                    isToggled = shouldBeToggled;
+                    UpdateVisuals(true); // 비주얼 강제 동기화
+                }
+            }
+            return;
+        }
         
         if (currentCount == -1 || // currentCount == -1은 '무조건 작동' 신호
         (currentCount > 0 && currentCount % CurrentToggleActivationCount == 0))
@@ -636,9 +652,6 @@ public class TileBehaviour : BaseTile
             // 현재 타일의 스냅샷을 기록함
             behaviourManager.ExecuteCommand(new TileCommand(this));
         }
-        
-        // 타일 변화 후 UI 갱신
-        UpdateCountText(currentCount);
         
     }
 
