@@ -23,7 +23,9 @@ public static class GameEvents
 
     public static event Action UndoTriggered; // Undo 발생 신호
     public static event Action RedoTriggered;
-    public static event Action SaveStateBeforeAction;
+    public static event Action<PlayerBehaviour> SaveStateBeforeAction;
+    public static void RaiseSaveStateBeforeAction(PlayerBehaviour pb) => SaveStateBeforeAction?.Invoke(pb);
+
 
     // (undoCount , redoCount)
     public static event Action<int, int> UndoRedoCountChanged;
@@ -38,11 +40,6 @@ public static class GameEvents
         RedoTriggered?.Invoke();
     }
 
-    public static void RaiseSaveStateBeforeAction()
-    {
-        SaveStateBeforeAction?.Invoke();
-    }
-    
     // 키 시퀀스 UI에서의 Undo/Redo Button의 SetActive를 결정하는 이벤트
     // BehaviourManaer에서 총괄
     public static void RaiseUndoRedoCountChanged(int undoCount, int redoCount)
@@ -141,8 +138,8 @@ public static class GameEvents
 
     #region TileMap
     
-    public static event Action<Vector3Int, float> TileMapRotated;
-    public static void RaiseTileMapRotated(Vector3Int cell, float angle) => TileMapRotated?.Invoke(cell, angle);
+    public static event Action<PlayerBehaviour, float> TileMapRotated;
+    public static void RaiseTileMapRotated(PlayerBehaviour pb, float angle) => TileMapRotated?.Invoke(pb, angle);
     
     // 맵이 회전하기 전 발생하는 이벤트
     public static event Action<bool> BeforeMapRotated;

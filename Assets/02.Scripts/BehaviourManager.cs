@@ -61,7 +61,7 @@ public class BehaviourManager : MonoBehaviour
     {
         if (IsPlayerCommand(command))
         {
-            GameEvents.RaiseSaveStateBeforeAction();
+            GameEvents.RaiseSaveStateBeforeAction(playerBehaviour);
         }
         
         command.Execute();
@@ -308,6 +308,9 @@ public class BehaviourManager : MonoBehaviour
         currentTurn = TurnState.Player;
         playerBehaviour.InitPlayer();
         enemyManager.InitEnemies();
+
+        if (mapManager != null) mapManager.Init();
+        
         GameEvents.RaiseUndoRedoCountChanged(0, 0);
     }
 

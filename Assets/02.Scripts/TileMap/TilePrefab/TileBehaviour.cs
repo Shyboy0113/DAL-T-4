@@ -866,7 +866,7 @@ public class TileBehaviour : BaseTile
         if (player.isUndoRedo || mapManager.IsRotating) return;
         
         // 현재 플레이어가 밟고 있는 타일의 월드 좌표를 넘겨줌
-        GameEvents.RaiseTileMapRotated(_tilemap.WorldToCell(transform.position), angle);
+        GameEvents.RaiseTileMapRotated(player, angle);
     }
 
     private IEnumerator BreakTile()

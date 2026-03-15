@@ -72,17 +72,23 @@ public class MapManager : MonoBehaviour
             mapFirstRoot = linker.mapFirstRoot;
             mapSecondRoot = linker.mapSecondRoot;
         
-            Initialize();
+            Init();
         }
     }
 
-    private void Initialize()
+    public void Init()
     {
         _isFirst = true;
         _currentRoot = mapFirstRoot;
         
         _activatedRoot = mapFirstRoot.transform;
         _deactivatedRoot = mapSecondRoot.transform;
+        
+        _accumulatedRotation = 0f;      // 누적 회전각 초기화
+        _tileIconZRotation = 0f;        // 타일 아이콘 회전각 초기화
+        _isRotating = false;            // 회전 중 플래그 초기화
+        _undoMapHistory.Clear();        // Undo 스택 비우기
+        _redoMapHistory.Clear();        // Redo 스택 비우기
 
         SetCameraLayer();
     }
@@ -160,9 +166,9 @@ public class MapManager : MonoBehaviour
         GameEvents.RedoTriggered -= ApplyRedoMapState;
     }
 
-     public void RotateAroundCell(Vector3Int cellPosition, float angle)
+     public void RotateAroundCell(PlayerBehaviour pb, float angle)
     {
-        if (_isRotating || player == null || player.isUndoRedo) return;
+        if (_isRotating || pb == null || pb.isUndoRedo) return;
         
         _isRotating = true;
         GameEvents.RaiseInputLockChanged(true);
@@ -170,11 +176,11 @@ public class MapManager : MonoBehaviour
 
         // 1. 피벗 위치 계산 및 플레이어 위치 강제 정렬 (Snapping)
         Vector3 snappedPivot = new Vector3(
-            Mathf.Floor(player.transform.position.x) + 0.5f,
-            Mathf.Floor(player.transform.position.y) + 0.5f,
+            Mathf.Floor(pb.transform.position.x) + 0.5f,
+            Mathf.Floor(pb.transform.position.y) + 0.5f,
             0
         );
-        player.transform.position = snappedPivot; 
+        pb.transform.position = snappedPivot;
 
         // 2. 계층 구조를 깨지 않고 피벗만 이동
         Vector3 offset = snappedPivot - mapPivot.position;
@@ -205,9 +211,9 @@ public class MapManager : MonoBehaviour
             });
     }
 
-    private void SaveMapState()
+    private void SaveMapState(PlayerBehaviour pb)
     {
-        if (player == null || player.isUndoRedo) return;
+        if (pb == null || pb.isUndoRedo) return;
         
         _undoMapHistory.Push(new MapState
         {
