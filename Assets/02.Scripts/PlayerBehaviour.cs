@@ -53,7 +53,10 @@ public class PlayerBehaviour : MonoBehaviour
     
     // Animator
     [SerializeField] private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
 
+    [SerializeField] private SpriteRenderer iconSpriteRenderer;
+    
     //방향 전환 및 이동시 효과음 발동
     [SerializeField] private AudioClip rotateSound;
     [SerializeField] private AudioClip moveSound;
@@ -298,6 +301,8 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // 게임오버 및 비주얼 복구
         GameManager.Instance.isGameOver = false;
+        iconSpriteRenderer.enabled = true;
+        _spriteRenderer.enabled = true;
         _collider2D.enabled = true;
         arrow.SetActive(true);
         _animator.Play("Idle");
@@ -316,6 +321,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // 게임오버 상태일 수 있으므로 복구
         GameManager.Instance.isGameOver = false;
+        _spriteRenderer.enabled = true;
         _collider2D.enabled = true;
         arrow.SetActive(true);
         _animator.Play("Idle");
@@ -348,6 +354,7 @@ public class PlayerBehaviour : MonoBehaviour
         _rigidbody2D = GetComponent<Rigidbody2D>();
         soundEffectPlayer = GetComponent<SoundEffectPlayer>();
         _collider2D = GetComponent<Collider2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
 
         _isInputLocked = true;
 
@@ -704,6 +711,7 @@ public class PlayerBehaviour : MonoBehaviour
         SetInputLock(false);
         
         _rigidbody2D.velocity = Vector2.zero;
+        iconSpriteRenderer.enabled = false;
         _animator.Play("Explosion");
         arrow.SetActive(false);
 
@@ -799,6 +807,7 @@ public class PlayerBehaviour : MonoBehaviour
         _stack = 0;
 
         _collider2D.enabled = true;
+        _spriteRenderer.enabled = true;
         
         // 파티클 초기화
         StopParticle();

@@ -28,6 +28,7 @@ public class EnemyBehaviour : MonoBehaviour
     private Animator _animator;
     private Collider2D _collider2D;
     private Rigidbody2D _rigidbody2D;
+    private SpriteRenderer _spriteRenderer;
 
 
     private void Awake()
@@ -35,6 +36,7 @@ public class EnemyBehaviour : MonoBehaviour
         _animator = GetComponent<Animator>();
         _collider2D = GetComponent<Collider2D>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
@@ -199,6 +201,9 @@ public class EnemyBehaviour : MonoBehaviour
         
         _rigidbody2D.velocity = Vector2.zero;
         _rigidbody2D.simulated = true;
+
+        _collider2D.enabled = true;
+        _spriteRenderer.enabled = true;
         
         transform.position = startPosition;
 
@@ -233,6 +238,7 @@ public class EnemyBehaviour : MonoBehaviour
         {
             _rigidbody2D.simulated = true;
             _collider2D.enabled = true;
+            _spriteRenderer.enabled = true;
             _animator.Play("Idle");
         }
 
