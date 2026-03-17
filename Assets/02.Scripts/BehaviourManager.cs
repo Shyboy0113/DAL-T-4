@@ -184,13 +184,13 @@ public class BehaviourManager : MonoBehaviour
         playerBehaviour.isRedo = true;
 
         // 1. Redo 스택 맨 위 TileCommand들 재실행 (있다면)
-        PopNonPlayerCommands(_redoStack, _undoStack, undo: false);
+        PopNonPlayerCommands(_redoStack, _undoStack, undo: false, isRedo: true);
 
         // 2. 플레이어 커맨드 재실행
         if (_redoStack.Count > 0 && IsPlayerCommand(_redoStack.Peek()))
         {
             ICommand playerCommand = _redoStack.Pop();
-            playerCommand.Execute();
+            playerCommand.Redo();
             _undoStack.Push(playerCommand);
 
             KeyType type = ReturnKeyType(playerCommand);
@@ -212,7 +212,7 @@ public class BehaviourManager : MonoBehaviour
         //    - 없으면: 3번째 행동이어도 적 턴 없이 넘어감 (정상)
         if (_redoStack.Count > 0 && !IsPlayerCommand(_redoStack.Peek()))
         {
-            PopNonPlayerCommands(_redoStack, _undoStack, undo: false);
+            PopNonPlayerCommands(_redoStack, _undoStack, undo: false, isRedo: true);
             // PopNonPlayerCommands 내부에서 EnemyMoveCommand.Execute()가 호출되므로
             // TurnSequence()를 별도로 호출하면 적이 2번 움직입니다. 호출하지 않습니다.
         }
@@ -224,14 +224,15 @@ public class BehaviourManager : MonoBehaviour
     }
 
     // 스택 맨 위의 비플레이어 커맨드(적/타일)를 대상 스택으로 이동하며 실행/취소
-    private void PopNonPlayerCommands(Stack<ICommand> from, Stack<ICommand> to, bool undo)
+    private void PopNonPlayerCommands(Stack<ICommand> from, Stack<ICommand> to, bool undo, bool isRedo = false)
     {
         while (from.Count > 0 && !IsPlayerCommand(from.Peek()))
         {
             ICommand cmd = from.Pop();
             to.Push(cmd);
-            if (undo) cmd.Undo();
-            else cmd.Execute();
+            if (undo)        cmd.Undo();
+            else if (isRedo) cmd.Redo();
+            else             cmd.Execute();
         }
     }
 

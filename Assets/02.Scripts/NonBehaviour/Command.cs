@@ -5,6 +5,7 @@ public interface ICommand
 {
     void Execute();
     void Undo();
+    void Redo();
 }
 
 #region PlayerCommand
@@ -25,16 +26,17 @@ public class ClockwiseRotateCommand : ICommand
     {
         _playerBehaviour.UpdateDirection(-1);
         _playerBehaviour.RotateArrow(true);
-        
         _playerBehaviour.CalculateRotationCount(-1);
-        _playerBehaviour.UpdateSequenceCanvas(-1); // UI 입력 칸 되돌리기
+        _playerBehaviour.UpdateSequenceCanvas(-1);
     }
+
+    public void Redo() => Execute();
 }
 
 public class CounterClockwiseRotateCommand : ICommand
 {
     private readonly PlayerBehaviour _playerBehaviour;
-    public CounterClockwiseRotateCommand(PlayerBehaviour PlayerBehaviour) => _playerBehaviour = PlayerBehaviour;
+    public CounterClockwiseRotateCommand(PlayerBehaviour playerBehaviour) => _playerBehaviour = playerBehaviour;
 
     public void Execute()
     {
@@ -45,11 +47,13 @@ public class CounterClockwiseRotateCommand : ICommand
 
     public void Undo()
     {
-        _playerBehaviour.UpdateDirection(1); // 반시계 회전 취소 → 시계 방향으로 복구
+        _playerBehaviour.UpdateDirection(1);
         _playerBehaviour.RotateArrow(true);
         _playerBehaviour.CalculateRotationCount(-1);
-        _playerBehaviour.UpdateSequenceCanvas(-1); // UI 입력 칸 되돌리기
+        _playerBehaviour.UpdateSequenceCanvas(-1);
     }
+
+    public void Redo() => Execute();
 }
 
 public class MoveCommand : ICommand
@@ -58,32 +62,20 @@ public class MoveCommand : ICommand
     private Vector3 _previousPosition; // 이동 전 위치 (Undo용)
     private Vector3 _nextPosition;     // 이동 후 위치 (Redo 텔레포트용)
     private bool _nextPositionRecorded = false;
-    private Vector2 _moveDirection;
+    private Vector2 _moveDirection;    // 이동 방향 (Redo 텔레포트 후 Ice 슬라이드 방향 복원용)
 
-    private bool _wasOnIce; // 이동 전 얼음 상태 저장 (Undo용)
-    private bool _wasOnIceAfter; // 이동 후 얼음 상태 저장 (Redo용)
-    
-    public MoveCommand(PlayerBehaviour PlayerBehaviour) => _playerBehaviour = PlayerBehaviour;
+    private bool _wasOnIce;      // 이동 전 얼음 상태 (Undo용)
+    private bool _wasOnIceAfter; // 이동 후 얼음 상태 (Redo용)
+
+    public MoveCommand(PlayerBehaviour playerBehaviour) => _playerBehaviour = playerBehaviour;
 
     public void Execute()
     {
-        if ((_playerBehaviour.isUndo|| _playerBehaviour.isRedo) && _nextPositionRecorded)
-        {
-            // Redo: 물리 이동 없이 기록된 위치로 즉시 텔레포트
-            // AddForce/Slide를 쓰면 타일들을 물리적으로 지나쳐 OnTriggerEnter가 발생합니다.
-            _playerBehaviour.SetLastMoveDirection(_moveDirection);
-            _playerBehaviour.TeleportTo(_nextPosition);
-            _playerBehaviour.EnableIceMode(_wasOnIceAfter);
-            _playerBehaviour.CalculateMoveCount(1);
-            return;
-        }
-
         // 최초 실행: 이동 전 위치와 상태 기록
         _previousPosition = _playerBehaviour.transform.position;
         _wasOnIce = _playerBehaviour.IsOnIce();
-        _moveDirection = _playerBehaviour.GetLastMoveDirection();
         _nextPositionRecorded = false;
-        
+
         _playerBehaviour.CalculateMoveCount(1);
         _playerBehaviour.MovePlayer();
     }
@@ -92,34 +84,40 @@ public class MoveCommand : ICommand
     // PlayerBehaviour.StopIceAndFinish() 또는 RaiseActionFinished() 시점에 기록합니다.
     public void RecordNextPosition(Vector3 pos, bool isOnIce)
     {
-        _nextPosition = pos;
-        _wasOnIceAfter = isOnIce;
+        _nextPosition         = pos;
+        _wasOnIceAfter        = isOnIce;
+        _moveDirection        = _playerBehaviour.GetLastMoveDirection(); // 이동 완료 후 방향 기록
         _nextPositionRecorded = true;
     }
 
     public void Undo()
     {
         _playerBehaviour.transform.position = _previousPosition;
-        
         _playerBehaviour.CalculateMoveCount(-1);
         _playerBehaviour.UpdateSequenceCanvas(-1);
-        
         _playerBehaviour.EnableIceMode(_wasOnIce);
         _playerBehaviour.StopVelocity();
+    }
+
+    public void Redo()
+    {
+        // RecordNextPosition()이 호출되지 않은 상태면 Redo 불가
+        if (!_nextPositionRecorded) return;
+
+        // 물리 이동 없이 기록된 위치로 즉시 텔레포트합니다.
+        // AddForce/Slide를 쓰면 타일들을 물리적으로 지나쳐 OnTriggerEnter가 발생합니다.
+        _playerBehaviour.SetLastMoveDirection(_moveDirection);
+        _playerBehaviour.TeleportTo(_nextPosition);
+        _playerBehaviour.EnableIceMode(_wasOnIceAfter);
+        _playerBehaviour.CalculateMoveCount(1);
     }
 }
 
 public class DeathCommand : ICommand
 {
-    public void Execute()
-    {
-        
-    }
-
-    public void Undo()
-    {
-        
-    }
+    public void Execute() { }
+    public void Undo()    { }
+    public void Redo()    { }
 }
 
 #endregion
@@ -154,30 +152,22 @@ public class EnemyMoveCommand : ICommand
         // 로컬 좌표로 복원합니다.
         _enemy.transform.localPosition = _previousLocalPosition;
     }
+
+    public void Redo() => Execute();
 }
 
 public class EnemyDeathCommand : ICommand
 {
-    private EnemyBehaviour _enemy;
+    private readonly EnemyBehaviour _enemy;
     public EnemyDeathCommand(EnemyBehaviour enemy) => _enemy = enemy;
 
-    private bool _isRedoExecute = false;
+    public void Execute() => _enemy.PlayExplosion();
 
-    public void Execute()
-    {
-        if (_isRedoExecute)
-        {
-            _enemy.SetDeadState(true); // Redo 시: PlayExplosion 체인 방지
-            return;
-        }
-        _isRedoExecute = true;
-        _enemy.PlayExplosion();
-    }
+    public void Undo() => _enemy.SetDeadState(false);
 
-    public void Undo()
-    {
-        _enemy.SetDeadState(false);
-    }
+    // Redo 시 PlayExplosion을 다시 호출하면 이펙트·이벤트 체인이 중복 발생합니다.
+    // 상태만 직접 전환합니다.
+    public void Redo() => _enemy.SetDeadState(true);
 }
     
 #endregion
@@ -199,14 +189,9 @@ public class TileCommand : ICommand
         _eb = eb;
         _beforeState = _tile.GetSnapShot();
     }
-    public void Execute()
-    {
-        _tile.ApplyTileCommand(_pb, _eb); // 실제 로직 실행
-    }
-    public void Undo()
-    {
-        _tile.RestoreSnapshot(_beforeState); // 스냅샷 복구
-    }
+    public void Execute() => _tile.ApplyTileCommand(_pb, _eb);
+    public void Undo()    => _tile.RestoreSnapshot(_beforeState);
+    public void Redo()    => _tile.ApplyTileCommand(_pb, _eb);
 }
 
 #endregion
