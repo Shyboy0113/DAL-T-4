@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UndoRedoButtonUI : MonoBehaviour
+public class UndoButtonUI : MonoBehaviour
 {
-    public enum ButtonType { Undo, Redo }
+    public enum ButtonType { Undo,  }
     [SerializeField] private ButtonType type;
 
     private Button _button;
@@ -25,7 +25,7 @@ public class UndoRedoButtonUI : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.UndoRedoCountChanged += UpdateButtonState;
+        GameEvents.UndoCountChanged += UpdateButtonState;
 
         // 씬 시작 또는 재활성화 시 항상 비활성 상태로 초기화
         // Start()에서 BehaviourManager를 직접 조회하던 방식은 실행 순서에 따라
@@ -35,12 +35,12 @@ public class UndoRedoButtonUI : MonoBehaviour
 
     private void OnDisable()
     {
-        GameEvents.UndoRedoCountChanged -= UpdateButtonState;
+        GameEvents.UndoCountChanged -= UpdateButtonState;
     }
 
-    private void UpdateButtonState(int undoCount, int redoCount)
+    private void UpdateButtonState(int undoCount, int Count)
     {
-        int currentCount = (type == ButtonType.Undo) ? undoCount : redoCount;
+        int currentCount = (type == ButtonType.Undo) ? undoCount : Count;
         bool isActive = currentCount > 0;
 
         // 1. 버튼 클릭 기능 활성/비활성화
