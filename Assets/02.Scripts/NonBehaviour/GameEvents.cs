@@ -21,30 +21,20 @@ public static class GameEvents
 
     #region Command Pattern
 
-    public static event Action UndoTriggered; // Undo 발생 신호
-    public static event Action RedoTriggered;
+    public static event Action UndoTriggered;
     public static event Action<PlayerBehaviour> SaveStateBeforeAction;
     public static void RaiseSaveStateBeforeAction(PlayerBehaviour pb) => SaveStateBeforeAction?.Invoke(pb);
 
+    public static event Action<int, int> UndoCountChanged;
 
-    // (undoCount , redoCount)
-    public static event Action<int, int> UndoRedoCountChanged;
-    
     public static void RaiseUndoTriggered()
     {
         UndoTriggered?.Invoke();
     }
 
-    public static void RaiseRedoTriggered()
+    public static void RaiseUndoCountChanged(int undoCount, int Count)
     {
-        RedoTriggered?.Invoke();
-    }
-
-    // 키 시퀀스 UI에서의 Undo/Redo Button의 SetActive를 결정하는 이벤트
-    // BehaviourManaer에서 총괄
-    public static void RaiseUndoRedoCountChanged(int undoCount, int redoCount)
-    {
-        UndoRedoCountChanged?.Invoke(undoCount, redoCount);
+        UndoCountChanged?.Invoke(undoCount, Count);
     }
 
     #endregion
