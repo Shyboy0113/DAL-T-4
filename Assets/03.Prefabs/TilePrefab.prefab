@@ -477,6 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   behaviourManager: {fileID: 0}
+  undoState: {fileID: 0}
   allDataAssets:
   - {fileID: 11400000, guid: 7b4ce66101976884892dbb9343d18309, type: 2}
   - {fileID: 11400000, guid: 0e2a3bc359f8a3145824e0280d2e43ff, type: 2}

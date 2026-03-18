@@ -1,135 +1,69 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public enum TurnState {Player, Tile, Enemy}
+public enum TurnState { Player, Tile, Enemy }
 
 public class BehaviourManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private PlayerBehaviour playerBehaviour;
-    [SerializeField] private EnemyManager enemyManager;
-    
-    [SerializeField] private MapManager mapManager;
-    
+    [SerializeField] private PlayerBehaviour           playerBehaviour;
+    [SerializeField] private PlayerUndoStateBridge undoState;
+    [SerializeField] private EnemyManager              enemyManager;
+    [SerializeField] private MapManager                mapManager;
+
     [Header("Turn State")]
     public TurnState currentTurn = TurnState.Player;
-
-    [Header("Command History")]
-    private Stack<ICommand> _undoStack = new Stack<ICommand>();
-    private Stack<ICommand> _redoStack = new Stack<ICommand>();
-
-    // 플레이어가 실제로 완료한 행동 횟수 (3의 배수마다 적 턴)
-    public int actionCount = 0;
+    private readonly CommandHistory _history = new CommandHistory();
 
     private void Awake()
     {
-        _undoStack.Clear();
-        _redoStack.Clear();
-        actionCount = 0;
+        _history.Clear();
     }
 
     private void OnEnable()
     {
-        GameEvents.OnPlayerTurnStarted += StartPlayerTurn;
-        GameEvents.OnEnemyTurnStarted += StartEnemyTurn;
-        GameEvents.PlayerDied += StopAllEnemiesTurn;
+        GameEvents.OnPlayerTurnStarted  += StartPlayerTurn;
+        GameEvents.OnEnemyTurnStarted   += StartEnemyTurn;
+        GameEvents.PlayerDied           += StopAllEnemiesTurn;
         GameEvents.PlayerActionFinished += OnPlayerActionFinished;
     }
 
     private void OnDisable()
     {
-        GameEvents.OnPlayerTurnStarted -= StartPlayerTurn;
-        GameEvents.OnEnemyTurnStarted -= StartEnemyTurn;
-        GameEvents.PlayerDied -= StopAllEnemiesTurn;
+        GameEvents.OnPlayerTurnStarted  -= StartPlayerTurn;
+        GameEvents.OnEnemyTurnStarted   -= StartEnemyTurn;
+        GameEvents.PlayerDied           -= StopAllEnemiesTurn;
         GameEvents.PlayerActionFinished -= OnPlayerActionFinished;
-    }
-
-    private void Update()
-    {
-        if (playerBehaviour.CheckSkip()) return;
-        
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            if (Input.GetKeyDown(KeyCode.Z)) UndoTurn();
-            if (Input.GetKeyDown(KeyCode.Y)) RedoTurn();
-        }
-        
-        Debug.Log(actionCount);
     }
 
     public void ExecuteCommand(ICommand command)
     {
-        if (IsPlayerCommand(command))
-        {
+        if (CommandHistory.IsPlayerCommand(command))
             GameEvents.RaiseSaveStateBeforeAction(playerBehaviour);
-        }
-        
+
+        _history.Push(command);
         command.Execute();
-        _undoStack.Push(command);
 
-        // Undo/Redo 중에는 redoStack을 비우지 않습니다.
-        // Redo 중 TileCommand.Execute() → HandleToggle() → ExecuteCommand() 체인이
-        // 발생할 수 있으며, 이때 Clear()하면 남은 redoStack이 통째로 날아가는 버그가 있습니다.
-        if (!playerBehaviour.isUndo && !playerBehaviour.isRedo)
-        {
-            _redoStack.Clear();
-        }
-
-        // TileCommand는 씬 초기화 시에도 발생하므로 UI 카운트에서 제외
-        if (IsPlayerCommand(command) || IsEnemyCommand(command))
-        {
-            // GameEvents.RaiseUndoRedoCountChanged 호출
-            UpdateUndoRedoUI();
-        }
+        if (CommandHistory.IsPlayerCommand(command) || CommandHistory.IsEnemyCommand(command))
+            UpdateUndoUI();
     }
 
-    // 플레이어 행동 + 타일 반응이 모두 끝난 시점에 수신
     private void OnPlayerActionFinished()
     {
-        actionCount++;
-        
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
-
-        // 이동이 완전히 끝난 위치를 MoveCommand에 기록합니다.
-        // Redo 시 AddForce/Slide 대신 이 위치로 텔레포트하여
-        // 중간 타일들을 물리적으로 지나치는 OnTriggerEnter를 방지합니다.
-        RecordMoveDestination();
         
-        if (playerBehaviour.isRedo) return;
+        GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount);
+        GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
 
-        if (actionCount % 3 == 0)
-        {
+        if (playerBehaviour.TotalActionCount % 3 == 0)
             StartCoroutine(TurnSequence());
-        }
-    }
-
-    // undoStack 맨 위의 MoveCommand에 현재 위치를 기록합니다.
-    private void RecordMoveDestination()
-    {
-        foreach (var cmd in _undoStack)
-        {
-            if (cmd is MoveCommand moveCmd)
-            {
-                moveCmd.RecordNextPosition(
-                    playerBehaviour.transform.position,
-                    playerBehaviour.IsOnIce()
-                );
-                return;
-            }
-            // TileCommand는 건너뜀, 다른 플레이어 커맨드(Rotate)면 MoveCommand 없음
-            if (IsPlayerCommand(cmd)) return;
-        }
     }
 
     private IEnumerator TurnSequence()
     {
         if (mapManager != null)
-        {
             yield return new WaitUntil(() => !mapManager.IsRotating);
-        }
-        
+
         GameEvents.RaiseEnemyTurnStarted(playerBehaviour.transform.position);
         enemyManager.StartAllEnemiesTurn(playerBehaviour.transform.position);
         yield return new WaitUntil(() => !enemyManager.IsAnyEnemyActing);
@@ -139,158 +73,49 @@ public class BehaviourManager : MonoBehaviour
     public void UndoTurn()
     {
         if (currentTurn != TurnState.Player) return;
-        if (playerBehaviour.CheckSkip()) return; // 회전/이동/적 턴 중엔 금지
+        if (playerBehaviour.CheckSkip())     return;
+        if (undoState.IsUndo)            return;
+        if (!_history.HasUndo)               return;
 
-        // 플레이어 커맨드가 스택에 없으면 Undo 불가
-        if (!HasPlayerCommand(_undoStack)) return;
+        undoState.BeginUndo();
 
-        playerBehaviour.isUndo = true;
-
-        // 1. 맨 위의 TileCommand들을 Undo (플레이어 행동 직후 쌓인 것)
-        PopNonPlayerCommands(_undoStack, _redoStack, undo: true);
+        // 1. 플레이어 커맨드 위에 쌓인 비플레이어 커맨드(타일/적) 먼저 Undo
+        _history.PopNonPlayerCommands(undo: true);
 
         // 2. 플레이어 커맨드 Undo
-        if (_undoStack.Count > 0 && IsPlayerCommand(_undoStack.Peek()))
+        ICommand playerCommand = _history.PopUndoPlayerCommand();
+        if (playerCommand != null)
         {
-            ICommand playerCommand = _undoStack.Pop();
-            _redoStack.Push(playerCommand);
             playerCommand.Undo();
-
             playerBehaviour.UndoState();
+
             GameEvents.RaiseUndoTriggered();
-            actionCount = Mathf.Max(0, actionCount - 1);
+            GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount);
             
-            GameEvents.RaisePlayerActed(actionCount); 
-            GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
-            GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount);
-            
+            if (playerCommand is MoveCommand)
+                GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
+            else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
+                GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount);
         }
 
-        // 참고: 적 커맨드는 플레이어 3번째 행동 이후 스택 맨 위에 쌓입니다.
-        // 따라서 3번째 행동을 Undo할 때 step 1의 PopNonPlayerCommands가
-        // 적/타일 커맨드를 먼저 처리하고, step 2에서 플레이어 커맨드를 Undo합니다.
-        // 1~2번째 행동을 Undo할 때는 step 1에서 처리할 비플레이어 커맨드가 없습니다.
-
-        UpdateUndoRedoUI();
-        StartCoroutine(IUndo());
+        UpdateUndoUI();
+        StartCoroutine(EndUndoAfterSync());
     }
 
-    public void RedoTurn()
+    private void UpdateUndoUI()
     {
-        if (currentTurn != TurnState.Player) return;
-        if (playerBehaviour.CheckSkip()) return; // 회전/이동/적 턴 중엔 금지
-        if (!HasPlayerCommand(_redoStack)) return;
-
-        playerBehaviour.isRedo = true;
-
-        // 1. Redo 스택 맨 위 TileCommand들 재실행 (있다면)
-        PopNonPlayerCommands(_redoStack, _undoStack, undo: false, isRedo: true);
-
-        // 2. 플레이어 커맨드 재실행
-        if (_redoStack.Count > 0 && IsPlayerCommand(_redoStack.Peek()))
-        {
-            ICommand playerCommand = _redoStack.Pop();
-            playerCommand.Redo();
-            _undoStack.Push(playerCommand);
-
-            KeyType type = ReturnKeyType(playerCommand);
-            playerBehaviour.RedoState(type);
-
-            // RaiseActionFinished는 isUndoRedo=true라 차단됩니다.
-            // actionCount는 여기서 직접 증가시킵니다.
-            
-            GameEvents.RaisePlayerActed(actionCount); 
-            GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
-            GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount);
-
-            GameEvents.RaiseRedoTriggered();
-        }
-
-        // 3. 이 행동에 딸린 비플레이어 커맨드(적/타일) 처리
-        //    Redo 스택 맨 위가 비플레이어 커맨드면 이 행동에 연결된 것으로 판단합니다.
-        //    - 적 커맨드가 있으면: 스택에서 꺼내 재실행 (TurnSequence는 호출하지 않음)
-        //    - 없으면: 3번째 행동이어도 적 턴 없이 넘어감 (정상)
-        if (_redoStack.Count > 0 && !IsPlayerCommand(_redoStack.Peek()))
-        {
-            PopNonPlayerCommands(_redoStack, _undoStack, undo: false, isRedo: true);
-            // PopNonPlayerCommands 내부에서 EnemyMoveCommand.Execute()가 호출되므로
-            // TurnSequence()를 별도로 호출하면 적이 2번 움직입니다. 호출하지 않습니다.
-        }
-
-        UpdateUndoRedoUI();
-
-        StartCoroutine(IRedo());
-        
-    }
-
-    // 스택 맨 위의 비플레이어 커맨드(적/타일)를 대상 스택으로 이동하며 실행/취소
-    private void PopNonPlayerCommands(Stack<ICommand> from, Stack<ICommand> to, bool undo, bool isRedo = false)
-    {
-        while (from.Count > 0 && !IsPlayerCommand(from.Peek()))
-        {
-            ICommand cmd = from.Pop();
-            to.Push(cmd);
-            if (undo)        cmd.Undo();
-            else if (isRedo) cmd.Redo();
-            else             cmd.Execute();
-        }
-    }
-
-    // 스택 안에 플레이어 커맨드가 하나라도 있는지 확인
-    private bool HasPlayerCommand(Stack<ICommand> stack)
-    {
-        foreach (var cmd in stack)
-        {
-            if (IsPlayerCommand(cmd)) return true;
-        }
-        return false;
-    }
-
-    // 플레이어 커맨드 수만 카운트 (TileCommand 제외하여 UI 오활성화 방지)
-    private int PlayerCommandCount(Stack<ICommand> stack)
-    {
-        int count = 0;
-        foreach (var cmd in stack)
-        {
-            if (IsPlayerCommand(cmd)) count++;
-        }
-        return count;
-    }
-
-    #region UndoRedoUI
-
-    private void UpdateUndoRedoUI()
-    {
-        // 키 시퀀스 UI에서의 Undo/Redo Button의 SetActive를 결정하는 이벤트
-        GameEvents.RaiseUndoRedoCountChanged(
-            PlayerCommandCount(_undoStack),
-            PlayerCommandCount(_redoStack)
-        );
-    }
-
-    #endregion
-    
-
-    public bool IsPlayerCommand(ICommand command)
-    {
-        return command is MoveCommand ||
-               command is ClockwiseRotateCommand ||
-               command is CounterClockwiseRotateCommand;
-    }
-
-    private bool IsEnemyCommand(ICommand command)
-    {
-        return command is EnemyMoveCommand || command is EnemyDeathCommand;
+        GameEvents.RaiseUndoCountChanged(
+            _history.UndoPlayerCommandCount(), 0);
     }
 
     public KeyType ReturnKeyType(ICommand command)
     {
         return command switch
         {
-            MoveCommand => KeyType.F4,
-            ClockwiseRotateCommand => KeyType.Alt,
+            MoveCommand                   => KeyType.F4,
+            ClockwiseRotateCommand        => KeyType.Alt,
             CounterClockwiseRotateCommand => KeyType.Tab,
-            _ => KeyType.None
+            _                             => KeyType.None
         };
     }
 
@@ -308,39 +133,29 @@ public class BehaviourManager : MonoBehaviour
 
     public void Init()
     {
-        _undoStack.Clear();
-        _redoStack.Clear();
-        actionCount = 0;
+        _history.Clear();
         currentTurn = TurnState.Player;
+
+        undoState.Reset();
         playerBehaviour.InitPlayer();
         enemyManager.InitEnemies();
 
         if (mapManager != null) mapManager.Init();
-        
-        GameEvents.RaiseUndoRedoCountChanged(0, 0);
+
+        GameEvents.RaiseUndoCountChanged(0, 0);
     }
 
     private void StopAllEnemiesTurn()
     {
         StopAllCoroutines();
+        undoState.Reset();
         currentTurn = TurnState.Player;
     }
 
-    private IEnumerator IUndo()
+    private IEnumerator EndUndoAfterSync()
     {
         Physics2D.SyncTransforms();
         yield return new WaitForSeconds(0.05f);
-        playerBehaviour.isUndo = false;
-    }
-
-    private IEnumerator IRedo()
-    {
-        Physics2D.SyncTransforms();
-        yield return new WaitForSeconds(0.05f);
-
-        if (!playerBehaviour.IsOnIce())
-        {
-            playerBehaviour.isRedo = false;   
-        }
+        undoState.EndUndo();
     }
 }

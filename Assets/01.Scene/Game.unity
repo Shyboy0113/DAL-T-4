@@ -6052,10 +6052,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerBehaviour: {fileID: 1639864504}
+  undoState: {fileID: 1639864509}
   enemyManager: {fileID: 516647610}
   mapManager: {fileID: 1887074968}
   currentTurn: 0
-  actionCount: 0
 --- !u!1 &1331002202
 GameObject:
   m_ObjectHideFlags: 0
@@ -7062,12 +7062,15 @@ GameObject:
   m_Component:
   - component: {fileID: 1639864500}
   - component: {fileID: 1639864499}
-  - component: {fileID: 1639864502}
   - component: {fileID: 1639864503}
   - component: {fileID: 1639864505}
+  - component: {fileID: 1639864502}
   - component: {fileID: 1639864504}
-  - component: {fileID: 1639864508}
+  - component: {fileID: 1639864511}
   - component: {fileID: 1639864507}
+  - component: {fileID: 1639864509}
+  - component: {fileID: 1639864512}
+  - component: {fileID: 1639864513}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -7225,27 +7228,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   behaviourManager: {fileID: 1324142982}
-  soundEffectPlayer: {fileID: 0}
+  undoRedoState: {fileID: 1639864509}
+  playerAnimator: {fileID: 1639864512}
   mapManager: {fileID: 1887074968}
-  _inputHistory: 
-  forceAmount: 100
-  arrow: {fileID: 455629648}
-  _animator: {fileID: 0}
-  iconSpriteRenderer: {fileID: 1048735077}
-  rotateSound: {fileID: 8300000, guid: 5af76f4cb1807fd4eb2c96f18e80753e, type: 3}
-  moveSound: {fileID: 8300000, guid: 7cb94cb702eddae4d9c6c495e8427099, type: 3}
-  explosionSound: {fileID: 8300000, guid: 7e5e291f283dded4cb36cedf3abd8ee9, type: 3}
+  soundEffectPlayer: {fileID: 1639864511}
   triggerSound: {fileID: 8300000, guid: f82647e6218505949b9a038503aac203, type: 3}
   cancelSound: {fileID: 8300000, guid: 02bb62f0fd347de41ac6aa721fb7733e, type: 3}
+  _inputHistory: 
+  forceAmount: 100
   moveCount: 0
   rotationCount: 0
-  DOTweenDuration: 0.25
-  DOTweenPunch: {x: 0, y: 0, z: 60}
-  DOTweenVibrato: 100
+  slideSpeed: 5
   particle: {fileID: 598599173}
   changePanelCanvasGroup: {fileID: 1197692234}
-  isUndo: 0
-  isRedo: 0
 --- !u!50 &1639864505
 Rigidbody2D:
   serializedVersion: 4
@@ -7369,7 +7364,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &1639864508
+--- !u!114 &1639864509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639864498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f41747730ac944359f7dac9c1f1c18a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1639864511
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7381,7 +7388,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea26e3d0cacdc44392b2886f1839922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 1639864507}
+--- !u!114 &1639864512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639864498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dfe4a9a362d4104980138ad6b94640d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1639864502}
+  spriteRenderer: {fileID: 1639864499}
+  iconSpriteRenderer: {fileID: 1048735077}
+  arrow: {fileID: 455629648}
+  soundEffectPlayer: {fileID: 1639864511}
+  explosionSound: {fileID: 8300000, guid: 7e5e291f283dded4cb36cedf3abd8ee9, type: 3}
+  tweenDuration: 0.5
+  tweenPunch: {x: 0, y: 0, z: 15}
+  tweenVibrato: 10
+  undoState: {fileID: 1639864509}
+--- !u!114 &1639864513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639864498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b975aa50a32eece458974ac891719ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  behaviourManager: {fileID: 1324142982}
+  playerBehaviour: {fileID: 1639864504}
+  soundEffectPlayer: {fileID: 1639864511}
+  rotateSound: {fileID: 8300000, guid: 5af76f4cb1807fd4eb2c96f18e80753e, type: 3}
+  moveSound: {fileID: 8300000, guid: 7cb94cb702eddae4d9c6c495e8427099, type: 3}
 --- !u!1 &1664862134
 GameObject:
   m_ObjectHideFlags: 0

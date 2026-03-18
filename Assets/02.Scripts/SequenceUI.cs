@@ -1,26 +1,33 @@
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class SequenceUI : MonoBehaviour
 {
-    
-    [SerializeField]
-    private TMP_Text[] _tmp_Text = new TMP_Text[3];
+    [SerializeField] private TMP_Text[] _tmp_Text = new TMP_Text[3];
+    [SerializeField] private PlayerBehaviour _playerBehaviour;
 
-    [SerializeField]
-    private PlayerBehaviour _playerBehaviour;
-    
     private void UpdateUI()
     {
-        if (_playerBehaviour is not null)
+        if (_playerBehaviour is null) return;
+
+        for (int i = 0; i < 3; i++)
         {
-            for (int i = 0; i < 3; i++)
-            {
-                int key = _playerBehaviour.CheckInputQueue(i);
-                _tmp_Text[i].text = InputText(i, key);
-            }
+            int    key     = _playerBehaviour.CheckInputQueue(i);
+            string newText = InputText(i, key);
+
+            // 텍스트가 실제로 바뀔 때만 애니메이션
+            if (_tmp_Text[i].text == newText) continue;
+
+            _tmp_Text[i].text = newText;
+
+            _tmp_Text[i].transform.DOKill();
+            _tmp_Text[i].transform.localScale = Vector3.one;
+            _tmp_Text[i].transform
+                .DOPunchScale(Vector3.one * 0.4f, 0.2f, 5, 0.5f);
         }
     }
+
     private string InputText(int index, int key)
     {
         switch (key)
@@ -43,21 +50,16 @@ public class SequenceUI : MonoBehaviour
     private void OnEnable()
     {
         _playerBehaviour = FindObjectOfType<PlayerBehaviour>();
-        
         if (_playerBehaviour != null)
         {
-            // ◀️ StackManager의 이벤트에 UpdateUI 메서드를 구독
             _playerBehaviour.OnInputQueueChanged += UpdateUI;
-            UpdateUI(); // ◀️ 시작할 때 한 번 초기화
+            UpdateUI();
         }
     }
 
     private void OnDestroy()
     {
         if (_playerBehaviour != null)
-        {
             _playerBehaviour.OnInputQueueChanged -= UpdateUI;
-        }
     }
-
 }
