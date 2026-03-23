@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using TMPro;
 
-public class SoundUI : MonoBehaviour
+public class Option_SoundUI : MonoBehaviour
 {
     // 음량 전체를 총괄하는 클래스
     [SerializeField] private AudioMixer audioMixer;
@@ -22,12 +22,31 @@ public class SoundUI : MonoBehaviour
     private float _bgmVolume = 1f;
     private float _sfxVolume = 1f;
     
-    private void Awake()
+    private void OnEnable()
     {
-        _masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
-        _bgmVolume = PlayerPrefs.GetFloat("BGMVolume", 1f);
-        _sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
-        
+        SyncUIWithMixer();
+    }
+    
+    private void SyncUIWithMixer()
+    {
+        // 공식: Linear = 10 ^ (dB / 20)
+        if (audioMixer.GetFloat("Master", out float masterDB))
+        {
+            _masterVolume = Mathf.Pow(10, masterDB / 20);
+            masterScrollbar.value = _masterVolume;
+        }
+
+        if (audioMixer.GetFloat("BGM", out float bgmDB))
+        {
+            _bgmVolume = Mathf.Pow(10, bgmDB / 20);
+            bgmScrollbar.value = _bgmVolume;
+        }
+
+        if (audioMixer.GetFloat("SFX", out float sfxDB))
+        {
+            _sfxVolume = Mathf.Pow(10, sfxDB / 20);
+            sfxScrollbar.value = _sfxVolume;
+        }
     }
 
     private void Start()

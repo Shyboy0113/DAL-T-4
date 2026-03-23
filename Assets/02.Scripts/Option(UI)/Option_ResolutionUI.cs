@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using System.Linq; // Sort¸¦ À§ÇØ Ãß°¡µÉ ¼ö ÀÖÀ¸³ª, List.Sort´Â ±âº» Æ÷ÇÔ
+using System.Linq; // Sortï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, List.Sortï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ResolutionUI : MonoBehaviour
+public class Option_ResolutionUI : MonoBehaviour
 {
-    // PlayerPrefs Å°¸¦ »ó¼ö·Î °ü¸®ÇÏ¿© ¿ÀÅ¸ ¹æÁö
+    // PlayerPrefs Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½Å¸ ï¿½ï¿½ï¿½ï¿½
     private const string FullScreenPrefKey = "FullScreen";
 
     public Resolution[] resolutions;
@@ -27,7 +27,7 @@ public class ResolutionUI : MonoBehaviour
 
     private void Awake()
     {
-        // GetComponentInChildren ¶Ç´Â ´Ù¸¥ ¾ÈÀüÇÑ ¹æ½ÄÀ¸·Î Ã£´Â °ÍÀ» °í·ÁÇØº¼ ¼ö ÀÖ½À´Ï´Ù.
+        // GetComponentInChildren ï¿½Ç´ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Øºï¿½ ï¿½ï¿½ ï¿½Ö½ï¿½ï¿½Ï´ï¿½.
         _cutoutFade = FindObjectOfType<CutoutFade>(); 
     }
 
@@ -37,7 +37,7 @@ public class ResolutionUI : MonoBehaviour
         InitializeResolutions();
     }
     
-    // ÀüÃ¼ È­¸é °ü·Ã ÃÊ±âÈ­¸¦ ´ã´çÇÏ´Â ¸Þ¼­µå
+    // ï¿½ï¿½Ã¼ È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     private void InitializeFullscreen()
     {
         bool isFullScreen = (PlayerPrefs.GetInt(FullScreenPrefKey, 1) == 1);
@@ -45,10 +45,10 @@ public class ResolutionUI : MonoBehaviour
         Screen.fullScreen = isFullScreen;
     }
 
-    // ÇØ»óµµ °ü·Ã ÃÊ±âÈ­¸¦ ´ã´çÇÏ´Â ¸Þ¼­µå
+    // ï¿½Ø»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     private void InitializeResolutions()
     {
-        // 1. Áßº¹ Á¦°Å ¹× ÃÖ°í ÁÖ»çÀ² ÇÊÅÍ¸µ
+        // 1. ï¿½ßºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö°ï¿½ ï¿½Ö»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½
         Dictionary<string, Resolution> uniqueResolutions = new Dictionary<string, Resolution>();
         foreach (Resolution res in Screen.resolutions)
         {
@@ -59,7 +59,7 @@ public class ResolutionUI : MonoBehaviour
             }
         }
         
-        // 2. ¸®½ºÆ®·Î º¯È¯ ÈÄ Á¤·Ä
+        // 2. ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         List<Resolution> filteredResolutions = new List<Resolution>(uniqueResolutions.Values);
         filteredResolutions.Sort((a, b) => {
             if (a.width != b.width) return a.width.CompareTo(b.width);
@@ -67,14 +67,14 @@ public class ResolutionUI : MonoBehaviour
         });
         resolutions = filteredResolutions.ToArray();
 
-        // 3. µå·Ó´Ù¿î Ã¤¿ì±â
+        // 3. ï¿½ï¿½Ó´Ù¿ï¿½ Ã¤ï¿½ï¿½ï¿½
         resolutionDropdown.ClearOptions();
         int currentResolutionIndex = 0;
         List<string> options = new List<string>();
 
         for (int i = 0; i < resolutions.Length; i++)
         {
-            // [¼öÁ¤µÊ] .refreshRateRatio.value¸¦ »ç¿ëÇÏ°í Á¤¼ö·Î ¹Ý¿Ã¸²
+            // [ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½] .refreshRateRatio.valueï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¿Ã¸ï¿½
             string option = resolutions[i].width + " x " + resolutions[i].height + " @ " +
                             Mathf.RoundToInt((float)resolutions[i].refreshRateRatio.value) + "hz";
             options.Add(option);
