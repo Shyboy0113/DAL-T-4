@@ -17,7 +17,7 @@ public class Option_UIHandler : MonoBehaviour
 
     private void OnEnable() 
     {
-        optionEvent.OnActiveToggle.AddListener(HandleOptionToggle);;
+        optionEvent.OnActiveToggle.AddListener(HandleOptionToggle);
     }
 
     private void Start()

@@ -60,6 +60,16 @@ public class ResetManagement : MonoBehaviour
         {
             ToggleHowToPlayPanel();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (GameManager.Instance != null && !GameManager.Instance.isOption)
+            {
+                // Option_UIHandler.HandleOptionToggle(true) 가 반응함
+                StartCoroutine(HandleOptionToggle(!GameManager.Instance.isOption));
+            }
+        }
+        
     }
     
     private void OnEnable()
@@ -164,4 +174,20 @@ public class ResetManagement : MonoBehaviour
         yield return null;
 
     }
+
+    #region EscEvent
+    
+    // GameScene 한정 Esc 키를 눌러서, 옵션창을 열게끔 설정하기 
+    [SerializeField] private SO_UIEvent optionEvent;
+    
+    private IEnumerator HandleOptionToggle(bool active)
+    {
+        // Option_UIHandler의 HandleOptionToggle 함수가 동시에 발동돼서, 한 프레임 뒤에 실행
+        yield return new WaitForEndOfFrame();
+        optionEvent.Raise(active);
+    }
+    
+    #endregion
+    
+    
 }
