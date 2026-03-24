@@ -23,10 +23,10 @@ public class ResetManagement : MonoBehaviour
     private bool _isProcessing = false; // 초기화 로직이 중복 실행되는 것 방지
 
     [SerializeField] private float time = 1.5f;
-    
-    private void Start()
+
+    private IEnumerator WaitForGameManager()
     {
-        stageLoader.LoadStage(GameManager.Instance.chapter, GameManager.Instance.stage);
+        yield return new WaitUntil(() => GameManager.Instance != null);
         
         cutoutFade.FadeIn(() =>
         {
@@ -36,6 +36,12 @@ public class ResetManagement : MonoBehaviour
         
         GameManager.Instance.isCleared = false;
         GameManager.Instance.ResetData();
+        stageLoader.LoadStage(GameManager.Instance.chapter, GameManager.Instance.stage);
+    }
+    
+    private void Start()
+    {
+        StartCoroutine(WaitForGameManager());
     }
     
     void Update()

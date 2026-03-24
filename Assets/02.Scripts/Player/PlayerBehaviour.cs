@@ -143,20 +143,24 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private CanvasGroup changePanelCanvasGroup;
     #endregion
 
+    private IEnumerator WaitForGameManager()
+    {
+        yield return new WaitUntil(() => GameManager.Instance != null);
+        GameManager.Instance.RegisterStackManager(this);
+    }
+    
     #region Lifecycle
 
     private void Awake()
     {
-        if (GameManager.Instance != null)
-            GameManager.Instance.RegisterStackManager(this);
-        else
-            Debug.LogError("GameManager instance isn't registered!");
+        StartCoroutine(WaitForGameManager());
 
         _rigidbody2D      = GetComponent<Rigidbody2D>();
         _collider2D       = GetComponent<Collider2D>();
         soundEffectPlayer = GetComponent<SoundEffectPlayer>();
 
         _isInputLocked = true;
+        
     }
 
     private void OnEnable()
