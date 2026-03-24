@@ -7949,6 +7949,7 @@ MonoBehaviour:
   changePanelCanvasGroup: {fileID: 1197692234}
   howToPlayPanel: {fileID: 719405649}
   time: 1.5
+  optionEvent: {fileID: 11400000, guid: 3a9c06157e920034cafd50ea77833862, type: 2}
 --- !u!1 &1754940354
 GameObject:
   m_ObjectHideFlags: 0

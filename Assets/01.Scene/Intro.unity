@@ -561,6 +561,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cutoutFade: {fileID: 111072689}
+  stageSelect: {fileID: 11400000, guid: b384db7b333e11d41b10f1945f8b631f, type: 2}
   optionEvent: {fileID: 11400000, guid: 3a9c06157e920034cafd50ea77833862, type: 2}
 --- !u!114 &184537246
 MonoBehaviour:
