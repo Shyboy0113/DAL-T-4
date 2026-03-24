@@ -5,6 +5,7 @@ using Input = UnityEngine.Input;
 
 public class GameManager : MonoBehaviour
 {
+    
     private void OnEnable()
     {
         // StackManager가 보내는 방송을 구독합니다.
@@ -48,6 +49,7 @@ public class GameManager : MonoBehaviour
     private bool _ismapDataLoaded = false;
     
     // 게임 상태
+    public bool isOption = false;
     public bool isGameOver = false;
     public bool isCleared = false;
 
@@ -109,7 +111,7 @@ public class GameManager : MonoBehaviour
 
         if (!isCleared)
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && pausePanel is not null)
+            if (Input.GetKeyDown(KeyCode.Escape) && pausePanel is not null && !isOption)
             {
                 _pausePanelActivity = !_pausePanelActivity;
                 pausePanel.SetActive(_pausePanelActivity);
