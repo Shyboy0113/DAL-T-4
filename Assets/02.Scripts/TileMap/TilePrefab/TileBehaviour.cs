@@ -51,8 +51,8 @@ public class TileBehaviour : BaseTile
     [SerializeField] private PlayerUndoStateBridge undoState;
 
     [Header("Scriptable Object Data")]
-    [SerializeField] private List<SOTileData> allDataAssets;
-    [SerializeField] private SOTileData       tileData;
+    [SerializeField] private List<SO_TileData> allDataAssets;
+    [SerializeField] private SO_TileData       tileData;
 
     [Header("Individual Overrides")]
     [SerializeField] private OverridableInt   maxActivationCount;
@@ -366,7 +366,10 @@ public class TileBehaviour : BaseTile
             if (teleportTarget != null)
             {
                 teleportTarget = null;
+                
+                #if UNITY_EDITOR
                 UnityEditor.EditorUtility.SetDirty(this);
+                #endif
             }
             return;
         }
@@ -391,7 +394,10 @@ public class TileBehaviour : BaseTile
         if (teleportTarget != foundTarget)
         {
             teleportTarget = foundTarget;
+            
+            #if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
+            #endif
         }
     }
 
@@ -438,11 +444,13 @@ public class TileBehaviour : BaseTile
 
         if (allDataAssets != null && allDataAssets.Count > 0)
         {
-            SOTileData matchedData = allDataAssets.Find(data => data != null && data.tileType == manualTileType);
+            SO_TileData matchedData = allDataAssets.Find(data => data != null && data.tileType == manualTileType);
             if (matchedData != null && tileData != matchedData)
             {
                 tileData = matchedData;
+                #if UNITY_EDITOR
                 UnityEditor.EditorUtility.SetDirty(this);
+                #endif
             }
         }
 
