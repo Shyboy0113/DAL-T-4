@@ -15,24 +15,24 @@ public class ImageOnMouseEvent : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private void Start()
     {
         _image = GetComponent<Image>();
-        _originalSize = _image.rectTransform.sizeDelta;  // ¿ø·¡ Å©±â ÀúÀå
-        _originalColor = _image.color;  // ¿ø·¡ »ö»ó ÀúÀå
+        _originalSize = _image.rectTransform.sizeDelta;  // ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        _originalColor = _image.color;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        _image.rectTransform.sizeDelta = _originalSize * hoverScale;  // ÀÌ¹ÌÁö Å©±â¸¸ 1.1¹è Áõ°¡
-        _image.color = hoverColor;  // »ö»óÀ» ÁöÁ¤ÇÑ »öÀ¸·Î º¯°æ
+        _image.rectTransform.sizeDelta = _originalSize * hoverScale;  // ï¿½Ì¹ï¿½ï¿½ï¿½ Å©ï¿½â¸¸ 1.1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        _image.color = hoverColor;  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        _image.rectTransform.sizeDelta = _originalSize;  // ¿ø·¡ Å©±â·Î º¹±Í
-        _image.color = _originalColor;  // ¿ø·¡ »ö»óÀ¸·Î º¹±Í
+        _image.rectTransform.sizeDelta = _originalSize;  // ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        _image.color = _originalColor;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     private void OnDisable()
     {
-        _image.color = _originalColor;
+        if (_image != null) _image.color = _originalColor;
     }
 }
