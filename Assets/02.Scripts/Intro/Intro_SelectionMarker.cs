@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems; // EventSystem 인터페이스 사용을 위해 필수!
 
@@ -15,6 +16,8 @@ public class Intro_SelectionMarker : MonoBehaviour, ISelectHandler, IDeselectHan
         {
             selectionMarkers.SetActive(false);
         }
+
+        StartCoroutine(I_CheckInitialSelection());
     }
 
     // 이 오브젝트가 선택되었을 때 EventSystem이 자동으로 호출하는 함수
@@ -32,6 +35,17 @@ public class Intro_SelectionMarker : MonoBehaviour, ISelectHandler, IDeselectHan
         if (selectionMarkers != null)
         {
             selectionMarkers.SetActive(false); // 마커를 끈다
+        }
+    }
+
+    private IEnumerator I_CheckInitialSelection()
+    {
+        yield return new WaitForEndOfFrame();
+        
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject)
+        {
+            // 내가 선택된 상태라면 마커를 강제로 켬
+            if (selectionMarkers != null) selectionMarkers.SetActive(true);
         }
     }
 }
