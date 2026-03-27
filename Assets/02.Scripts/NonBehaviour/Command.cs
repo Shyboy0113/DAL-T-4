@@ -145,4 +145,26 @@ public class TileCommand : ICommand
     public void Undo()    => _tile.RestoreSnapshot(_beforeState);
 }
 
+public class TileMapChangeCommand : ICommand
+{
+    private readonly MapManager _mapManager;
+    private readonly PlayerBehaviour _player;
+
+    public TileMapChangeCommand(MapManager mapManager, PlayerBehaviour player)
+    {
+        _mapManager = mapManager;
+        _player = player;
+    }
+
+    public void Execute()
+    {
+        GameEvents.RaiseTileMapChanged();
+    }
+
+    public void Undo()
+    {
+        GameEvents.RaiseTileMapChanged(); // 다시 전환하면 원래대로
+    }
+}
+
 #endregion

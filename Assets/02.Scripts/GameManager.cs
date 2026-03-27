@@ -52,7 +52,9 @@ public class GameManager : MonoBehaviour
     public bool isOption = false;
     public bool isGameOver = false;
     public bool isCleared = false;
-
+    public bool isPaused = false;
+    public void ToggleIsPaused() => isPaused = !isPaused;
+    
     public bool canUseF4 = true;
     public bool canUseLeftALT = true;
     public bool canUseTAB = false;
@@ -63,16 +65,6 @@ public class GameManager : MonoBehaviour
     public int pushedNumberF4;
     public int pushedNumberTAB;
 
-    // 게임 클리어 패널
-    public GameObject clearPanel;
-    public GameObject pausePanel;
-    private bool _pausePanelActivity;
-
-    public void GetCurrentStageData(MapDataLoader mapDataLoader)
-    {
-        // 현재 맵 데이터 불러오기
-        currentStageData = mapDataLoader.GetStageData(chapter, stage);
-    }
     
     void Awake()
     {
@@ -91,8 +83,6 @@ public class GameManager : MonoBehaviour
             Debug.LogError("Can't find the MapDataLoader!!");
             _ismapDataLoaded = false;
         }
-        
-        CheckPausePanel();
     }
 
     private void Start()
@@ -100,7 +90,6 @@ public class GameManager : MonoBehaviour
         // ✅ JSON에서 현재 스테이지 데이터 불러오기
         LoadStageData(1, 1);
 
-        _pausePanelActivity = false;
     }
 
     void Update()
@@ -108,15 +97,6 @@ public class GameManager : MonoBehaviour
         if (isGameOver || isCleared) return;
 
         currentTime += Time.deltaTime;
-
-        if (!isCleared)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape) && pausePanel is not null && !isOption)
-            {
-                _pausePanelActivity = !_pausePanelActivity;
-                pausePanel.SetActive(_pausePanelActivity);
-            }
-        }
     }
 
     #region StackManager 외부 등록
@@ -132,12 +112,6 @@ public class GameManager : MonoBehaviour
         _playerBehaviour = null;
     }
     #endregion
-
-    public void CheckPausePanel()
-    {
-        pausePanel = GameObject.Find("Pause Canvas");
-        if(pausePanel) pausePanel.gameObject.SetActive(false);
-    }
 
     public void GameClear()
     {
@@ -160,12 +134,10 @@ public class GameManager : MonoBehaviour
 
     public void ResetData()
     {
-        //Scene에 있는 패널을 재연결
-        CheckPausePanel();
-        
         // 게임 상태 초기화
         isGameOver = false;
         isCleared = false;
+        isPaused = false;
 
         // 도전과제 초기화
         currentTime = 0f;

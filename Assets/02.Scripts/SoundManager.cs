@@ -1,6 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Eflatun.SceneReference;
+
+[System.Serializable]
+public class SceneBGM
+{
+    public SceneReference scene;
+    public AudioClip bgm;
+}
 
 public class SoundManager : MonoBehaviour
 {
@@ -8,9 +16,9 @@ public class SoundManager : MonoBehaviour
     
     [SerializeField]
     private AudioSource audioSource;
+    public List<SceneBGM> sceneBGMList;
 
-    public List<AudioClip> bgmList;
-
+    // 인스펙터 창에서 작업자가 현재 무슨 BGM이 틀려 있는지 직접 확인하기 위한 용도
     [SerializeField] private string currentStage;
     [SerializeField] private AudioClip currentAudioClip;
     
@@ -29,12 +37,12 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void RenewalBGMForSCene(SceneReference sceneReference)
     {
-        currentAudioClip = bgmList[0];
+        var entry = sceneBGMList.Find(x => x.scene.Name == sceneReference.Name);
+        if (entry == null) return;
         
-        audioSource.clip = bgmList[0]; //맨 첫번째 BGM을 기준으로 설정
-        audioSource.Play();
+        RenewalBGM(entry.bgm, sceneReference.Name);
     }
 
     public void RenewalBGM(AudioClip audioClip, string stageName)

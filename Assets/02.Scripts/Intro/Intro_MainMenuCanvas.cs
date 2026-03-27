@@ -1,14 +1,12 @@
-using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using Eflatun.SceneReference;
 
 public class Intro_MainMenuCanvas : MonoBehaviour
 {
     [SerializeField] private CutoutFade cutoutFade;
-
-    [SerializeField] private SO_SceneGroup stageSelect;
-        
+    [SerializeField] private SceneReference stageSelectScene; //stageSelect Scene의 이름이 아닌 Scene 자체를 할당
+    
     public SO_UIEvent optionEvent;
     
     private GameObject _lastSelectedGameObject;
@@ -43,7 +41,7 @@ public class Intro_MainMenuCanvas : MonoBehaviour
     {
         cutoutFade.FadeOut(() => 
         {
-            SceneGroupLoader.LoadGroup(stageSelect);
+            StartCoroutine(SceneLoader.LoadScene(stageSelectScene));
         });
         
     }

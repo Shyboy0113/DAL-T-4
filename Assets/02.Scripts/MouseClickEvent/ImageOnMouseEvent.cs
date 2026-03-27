@@ -1,38 +1,48 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class ImageOnMouseEvent : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ImageOnMouseEvent : MonoBehaviour,
+    IPointerEnterHandler, IPointerExitHandler,
+    ISelectHandler, IDeselectHandler
 {
-    [SerializeField] private Color hoverColor = Color.white;
     [SerializeField] private float hoverScale = 1.1f;
-    
-    private Image _image;
-    private Vector2 _originalSize;
-    private Color _originalColor;
 
-    private void Start()
+    private RectTransform _rectTransform;
+    private Button _button;
+
+    private void Awake()
     {
-        _image = GetComponent<Image>();
-        _originalSize = _image.rectTransform.sizeDelta;  // ���� ũ�� ����
-        _originalColor = _image.color;  // ���� ���� ����
+        _rectTransform = GetComponent<RectTransform>();
+        _button = GetComponent<Button>();
     }
+
+    private bool IsInteractable => _button == null || _button.interactable;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        _image.rectTransform.sizeDelta = _originalSize * hoverScale;  // �̹��� ũ�⸸ 1.1�� ����
-        _image.color = hoverColor;  // ������ ������ ������ ����
+        if (!IsInteractable) return;
+        _rectTransform.localScale = Vector3.one * hoverScale;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        _image.rectTransform.sizeDelta = _originalSize;  // ���� ũ��� ����
-        _image.color = _originalColor;  // ���� �������� ����
+        _rectTransform.localScale = Vector3.one;
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        _rectTransform.localScale = Vector3.one * hoverScale;
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        _rectTransform.localScale = Vector3.one;
     }
 
     private void OnDisable()
     {
-        if (_image != null) _image.color = _originalColor;
+        if (_rectTransform != null)
+            _rectTransform.localScale = Vector3.one;
     }
 }

@@ -1,10 +1,7 @@
-using System;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using TMPro; // TextMeshPro를 제어하기 위해 필수!
 
-public class Option_CanvasEventSystemFocusKeeper : MonoBehaviour
+public class CanvasEventSystemFocusKeeper : MonoBehaviour
 {
     [Tooltip("이 메뉴가 켜졌을 때 가장 먼저 선택될 UI 오브젝트")]
     public GameObject firstSelectedObject;
@@ -41,8 +38,16 @@ public class Option_CanvasEventSystemFocusKeeper : MonoBehaviour
         }
         else
         {
-            // 포커스가 잘 유지되고 있다면, 현재 선택된 것을 '마지막 선택'으로 계속 기록만 해둡니다.
-            _lastSelectedObject = currentSelected;
+            // 자신의 자식 오브젝트일 때만 기록
+            if (currentSelected.transform.IsChildOf(transform))
+                _lastSelectedObject = currentSelected;
         }
     }
+    
+    public void RestoreLastSelected()
+    {
+        if (_lastSelectedObject != null)
+            EventSystem.current.SetSelectedGameObject(_lastSelectedObject);
+    }
+    
 }

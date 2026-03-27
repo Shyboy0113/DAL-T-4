@@ -1,29 +1,63 @@
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
-public class TextOnMouseEvent : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class TextOnMouseEvent : MonoBehaviour,
+    IPointerEnterHandler, IPointerExitHandler,
+    ISelectHandler, IDeselectHandler
 {
+    [SerializeField] private float hoverScale = 1.1f;
+    [SerializeField] private Color hoverColor = Color.yellow;
+
+    private RectTransform _rectTransform;
+    private Button _button;
     private TMP_Text _text;
-    private Vector3 _originalScale;
     private Color _originalColor;
 
-    private void Start()
+    private void Awake()
     {
+        _rectTransform = GetComponent<RectTransform>();
+        _button = GetComponentInParent<Button>();
         _text = GetComponent<TMP_Text>();
-        _originalScale = transform.localScale;  // ���� ������ ����
-        _originalColor = _text.color;  // ���� ���� ����
+        _originalColor = _text.color;
     }
+
+    private bool IsInteractable => _button == null || _button.interactable;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        transform.localScale = _originalScale * 1.1f;  // ��ü ũ�� 1.1�� ����
-        _text.color = Color.yellow;  // ������ ��������� ����
+        if (!IsInteractable) return;
+        _rectTransform.localScale = Vector3.one * hoverScale;
+        _text.color = hoverColor;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        transform.localScale = _originalScale;  // ���� ũ��� ����
-        _text.color = _originalColor;  // ���� �������� ����
+        if (EventSystem.current.currentSelectedGameObject != gameObject)
+        {
+            _rectTransform.localScale = Vector3.one;
+            _text.color = _originalColor;
+        }
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        _rectTransform.localScale = Vector3.one * hoverScale;
+        _text.color = hoverColor;
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        _rectTransform.localScale = Vector3.one;
+        _text.color = _originalColor;
+    }
+
+    private void OnDisable()
+    {
+        if (_rectTransform != null)
+            _rectTransform.localScale = Vector3.one;
+        if (_text != null)
+            _text.color = _originalColor;
     }
 }

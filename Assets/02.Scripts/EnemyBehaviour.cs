@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class EnemyBehaviour : MonoBehaviour
 {
@@ -25,15 +26,17 @@ public class EnemyBehaviour : MonoBehaviour
     private Coroutine _slideCoroutine = null;
     private Vector2 _lastMoveDirection;
     
-    private Animator _animator;
+    [SerializeField] private Animator animator;
     private Collider2D _collider2D;
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
+    
+    [SerializeField] private SpriteRenderer iconSpriteRenderer;
 
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         _collider2D = GetComponent<Collider2D>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -178,7 +181,7 @@ public class EnemyBehaviour : MonoBehaviour
     public void PlayExplosion()
     {
         // 이미 폭발 애니메이션이 재생 중이거나, 죽어있다면 무시
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Explosion") || IsDead) return;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Explosion") || IsDead) return;
 
         SetDeadState(true);
         
@@ -189,7 +192,14 @@ public class EnemyBehaviour : MonoBehaviour
         
         behaviourManager.ExecuteCommand(deathCommand);
 
-    }    
+    }
+
+    private IEnumerator IDisableSprite()
+    {
+        yield return new WaitForSeconds(0.75f);
+
+        if(_spriteRenderer != null) _spriteRenderer.enabled = false;
+    }
 
     public void Init()
     {
@@ -232,14 +242,27 @@ public class EnemyBehaviour : MonoBehaviour
             _rigidbody2D.velocity = Vector2.zero;
             _rigidbody2D.simulated = false;
             _collider2D.enabled = false;
-            _animator.Play("Explosion");
+            
+            if (iconSpriteRenderer != null)
+                iconSpriteRenderer.enabled = false; // 죽으면 Icon 비활성화
+            
+            animator.Play("Explosion");
+            
+            StartCoroutine(IDisableSprite());
+            
         }
         else
         {
             _rigidbody2D.simulated = true;
             _collider2D.enabled = true;
             _spriteRenderer.enabled = true;
-            _animator.Play("Idle");
+            
+            if (iconSpriteRenderer != null)
+                iconSpriteRenderer.enabled = true; // 살아나면 Icon 활성화
+            
+            animator.Play("Idle");
+            
+            
         }
 
     }

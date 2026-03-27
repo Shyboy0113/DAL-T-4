@@ -8,7 +8,8 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private BehaviourManager  behaviourManager;
     [SerializeField] private PlayerBehaviour   playerBehaviour;
     [SerializeField] private SoundEffectPlayer soundEffectPlayer;
-
+    [SerializeField] private MapManager mapManager;
+    
     [SerializeField] private AudioClip rotateSound;
     [SerializeField] private AudioClip moveSound;
 
@@ -38,8 +39,14 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void EnqueueCommand(ICommand command, KeyType keyType, AudioClip sound)
     {
-        playerBehaviour.HandleInput(keyType);
+        bool isMapChange = playerBehaviour.HandleInput(keyType);
 
+        if (isMapChange)
+        {
+            behaviourManager.ExecuteCommand(new TileMapChangeCommand(mapManager, playerBehaviour));
+            //return;
+        }
+        
         // 게임오버(Alt+F4 등)가 발생해도 커맨드는 실행합니다.
         // actionCount는 플레이어 행동이 있을 때 무조건 올라가야 하며,
         // OnPlayerActionFinished()의 isGameOver 체크가 적 턴 등 부수 효과를 차단합니다.

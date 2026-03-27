@@ -64,6 +64,10 @@ public class BehaviourManager : MonoBehaviour
         if (mapManager != null)
             yield return new WaitUntil(() => !mapManager.IsRotating);
 
+
+        yield return new WaitForSeconds(0.1f);
+        if (GameManager.Instance.isGameOver) yield break;
+
         GameEvents.RaiseEnemyTurnStarted(playerBehaviour.transform.position);
         enemyManager.StartAllEnemiesTurn(playerBehaviour.transform.position);
         yield return new WaitUntil(() => !enemyManager.IsAnyEnemyActing);
@@ -86,10 +90,11 @@ public class BehaviourManager : MonoBehaviour
         ICommand playerCommand = _history.PopUndoPlayerCommand();
         if (playerCommand != null)
         {
+            GameEvents.RaiseUndoTriggered();
+            
             playerCommand.Undo();
             playerBehaviour.UndoState();
-
-            GameEvents.RaiseUndoTriggered();
+            
             GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount);
             
             if (playerCommand is MoveCommand)

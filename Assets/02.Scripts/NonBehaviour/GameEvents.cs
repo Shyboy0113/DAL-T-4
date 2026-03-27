@@ -113,6 +113,7 @@ public static class GameEvents
 
     public static void RaiseInputLockChanged(bool isLocked)
     {
+        Debug.Log($"InputLock: {isLocked}\n{System.Environment.StackTrace}");
         InputLockChanged?.Invoke(isLocked);
     }
 

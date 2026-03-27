@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Eflatun.SceneReference;
 
 /*
 싱글톤에 기존 찌꺼기 데이터들이 남아있지 않게 초기 설정해주는 스크립트입니다.
@@ -9,15 +9,18 @@ using UnityEngine.SceneManagement;
 
 */
 
-public class ResetManagement : MonoBehaviour
+public class GameStateManagement : MonoBehaviour
 {   
     [SerializeField] private StageLoader stageLoader; // 맵 생성 담당 스크립트
     [SerializeField] private CutoutFade cutoutFade; //Fade용
     
+    [SerializeField] private SceneReference stageSelectScene;
+    
     [SerializeField] private BehaviourManager behaviourManager;
 
-    [SerializeField] private CanvasGroup changePanelCanvasGroup;
+    [SerializeField] private CanvasGroup mapPanel;
     [SerializeField] private GameObject howToPlayPanel;
+    [SerializeField] private GameObject pausePanel;
     
     private bool _isRestart = false;
     private bool _isProcessing = false; // 초기화 로직이 중복 실행되는 것 방지
@@ -36,6 +39,12 @@ public class ResetManagement : MonoBehaviour
         
         GameManager.Instance.isCleared = false;
         GameManager.Instance.ResetData();
+        
+        // UI 패널들 초기화
+        HideHowToPlayPanel();
+        HideMapUI();
+        HidePausePanel();
+        
         stageLoader.LoadStage(GameManager.Instance.chapter, GameManager.Instance.stage);
     }
     
@@ -46,7 +55,7 @@ public class ResetManagement : MonoBehaviour
     
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R) && !_isProcessing && !_isRestart)
+        if(Input.GetKeyDown(KeyCode.R))
         {
             RestartStage();
         }
@@ -56,17 +65,19 @@ public class ResetManagement : MonoBehaviour
             ToggleMapUI();
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.H))
         {
             ToggleHowToPlayPanel();
         }
 
+        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameManager.Instance != null && !GameManager.Instance.isOption)
+            if (GameManager.Instance is null) return;
+
+            if (!GameManager.Instance.isOption)
             {
-                // Option_UIHandler.HandleOptionToggle(true) 가 반응함
-                StartCoroutine(HandleOptionToggle(!GameManager.Instance.isOption));
+                TogglePausePanel();
             }
         }
         
@@ -82,18 +93,44 @@ public class ResetManagement : MonoBehaviour
         GameEvents.StageCleared -= ChangeStage;
     }
 
+    public void ToggleMapUI()
+    {
+        bool newState = !mapPanel.gameObject.activeSelf;
+        mapPanel.gameObject.SetActive(newState);
+    }
+    
     public void ToggleHowToPlayPanel()
     {
         howToPlayPanel.SetActive(!howToPlayPanel.activeSelf);
     }
-    
-    public void ToggleMapUI()
+
+    public void TogglePausePanel()
     {
-        changePanelCanvasGroup.gameObject.SetActive(!changePanelCanvasGroup.gameObject.activeSelf);
+        bool newState = !pausePanel.activeSelf;
+        pausePanel.SetActive(newState);
+        GameManager.Instance.isPaused = newState;
+    }
+    
+    public void HideHowToPlayPanel()
+    {
+        howToPlayPanel.SetActive(false);
+    }
+    
+    public void HideMapUI()
+    {
+        mapPanel.gameObject.SetActive(false);
+    }
+
+    public void HidePausePanel()
+    {
+        pausePanel.SetActive(false);
+        GameManager.Instance.isPaused = false;
     }
 
     public void RestartStage()
     {
+        if (_isProcessing || _isRestart) return;
+        
         if (GameManager.Instance.isCleared) return;
         
         _isRestart = true;
@@ -139,7 +176,10 @@ public class ResetManagement : MonoBehaviour
                 if (!stageLoader.LoadStage(nextChapter, nextStage))
                 {
                     // 추후 게임 클리어 관련 업적이나 축하 메세지 로직 추가
-                    SceneManager.LoadScene("StageSelect");
+                    if (!stageLoader.LoadStage(nextChapter, nextStage))
+                    {
+                        StartCoroutine(SceneLoader.LoadScene(stageSelectScene));
+                    }
                 }
             }
 
@@ -157,11 +197,15 @@ public class ResetManagement : MonoBehaviour
         // 플레이어 초기화
         behaviourManager.Init();
         GameEvents.RaiseInputLockChanged(true);
-        
         GameEvents.RaiseStageRestarted(); //FadeText.Reset() 실행됨
         
         cutoutFade.FadeIn(() =>
         {
+            // UI 패널들 초기화
+            HideHowToPlayPanel();
+            HideMapUI();
+            HidePausePanel();
+            
             // 데이터 리셋
             GameManager.Instance.ResetData();
             GameEvents.RaiseInputLockChanged(false);
@@ -174,20 +218,5 @@ public class ResetManagement : MonoBehaviour
         yield return null;
 
     }
-
-    #region EscEvent
-    
-    // GameScene 한정 Esc 키를 눌러서, 옵션창을 열게끔 설정하기 
-    [SerializeField] private SO_UIEvent optionEvent;
-    
-    private IEnumerator HandleOptionToggle(bool active)
-    {
-        // Option_UIHandler의 HandleOptionToggle 함수가 동시에 발동돼서, 한 프레임 뒤에 실행
-        yield return new WaitForEndOfFrame();
-        optionEvent.Raise(active);
-    }
-    
-    #endregion
-    
     
 }

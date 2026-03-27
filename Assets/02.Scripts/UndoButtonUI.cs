@@ -15,6 +15,10 @@ public class UndoButtonUI : MonoBehaviour
     [SerializeField] private Color activeColor = new Color(255f/255f, 255f/255f, 255f/255f, 196f/255f);
     [SerializeField] private Color deActiveColor = new Color (0.75f, 0.75f, 0.75f, 196f/255f);
 
+    // Button의 Navigation 관련 할당
+    [SerializeField] private Button leftButton;  // Map Button
+    [SerializeField] private Button rightButton; // Restart Button
+    
     private void Awake()
     {
         _button = GetComponent<Button>();
@@ -45,6 +49,21 @@ public class UndoButtonUI : MonoBehaviour
 
         // 1. 버튼 클릭 기능 활성/비활성화
         _button.interactable = isActive;
+        
+        // 주변 버튼들의 Navigation 동적 변경
+        if (leftButton != null)
+        {
+            Navigation leftNav = leftButton.navigation;
+            leftNav.selectOnRight = isActive ? _button : rightButton;
+            leftButton.navigation = leftNav;
+        }
+
+        if (rightButton != null)
+        {
+            Navigation rightNav = rightButton.navigation;
+            rightNav.selectOnLeft = isActive ? _button : leftButton;
+            rightButton.navigation = rightNav;
+        }
 
         // 2. 시각적 연출 (투명도 및 색상)
         if (isActive)

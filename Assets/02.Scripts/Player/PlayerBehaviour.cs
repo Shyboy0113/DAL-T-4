@@ -47,11 +47,17 @@ public class PlayerBehaviour : MonoBehaviour
     #endregion
 
     #region Input Lock
-    private bool _isInputLocked = false;
-    private bool _isEnemyActing = false;
-    private bool _isMapBusy     = false;
+    [SerializeField] private bool _isInputLocked = false;
+    [SerializeField] private bool _isEnemyActing = false;
+    [SerializeField] private bool _isMapBusy     = false;
 
     private void SetInputLock(bool locked) => _isInputLocked = locked;
+
+    private IEnumerator ISetInputLock(bool locked, float time)
+    {
+        yield return new WaitForSeconds(time);
+        _isInputLocked = locked;
+    }
 
     public bool CheckSkip() =>
         playerAnimator.IsRotating || _isInputLocked || _isMapBusy || _isEnemyActing;
@@ -262,7 +268,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     #region Input Handling
 
-    public void HandleInput(KeyType keyType)
+    public bool HandleInput(KeyType keyType)
     {
         int slotInCycle = _inputHistory.Count % MaxQueueSize;
 
@@ -278,17 +284,21 @@ public class PlayerBehaviour : MonoBehaviour
         {
             _collider2D.enabled = false;
             PlayExplosion();
+            return false;
         }
         else if (CheckMapChange())
         {
-            GameEvents.RaiseTileMapChanged();
-            ResetQueue();
-            _inputHistory.Clear();
-            GameEvents.RaiseInputLockChanged(true);
-            Physics2D.SyncTransforms();
-            StartCoroutine(DelayedGroundCheck(1.0f));
-            GameEvents.RaiseInputLockChanged(false);
+            return true; // 맵 전환 발생 알림, 실제 전환은 PlayerInputHandler에서 커맨드로 처리
         }
+
+        return false;
+    }
+
+    public void ChangePlayerTransform(Vector3 tilePosition)
+    {
+        Vector3 newPosition = transform.position;
+        newPosition.z = tilePosition.z;
+        transform.position = newPosition;
     }
 
     private IEnumerator DelayedGroundCheck(float delay)
@@ -504,6 +514,11 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void InitPlayer()
     {
+
+        _isInputLocked = false;
+        _isMapBusy = false;
+        _isEnemyActing = false;
+            
         _rigidbody2D.velocity = Vector2.zero;
         _collider2D.enabled   = true;
         _rigidbody2D.simulated = true;
@@ -529,6 +544,9 @@ public class PlayerBehaviour : MonoBehaviour
 
         transform.position = new Vector3(0.5f, 0.5f, 0f);
         Physics2D.SyncTransforms();
+
+        StartCoroutine(ISetInputLock(false, 1.0f));
+
     }
 
     #endregion

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class MapManager : MonoBehaviour
         public Vector3 secondRootPosition;
         public float   tileIconZRotation;
         public float   accumulatedRotation;
+        public bool isFirst;
+        public RenderTexture renderTexture;
     }
 
     private Stack<MapState> _undoMapHistory = new Stack<MapState>();
@@ -34,6 +37,11 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject mapFirstRoot;
     [SerializeField] private GameObject mapSecondRoot;
 
+    [SerializeField] private RawImage screen;
+    [SerializeField] private RenderTexture mapFirstRenderTexture;
+    [SerializeField] private RenderTexture mapSecondRenderTexture;
+    private RenderTexture _currentRenderTexture;
+    
     private GameObject _currentRoot;
     private Transform  _activatedRoot;
     private Transform  _deactivatedRoot;
@@ -74,9 +82,15 @@ public class MapManager : MonoBehaviour
         _isRotating          = false;
         _undoMapHistory.Clear();
 
+        //Raw Image의 RenderTexture 변화
+        screen.texture = mapFirstRenderTexture;
+        _currentRenderTexture = mapFirstRenderTexture;
+        
+        player.ChangePlayerTransform(new Vector3(player.transform.position.x,player.transform.position.y,mapFirstRoot.transform.position.z));
+        
         SetCameraLayer();
     }
-
+    
     private void ChangeTileMap()
     {
         _isFirst = !_isFirst;
@@ -89,6 +103,13 @@ public class MapManager : MonoBehaviour
         _activatedRoot   = mapFirstRoot.transform;
         _deactivatedRoot = mapSecondRoot.transform;
         _currentRoot     = mapFirstRoot;
+        
+        //Raw Image의 RenderTexture 변화
+        screen.texture = mapFirstRenderTexture;
+        _currentRenderTexture = mapFirstRenderTexture;
+        
+        player.ChangePlayerTransform(new Vector3(player.transform.position.x,player.transform.position.y,mapFirstRoot.transform.position.z));
+        
         SetCameraLayer();
     }
 
@@ -97,6 +118,13 @@ public class MapManager : MonoBehaviour
         _activatedRoot   = mapSecondRoot.transform;
         _deactivatedRoot = mapFirstRoot.transform;
         _currentRoot     = mapSecondRoot;
+        
+        //Raw Image의 RenderTexture 변화
+        screen.texture = mapSecondRenderTexture;
+        _currentRenderTexture = mapSecondRenderTexture;
+        
+        player.ChangePlayerTransform(new Vector3(player.transform.position.x,player.transform.position.y,mapSecondRoot.transform.position.z));
+        
         SetCameraLayer();
     }
 
@@ -192,23 +220,44 @@ public class MapManager : MonoBehaviour
         bool isUndo = _undoState != null && _undoState.IsUndo;
         if (pb == null || isUndo) return;
 
-        _undoMapHistory.Push(new MapState
+        var state = new MapState
         {
             pivotPosition       = mapPivot.position,
             zRotation           = mapPivot.eulerAngles.z,
             firstRootPosition   = mapFirstRoot.transform.position,
             secondRootPosition  = mapSecondRoot.transform.position,
             tileIconZRotation   = _tileIconZRotation,
-            accumulatedRotation = _accumulatedRotation
-        });
+            accumulatedRotation = _accumulatedRotation,
+            isFirst             = _isFirst,
+            renderTexture       = _currentRenderTexture
+        };
+
+        Debug.Log($"[SaveMapState]\n" +
+                  $"  pivotPosition: {state.pivotPosition}\n" +
+                  $"  zRotation: {state.zRotation}\n" +
+                  $"  firstRootPosition: {state.firstRootPosition}\n" +
+                  $"  secondRootPosition: {state.secondRootPosition}\n" +
+                  $"  tileIconZRotation: {state.tileIconZRotation}\n" +
+                  $"  accumulatedRotation: {state.accumulatedRotation}\n" +
+                  $"  isFirst: {state.isFirst}\n" +
+                  $"  renderTexture: {state.renderTexture?.name}");
+
+        _undoMapHistory.Push(state);
     }
 
     private void RestoreMapState()
     {
-        if (_undoMapHistory.Count <= 0) return;
+        if (_undoMapHistory.Count <= 0)
+        {
+            Debug.Log("[MapManager] RestoreMapState: 히스토리 없음");
+            return;
+        }
 
         MapState lastState = _undoMapHistory.Pop();
-
+        
+        Debug.Log($"[MapManager] 복원 전 - isFirst: {_isFirst}, playerZ: {player.transform.position.z}");
+        Debug.Log($"[MapManager] 복원할 상태 - isFirst: {lastState.isFirst}, renderTexture: {lastState.renderTexture?.name}");
+        
         mapPivot.position = lastState.pivotPosition;
         mapPivot.rotation = Quaternion.Euler(0, 0, lastState.zRotation);
         mapFirstRoot.transform.position  = lastState.firstRootPosition;
@@ -218,6 +267,17 @@ public class MapManager : MonoBehaviour
         _tileIconZRotation   = lastState.tileIconZRotation;
         _accumulatedRotation = lastState.accumulatedRotation;
 
+        // 맵 전환 상태 복원
+        _isFirst = lastState.isFirst;
+        if (_isFirst) ActivateFirst();
+        else          ActivateSecond();
+        
+        Debug.Log($"[MapManager] 복원 후 - isFirst: {_isFirst}, playerZ: {player.transform.position.z}");
+
+        // RenderTexture 복원
+        screen.texture = lastState.renderTexture;
+        _currentRenderTexture = lastState.renderTexture;
+        
         Physics2D.SyncTransforms();
     }
 
