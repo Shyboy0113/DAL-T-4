@@ -28,6 +28,9 @@ public class MapManager : MonoBehaviour
     private float _accumulatedRotation = 0f;
     private float _tileIconZRotation   = 0f;
 
+    private bool _preChangeIsFirst;
+    private bool _mapChangedSinceLastSave;
+
     // ── 리팩터링 추가: pb.isUndo/isRedo 직접 접근 대신 Bridge 사용 ──
     private PlayerUndoStateBridge _undoState;
 
@@ -93,6 +96,9 @@ public class MapManager : MonoBehaviour
     
     private void ChangeTileMap()
     {
+        _preChangeIsFirst        = _isFirst;
+        _mapChangedSinceLastSave = true;
+
         _isFirst = !_isFirst;
         if (_isFirst) ActivateFirst();
         else          ActivateSecond();
@@ -220,6 +226,13 @@ public class MapManager : MonoBehaviour
         bool isUndo = _undoState != null && _undoState.IsUndo;
         if (pb == null || isUndo) return;
 
+        // 직전에 맵 전환이 있었다면 전환 전 isFirst 값을 사용
+        bool isFirstSnapshot     = _mapChangedSinceLastSave ? _preChangeIsFirst : _isFirst;
+        _mapChangedSinceLastSave = false;
+
+        // isFirst와 renderTexture가 항상 일치하도록 isFirstSnapshot에서 파생
+        RenderTexture renderTextureSnapshot = isFirstSnapshot ? mapFirstRenderTexture : mapSecondRenderTexture;
+
         var state = new MapState
         {
             pivotPosition       = mapPivot.position,
@@ -228,8 +241,8 @@ public class MapManager : MonoBehaviour
             secondRootPosition  = mapSecondRoot.transform.position,
             tileIconZRotation   = _tileIconZRotation,
             accumulatedRotation = _accumulatedRotation,
-            isFirst             = _isFirst,
-            renderTexture       = _currentRenderTexture
+            isFirst             = isFirstSnapshot,
+            renderTexture       = renderTextureSnapshot
         };
 
         Debug.Log($"[SaveMapState]\n" +
