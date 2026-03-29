@@ -28,7 +28,8 @@ public enum TileType
     MoveToggle,
     RotationToggle,
     ColorToggle,
-    ConditionalToggle
+    ConditionalToggle,
+    Help
 }
 
 [System.Flags]
