@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageDescription: "ALT\uC640 \uD0A4 \uC2DC\uD000\uC2A4 \uCD08\uAE30\uD654\uC758
     \uD65C\uC6A9"
-  stagePrefab: {fileID: 2685018636728712195, guid: 8519bc1623adb3b48b4eea87cc40e0b2, type: 3}
+  stagePrefab: {fileID: 2685018636728712195, guid: f1b095e6ad5aa174aa35800c9c2b9049, type: 3}
   chapterNum: 1
   stageNum: 3
   audioClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}

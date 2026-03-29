@@ -105,8 +105,9 @@ public class TileBehaviour : BaseTile
     [Header("Toggle")]
     [SerializeField] private bool isToggled = false;
     public bool IsToggled => isToggled;
-
-    [SerializeField] private Sprite          toggleOffSprite;
+    
+    // 그 외 Toggle의 On 상태의 까만 Sprite
+    [SerializeField] private Sprite          toggleOnSprite;
     [SerializeField] private PlayerBehaviour player;
 
     [Header("Animations")]
@@ -434,6 +435,7 @@ public class TileBehaviour : BaseTile
     private void Start()
     {
         UpdateCountText(0);
+        UpdateVisuals(true);
         CheckOccupantsAfterToggle();
     }
 
@@ -599,9 +601,9 @@ public class TileBehaviour : BaseTile
                 ? tileSprites[(int)TileType.Breakable]
                 : breakableSprites[Mathf.Clamp(_currentHit - 1, 0, breakableSprites.Length - 1)];
         }
-        else if (currentTileType == TileType.ToggleTargeted)
+        else if (currentTileType == TileType.ToggleTargeted || IsPlayerActionTile())
         {
-            nextIcon = isToggled ? tileSprites[(int)currentTileType] : toggleOffSprite;
+            nextIcon = isToggled ? toggleOnSprite : tileSprites[(int)currentTileType];
         }
         else
         {
