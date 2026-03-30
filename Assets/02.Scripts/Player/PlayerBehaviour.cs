@@ -512,17 +512,17 @@ public class PlayerBehaviour : MonoBehaviour
 
     #region Init
 
-    public void InitPlayer()
+    public void InitPlayer(Vector3? spawnPosition = null)
     {
 
         _isInputLocked = false;
         _isMapBusy = false;
         _isEnemyActing = false;
-            
+
         _rigidbody2D.velocity = Vector2.zero;
         _collider2D.enabled   = true;
         _rigidbody2D.simulated = true;
-        
+
         StopParticle();
 
         _isOnIce = false;
@@ -542,7 +542,7 @@ public class PlayerBehaviour : MonoBehaviour
         playerAnimator.PlayIdle();
         playerAnimator.RotateArrow(_playerDirection, immediate: true);
 
-        transform.position = new Vector3(0.5f, 0.5f, 0f);
+        transform.position = spawnPosition ?? new Vector3(0.5f, 0.5f, 0f);
         Physics2D.SyncTransforms();
 
         StartCoroutine(ISetInputLock(false, 1.0f));

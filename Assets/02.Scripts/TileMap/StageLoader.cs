@@ -48,10 +48,20 @@ public class StageLoader : MonoBehaviour
     private void ResetPlayerStatus()
     {
         var player = FindObjectOfType<PlayerBehaviour>();
-        if (player != null)
+        if (player == null) return;
+
+        Vector3? spawnPos = null;
+        var tiles = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None);
+        foreach (var tile in tiles)
         {
-            player.InitPlayer();
+            if (tile.currentTileType == TileType.Start)
+            {
+                spawnPos = tile.transform.position;
+                break;
+            }
         }
+
+        player.InitPlayer(spawnPos);
     }
 
 }
