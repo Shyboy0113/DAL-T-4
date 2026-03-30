@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab9ce091a50fdc34bbe98cb1fa21e5b7, type: 3}
-  m_Name: Stage 1-1
+  m_Name: Stage 1-13
   m_EditorClassIdentifier: 
-  stageDescription: "F4 \uC870\uC791\uBC95\uC5D0 \uB300\uD55C \uC124\uBA85 \uC2A4\uD14C\uC774\uC9C0"
-  stagePrefab: {fileID: 2685018636728712195, guid: d05ab4e89e5154c49be8f6db29424aa0, type: 3}
+  stageDescription: 
+  stagePrefab: {fileID: 2685018636728712195, guid: 15bacd232f644b040a040bdcd684b7e2, type: 3}
   chapterNum: 1
-  stageNum: 1
+  stageNum: 8
   audioClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   canUseF4: 1
   canUseLeftALT: 1
