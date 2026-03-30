@@ -133,6 +133,27 @@ public static class GameEvents
         StageRestarted?.Invoke();
     }
 
+    #region Chat Commands
+
+    // 채팅 입력으로 발동되는 커맨드 이벤트 (키보드 입력과 동일한 효과)
+    public static event Action ChatCommandRotateCW;   // "rotate"   → LeftALT와 동일
+    public static event Action ChatCommandRotateCCW;  // "counterrotate" → TAB과 동일
+    public static event Action ChatCommandMove;       // "move"     → F4와 동일
+
+    // 채팅 입력으로 발동되는 이스터에그 이벤트
+    public static event Action ChatCommandDance;      // "dance"    → 적 Dance 애니메이션
+    public static event Action ChatCommandLove;       // "i love you" → 적 Love 애니메이션
+    public static event Action ChatCommandWhistle;    // "whistle"  → 휘파람 효과음
+
+    public static void RaiseChatCommandRotateCW()  => ChatCommandRotateCW?.Invoke();
+    public static void RaiseChatCommandRotateCCW() => ChatCommandRotateCCW?.Invoke();
+    public static void RaiseChatCommandMove()      => ChatCommandMove?.Invoke();
+    public static void RaiseChatCommandDance()     => ChatCommandDance?.Invoke();
+    public static void RaiseChatCommandLove()      => ChatCommandLove?.Invoke();
+    public static void RaiseChatCommandWhistle()   => ChatCommandWhistle?.Invoke();
+
+    #endregion
+
     #region TileMap
     
     public static event Action<PlayerBehaviour, float> TileMapRotated;
