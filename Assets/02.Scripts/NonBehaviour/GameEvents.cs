@@ -9,6 +9,7 @@ public static class GameEvents
     public static event Action StageCleared;
     public static event Action StageRestarted;
     public static event Action PlayerDied;
+    public static event Action EnemyDied;
     public static event Action<bool> InputLockChanged;
     public static event Action TileMapChanged;
     public static event Action<TileColor> ColorToggleTriggered; // ColorToggle용
@@ -109,6 +110,11 @@ public static class GameEvents
     public static void RaisePlayerDied()
     {
         PlayerDied?.Invoke();
+    }
+
+    public static void RaiseEnemyDied()
+    {
+        EnemyDied?.Invoke();
     }
 
     public static void RaiseInputLockChanged(bool isLocked)

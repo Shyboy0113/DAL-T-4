@@ -184,7 +184,8 @@ public class EnemyBehaviour : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Explosion") || IsDead) return;
 
         SetDeadState(true);
-        
+        GameEvents.RaiseEnemyDied();
+
         // 효과음 실행
         soundEffectPlayer.PlaySoundEffect(explosionSound);
 
