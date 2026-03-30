@@ -21,3 +21,5 @@ MonoBehaviour:
   canUseF4: 1
   canUseLeftALT: 1
   canUseTAB: 0
+  enemyNum: 0
+  hasSecondMap: 0

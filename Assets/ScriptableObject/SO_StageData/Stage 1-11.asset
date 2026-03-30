@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9ce091a50fdc34bbe98cb1fa21e5b7, type: 3}
   m_Name: Stage 1-11
   m_EditorClassIdentifier: 
+  stageDescription: 
   stagePrefab: {fileID: 2685018636728712195, guid: 42ca810cf93922c43ac82dc74fb542c6, type: 3}
   chapterNum: 1
   stageNum: 8
@@ -19,3 +20,5 @@ MonoBehaviour:
   canUseF4: 1
   canUseLeftALT: 1
   canUseTAB: 0
+  enemyNum: 0
+  hasSecondMap: 0
