@@ -13,6 +13,20 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField] private AudioClip rotateSound;
     [SerializeField] private AudioClip moveSound;
 
+    private void OnEnable()
+    {
+        GameEvents.ChatCommandRotateCW  += OnChatRotateCW;
+        GameEvents.ChatCommandRotateCCW += OnChatRotateCCW;
+        GameEvents.ChatCommandMove      += OnChatMove;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.ChatCommandRotateCW  -= OnChatRotateCW;
+        GameEvents.ChatCommandRotateCCW -= OnChatRotateCCW;
+        GameEvents.ChatCommandMove      -= OnChatMove;
+    }
+
     private void Update()
     {
         if (playerBehaviour.CheckSkip()) return;
@@ -36,6 +50,31 @@ public class PlayerInputHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F4) && GameManager.Instance.canUseF4)
             EnqueueCommand(new MoveCommand(playerBehaviour), KeyType.F4, moveSound);
+    }
+
+    // ── 채팅 커맨드 핸들러 (키보드 입력과 동일한 조건/효과) ─────────────────────
+    private void OnChatRotateCW()
+    {
+        if (playerBehaviour.CheckSkip()) return;
+        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+        if (!GameManager.Instance.canUseLeftALT) return;
+        EnqueueCommand(new ClockwiseRotateCommand(playerBehaviour), KeyType.Alt, rotateSound);
+    }
+
+    private void OnChatRotateCCW()
+    {
+        if (playerBehaviour.CheckSkip()) return;
+        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+        if (!GameManager.Instance.canUseTAB) return;
+        EnqueueCommand(new CounterClockwiseRotateCommand(playerBehaviour), KeyType.Tab, rotateSound);
+    }
+
+    private void OnChatMove()
+    {
+        if (playerBehaviour.CheckSkip()) return;
+        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+        if (!GameManager.Instance.canUseF4) return;
+        EnqueueCommand(new MoveCommand(playerBehaviour), KeyType.F4, moveSound);
     }
 
     private void EnqueueCommand(ICommand command, KeyType keyType, AudioClip sound)
