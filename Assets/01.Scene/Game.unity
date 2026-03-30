@@ -3144,6 +3144,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bc675214d297dbe49acc131f7eb32307, type: 2}
   - {fileID: 11400000, guid: 89b68d8bbe4749f418aa6a9f505eca1a, type: 2}
   mapParent: {fileID: 646907079}
+  map1Camera: {fileID: 1139805366}
+  map2Camera: {fileID: 987032174}
 --- !u!1 &661051925
 GameObject:
   m_ObjectHideFlags: 0
