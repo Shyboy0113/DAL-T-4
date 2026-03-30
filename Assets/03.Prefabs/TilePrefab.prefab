@@ -500,6 +500,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 12d8d184f4bfbb241ad101f891efee2b, type: 2}
   - {fileID: 11400000, guid: 3089fc836fca50f48b33b1c794173faf, type: 2}
   - {fileID: 11400000, guid: d2c6211084d57f84db9705a489cbe8b6, type: 2}
+  - {fileID: 11400000, guid: 338ab81cf829fe44ca3fa8a9fa1b6c11, type: 2}
+  - {fileID: 11400000, guid: 26a5ea6e58440054cbd0c6aa2e035df4, type: 2}
   tileData: {fileID: 11400000, guid: 7b4ce66101976884892dbb9343d18309, type: 2}
   maxActivationCount:
     UseOverride: 0
@@ -538,6 +540,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b421bcbe0f8a3874ab8b821326634da9, type: 3}
   - {fileID: 21300000, guid: 4ac8e7ea0544f9849998edbe4534d4e6, type: 3}
   - {fileID: 21300000, guid: df70493a2363d254ab3d00728144db5e, type: 3}
+  - {fileID: 21300000, guid: 9e411c83563297841804b6cd2c3ec4fa, type: 3}
+  - {fileID: 21300000, guid: 0c6fcc9a8bc0f204dbce34154a1b9bca, type: 3}
   backgroundRenderer: {fileID: 4596620451026543370}
   iconRenderer: {fileID: 4951251146867796789}
   toggleSound: {fileID: 8300000, guid: 21ce263de1312d247a2ecb44238a23f3, type: 3}

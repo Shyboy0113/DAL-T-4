@@ -29,7 +29,9 @@ public enum TileType
     RotationToggle,
     ColorToggle,
     ConditionalToggle,
-    Help
+    Help,
+    Star,
+    Start
 }
 
 [System.Flags]
