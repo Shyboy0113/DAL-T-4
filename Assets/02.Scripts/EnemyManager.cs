@@ -7,7 +7,12 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private List<EnemyBehaviour> _enemies = new List<EnemyBehaviour>();
     [SerializeField] private float delayTime; // 적의 공격/이동 애니메이션 끝날 때까지 대기
-    
+
+    [Header("Enemy Containers")]
+    [SerializeField] private Transform unassignedContainer;
+    [SerializeField] private Transform map1Container;
+    [SerializeField] private Transform map2Container;
+
     public bool IsAnyEnemyActing { get; private set; } // BehaviourManager가 확인
 
     private void Awake()
@@ -19,8 +24,11 @@ public class EnemyManager : MonoBehaviour
     {
         if (_enemies.Count == 0)
         {
-            _enemies.AddRange(GetComponentsInChildren<EnemyBehaviour>());
+            _enemies.AddRange(GetComponentsInChildren<EnemyBehaviour>(true));
         }
+
+        foreach (var enemy in _enemies)
+            enemy.gameObject.SetActive(false);
     }
     
     public void InitEnemies()
@@ -63,12 +71,19 @@ public class EnemyManager : MonoBehaviour
                 var (pos, layer) = spawnList[i];
                 _enemies[i].gameObject.layer = layer;
                 _enemies[i].SetStartPosition(pos);
+
+                if (layer == map1Layer)
+                    _enemies[i].transform.SetParent(map1Container, false);
+                else if (layer == map2Layer)
+                    _enemies[i].transform.SetParent(map2Container, false);
+
                 _enemies[i].gameObject.SetActive(true);
                 _enemies[i].Init();
             }
             else
             {
                 _enemies[i].gameObject.SetActive(false);
+                _enemies[i].transform.SetParent(unassignedContainer, false);
             }
         }
     }
