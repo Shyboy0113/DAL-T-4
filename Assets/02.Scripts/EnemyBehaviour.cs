@@ -44,16 +44,30 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void OnEnable()
     {
-        // 맵 회전 시 플레이어와 적의 물리 로직을 활성화/비활성화 (여기선 적의 물리 상태만)
-        GameEvents.BeforeMapRotated += FreezeEnemyPhysicalLogic;
-        GameEvents.AfterMapRotated  += FreezeEnemyPhysicalLogic;
+        GameEvents.BeforeMapRotated  += FreezeEnemyPhysicalLogic;
+        GameEvents.AfterMapRotated   += FreezeEnemyPhysicalLogic;
+        GameEvents.ChatCommandDance  += OnChatDance;
+        GameEvents.ChatCommandLove   += OnChatLove;
     }
 
     private void OnDisable()
     {
-        // 맵 회전 시 플레이어와 적의 물리 로직을 활성화/비활성화 (여기선 적의 물리 상태만)
-        GameEvents.BeforeMapRotated -= FreezeEnemyPhysicalLogic;
-        GameEvents.AfterMapRotated  -= FreezeEnemyPhysicalLogic;
+        GameEvents.BeforeMapRotated  -= FreezeEnemyPhysicalLogic;
+        GameEvents.AfterMapRotated   -= FreezeEnemyPhysicalLogic;
+        GameEvents.ChatCommandDance  -= OnChatDance;
+        GameEvents.ChatCommandLove   -= OnChatLove;
+    }
+
+    private void OnChatDance()
+    {
+        if (IsDead) return;
+        animator.Play("Dance");
+    }
+
+    private void OnChatLove()
+    {
+        if (IsDead) return;
+        animator.Play("Love");
     }
 
     public void FreezeEnemyPhysicalLogic(bool freeze)
