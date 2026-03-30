@@ -21,6 +21,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private SoundEffectPlayer         soundEffectPlayer;
     [SerializeField] private AudioClip                 triggerSound;
     [SerializeField] private AudioClip                 cancelSound;
+    [SerializeField] private PlayerShadow              playerShadow;
     #endregion
 
     #region Sequence UI
@@ -332,7 +333,8 @@ public class PlayerBehaviour : MonoBehaviour
     {
         GameManager.Instance.isGameOver = false;
         playerAnimator.PlayIdle();
-        
+        playerShadow?.Show();
+
         _collider2D.enabled   = true;
         _rigidbody2D.simulated = true;
 
@@ -545,6 +547,7 @@ public class PlayerBehaviour : MonoBehaviour
         transform.position = spawnPosition ?? new Vector3(0.5f, 0.5f, 0f);
         Physics2D.SyncTransforms();
 
+        playerShadow?.Show();
         StartCoroutine(ISetInputLock(false, 1.0f));
 
     }
