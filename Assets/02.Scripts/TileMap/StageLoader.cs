@@ -13,6 +13,9 @@ public class StageLoader : MonoBehaviour
     [Header("Enemy")]
     [SerializeField] private EnemyManager enemyManager;
 
+    [Header("UI")]
+    [SerializeField] private SecondMapScreenPanel secondMapScreenPanel;
+
     private GameObject _currentStageObject;
 
     public bool LoadStage(int chapterNum, int stageNum)
@@ -39,10 +42,12 @@ public class StageLoader : MonoBehaviour
             ResetPlayerStatus();
             CenterCamerasOnTiles();
             if (enemyManager != null) enemyManager.SpawnEnemies(stageData.enemyNum);
+            secondMapScreenPanel?.Refresh();
 
             GameManager.Instance.canUseF4 = stageData.canUseF4;
             GameManager.Instance.canUseLeftALT = stageData.canUseLeftALT;
             GameManager.Instance.canUseTAB = stageData.canUseTAB;
+            GameManager.Instance.hasSecondMap = stageData.hasSecondMap;
             
             if (SoundManager.Instance != null)
             {

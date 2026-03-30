@@ -313,8 +313,9 @@ public class PlayerBehaviour : MonoBehaviour
         (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.F4);
 
     public bool CheckMapChange() =>
-        (_inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.Tab) ||
-        (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.Tab);
+        GameManager.Instance.hasSecondMap &&
+        ((_inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.Tab) ||
+         (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.Tab));
 
     public int CheckInputQueue(int slot) => _inputQueue[slot];
 

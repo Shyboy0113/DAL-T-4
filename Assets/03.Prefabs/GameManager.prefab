@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6a4122d6deea884f877071dbf3824cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stackManager: {fileID: 0}
+  _playerBehaviour: {fileID: 0}
   _mapDataLoader: {fileID: 4235201927906267008}
   _jsonDataManager: {fileID: 583788740016456793}
   currentStageData:
@@ -78,14 +78,18 @@ MonoBehaviour:
     minClearTime: 0
   chapter: 1
   stage: 1
+  isOption: 0
   isGameOver: 0
   isCleared: 0
+  isPaused: 0
+  canUseF4: 1
+  canUseLeftALT: 1
+  canUseTAB: 0
+  hasSecondMap: 0
   currentTime: 0
   pushedNumberALT: 0
   pushedNumberF4: 0
   pushedNumberTAB: 0
-  clearPanel: {fileID: 0}
-  pausePanel: {fileID: 0}
 --- !u!114 &4235201927906267008
 MonoBehaviour:
   m_ObjectHideFlags: 0

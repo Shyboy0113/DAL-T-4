@@ -20,4 +20,6 @@ public class SO_StageData : ScriptableObject
 
     public int enemyNum = 0;
 
+    public bool hasSecondMap = false;
+
 }
