@@ -17,5 +17,7 @@ public class SO_StageData : ScriptableObject
     public bool canUseF4 = true;
     public bool canUseLeftALT = true;
     public bool canUseTAB = false;
-    
+
+    public int enemyNum = 0;
+
 }

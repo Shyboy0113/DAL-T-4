@@ -31,7 +31,9 @@ public enum TileType
     ConditionalToggle,
     Help,
     Star,
-    Start
+    Start,
+    FirstEnemySpawn,
+    SecondEnemySpawn
 }
 
 [System.Flags]

@@ -27,7 +27,49 @@ public class EnemyManager : MonoBehaviour
     {
         foreach (var enemy in _enemies)
         {
+            if (!enemy.gameObject.activeSelf) continue;
             enemy.Init();
+        }
+    }
+
+    public void SpawnEnemies(int enemyNum)
+    {
+        int map1Layer = LayerMask.NameToLayer("Map 1");
+        int map2Layer = LayerMask.NameToLayer("Map 2");
+
+        var allTiles = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None);
+
+        var map1Spawns = new List<Vector3>();
+        var map2Spawns = new List<Vector3>();
+
+        foreach (var tile in allTiles)
+        {
+            if (tile.currentTileType == TileType.FirstEnemySpawn)
+                map1Spawns.Add(tile.transform.position);
+            else if (tile.currentTileType == TileType.SecondEnemySpawn)
+                map2Spawns.Add(tile.transform.position);
+        }
+
+        var spawnList = new List<(Vector3 pos, int layer)>();
+        foreach (var pos in map1Spawns) spawnList.Add((pos, map1Layer));
+        foreach (var pos in map2Spawns) spawnList.Add((pos, map2Layer));
+
+        int activeCount = Mathf.Min(enemyNum, spawnList.Count);
+
+        for (int i = 0; i < _enemies.Count; i++)
+        {
+            if (i < activeCount)
+            {
+                var (pos, layer) = spawnList[i];
+                _enemies[i].gameObject.layer = layer;
+                _enemies[i].SetStartPosition(pos);
+                _enemies[i].gameObject.SetActive(true);
+                _enemies[i].Init();
+            }
+            else
+            {
+                _enemies[i].gameObject.SetActive(false);
+            }
         }
     }
     

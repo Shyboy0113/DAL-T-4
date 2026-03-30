@@ -10,6 +10,9 @@ public class StageLoader : MonoBehaviour
     [SerializeField] private Camera map1Camera;
     [SerializeField] private Camera map2Camera;
 
+    [Header("Enemy")]
+    [SerializeField] private EnemyManager enemyManager;
+
     private GameObject _currentStageObject;
 
     public bool LoadStage(int chapterNum, int stageNum)
@@ -35,6 +38,7 @@ public class StageLoader : MonoBehaviour
             
             ResetPlayerStatus();
             CenterCamerasOnTiles();
+            if (enemyManager != null) enemyManager.SpawnEnemies(stageData.enemyNum);
 
             GameManager.Instance.canUseF4 = stageData.canUseF4;
             GameManager.Instance.canUseLeftALT = stageData.canUseLeftALT;

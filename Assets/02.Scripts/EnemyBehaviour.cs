@@ -12,7 +12,7 @@ public class EnemyBehaviour : MonoBehaviour
     private bool _isDead = false;
     public bool IsDead => _isDead;
 
-    [SerializeField] private Vector3 startPosition;
+    private Vector3 startPosition;
     [SerializeField] private BehaviourManager behaviourManager;
     
     [SerializeField] private SoundEffectPlayer soundEffectPlayer;
@@ -199,6 +199,11 @@ public class EnemyBehaviour : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
 
         if(_spriteRenderer != null) _spriteRenderer.enabled = false;
+    }
+
+    public void SetStartPosition(Vector3 pos)
+    {
+        startPosition = pos;
     }
 
     public void Init()
