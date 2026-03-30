@@ -55,7 +55,9 @@ public class GameStateManagement : MonoBehaviour
     
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R))
+        if (GameManager.Instance is null || GameManager.Instance.isChatting) return;
+        
+        if (Input.GetKeyDown(KeyCode.R))
         {
             RestartStage();
         }
@@ -69,16 +71,13 @@ public class GameStateManagement : MonoBehaviour
         {
             ToggleHowToPlayPanel();
         }
-
         
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameManager.Instance is null) return;
-
-            if (!GameManager.Instance.isOption)
-            {
-                TogglePausePanel();
-            }
+            if (GameManager.Instance.isOption) return;
+            
+            TogglePausePanel();
+            
         }
         
     }

@@ -16,7 +16,8 @@ public class PlayerInputHandler : MonoBehaviour
     private void Update()
     {
         if (playerBehaviour.CheckSkip()) return;
-        
+        if (GameManager.Instance.isChatting) return; // 채팅 중 게임 입력 차단
+
         // Undo (Redo 제거)
         if (Input.GetKey(KeyCode.LeftControl))
         {

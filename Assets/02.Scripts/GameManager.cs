@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
     public bool canUseLeftALT = true;
     public bool canUseTAB = false;
     public bool hasSecondMap = false;
+    public bool isChatting = false;
     
     // 도전 과제용 데이터
     public float currentTime;

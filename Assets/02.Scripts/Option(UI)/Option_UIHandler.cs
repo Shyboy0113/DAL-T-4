@@ -35,7 +35,8 @@ public class Option_UIHandler : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance == null || GameManager.Instance.isCleared) 
+        if (GameManager.Instance == null || GameManager.Instance.isCleared ||
+            GameManager.Instance.isChatting) 
             return;
         
         if (Input.GetKeyDown(KeyCode.Escape))
