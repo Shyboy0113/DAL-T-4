@@ -179,6 +179,7 @@ public class PlayerBehaviour : MonoBehaviour
         GameEvents.OnPlayerTurnStarted += ()  => _isEnemyActing = false;
         GameEvents.BeforeMapRotated    += FreezePlayerPhysicalLogic;
         GameEvents.AfterMapRotated     += FreezePlayerPhysicalLogic;
+        GameEvents.ChatCommandSuicide  += PlayExplosion;
     }
 
     private void OnDisable()
@@ -188,6 +189,7 @@ public class PlayerBehaviour : MonoBehaviour
         GameEvents.InputLockChanged    -= SetInputLock;
         GameEvents.BeforeMapRotated    -= FreezePlayerPhysicalLogic;
         GameEvents.AfterMapRotated     -= FreezePlayerPhysicalLogic;
+        GameEvents.ChatCommandSuicide  -= PlayExplosion;
     }
 
     private void Start()

@@ -79,7 +79,7 @@ public class ChatPanel : MonoBehaviour
             new ChatCommand(
                 keywords  : new[] { "suicide" },
                 easterEgg : "<color=#FF4444>[!!!]</color> <color=#FFAAAA>스스로 자멸을 선택했습니다...</color>",
-                effect    : GameEvents.RaisePlayerDied
+                effect    : GameEvents.RaiseChatCommandSuicide
             ),
             new ChatCommand(
                 keywords  : new[] { "counterrotate", "counter rotate" },

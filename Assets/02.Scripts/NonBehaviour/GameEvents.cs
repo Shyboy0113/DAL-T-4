@@ -136,6 +136,7 @@ public static class GameEvents
     #region Chat Commands
 
     // 채팅 입력으로 발동되는 커맨드 이벤트 (키보드 입력과 동일한 효과)
+    public static event Action ChatCommandSuicide;    // "suicide"  → 플레이어 PlayExplosion
     public static event Action ChatCommandRotateCW;   // "rotate"   → LeftALT와 동일
     public static event Action ChatCommandRotateCCW;  // "counterrotate" → TAB과 동일
     public static event Action ChatCommandMove;       // "move"     → F4와 동일
@@ -145,6 +146,7 @@ public static class GameEvents
     public static event Action ChatCommandLove;       // "i love you" → 적 Love 애니메이션
     public static event Action ChatCommandWhistle;    // "whistle"  → 휘파람 효과음
 
+    public static void RaiseChatCommandSuicide()   => ChatCommandSuicide?.Invoke();
     public static void RaiseChatCommandRotateCW()  => ChatCommandRotateCW?.Invoke();
     public static void RaiseChatCommandRotateCCW() => ChatCommandRotateCCW?.Invoke();
     public static void RaiseChatCommandMove()      => ChatCommandMove?.Invoke();
