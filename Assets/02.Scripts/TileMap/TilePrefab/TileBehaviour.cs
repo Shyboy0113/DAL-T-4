@@ -524,20 +524,8 @@ public class TileBehaviour : BaseTile
         UpdateCountText(currentCount);
 
         // Undo 중에는 새 TileCommand를 생성하지 않습니다.
-        if (IsUndoOr)
-        {
-            if (IsCountableTile())
-            {
-                bool shouldBeToggled = currentCount > 0 &&
-                    (currentCount / CurrentToggleActivationCount) % 2 != 0;
-                if (isToggled != shouldBeToggled)
-                {
-                    isToggled = shouldBeToggled;
-                    UpdateVisuals(true);
-                }
-            }
-            return;
-        }
+        // isToggled 복원은 TileCommand.Undo() → RestoreSnapshot이 담당하므로 여기서 재계산하지 않습니다.
+        if (IsUndoOr) return;
 
         if (currentCount == -1 ||
             (currentCount > 0 && currentCount % CurrentToggleActivationCount == 0))
