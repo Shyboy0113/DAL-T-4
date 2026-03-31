@@ -53,7 +53,6 @@ public class BehaviourManager : MonoBehaviour
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
         
         GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount);
-        GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
 
         if (playerBehaviour.TotalActionCount % 3 == 0)
             StartCoroutine(TurnSequence());

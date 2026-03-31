@@ -119,7 +119,10 @@ public class PlayerBehaviour : MonoBehaviour
     {
         EnableIceMode(false);
         if (!undoRedoState.IsUndo)
+        {
+            GameEvents.RaisePlayerMoved(moveCount);
             GameEvents.RaisePlayerActionFinished();
+        }
     }
 
     private IEnumerator Slide(Vector2 direction)
@@ -249,7 +252,10 @@ public class PlayerBehaviour : MonoBehaviour
         // Ice 위에서는 Stop 타일 진입 시 StopIceAndFinish()가 ActionFinished를 발화합니다.
         // 일반 이동은 여기서 발화합니다.
         if (!undoRedoState.IsUndo && !_isOnIce)
+        {
+            GameEvents.RaisePlayerMoved(moveCount);
             GameEvents.RaisePlayerActionFinished();
+        }
 
         yield return new WaitForSeconds(0.05f); // 총 0.2s 후
         SetInputLock(false);
