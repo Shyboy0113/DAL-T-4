@@ -106,6 +106,7 @@ public class EnemyMoveCommand : ICommand
 
     public void Undo()
     {
+        if (_enemy == null || !_enemy.gameObject.activeInHierarchy) return;
         _enemy.transform.DOKill();
         _enemy.EnableIceMode(false);
         _enemy.transform.localPosition = _previousLocalPosition;
