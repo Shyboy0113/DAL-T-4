@@ -15,7 +15,7 @@ public class BehaviourManager : MonoBehaviour
     public TurnState currentTurn = TurnState.Player;
     private readonly CommandHistory _history = new CommandHistory();
 
-    private void Awake()
+    private void Start()
     {
         _history.Clear();
     }
@@ -64,7 +64,7 @@ public class BehaviourManager : MonoBehaviour
             yield return new WaitUntil(() => !mapManager.IsRotating);
 
 
-        yield return new WaitForSeconds(0.1f);
+        //yield return new WaitForSeconds(0.1f);
         if (GameManager.Instance.isGameOver) yield break;
 
         GameEvents.RaiseEnemyTurnStarted(playerBehaviour.transform.position);
@@ -152,6 +152,7 @@ public class BehaviourManager : MonoBehaviour
     private void StopAllEnemiesTurn()
     {
         StopAllCoroutines();
+        enemyManager?.StopAllEnemiesTurn();
         undoState.Reset();
         currentTurn = TurnState.Player;
     }

@@ -46,6 +46,7 @@ public class GameStateManagement : MonoBehaviour
         HidePausePanel();
         
         stageLoader.LoadStage(GameManager.Instance.chapter, GameManager.Instance.stage);
+        behaviourManager.Init();
     }
     
     private void Start()
