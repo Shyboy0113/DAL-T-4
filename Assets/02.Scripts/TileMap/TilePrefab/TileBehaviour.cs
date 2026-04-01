@@ -95,6 +95,10 @@ public class TileBehaviour : BaseTile
     private bool _isEnemyOnMe      = false;
     private EnemyBehaviour _currentEnemyOnMe;
 
+    // OnTriggerEnter2D에서 등록 후, 타일 로직 턴에서 처리할 pending 참조
+    private PlayerBehaviour _pendingPlayer = null;
+    private EnemyBehaviour  _pendingEnemy  = null;
+
     [Header("SFX & Visuals")]
     private AudioSource _effectSound;
     [SerializeField] private AudioClip toggleSound;
@@ -411,8 +415,8 @@ public class TileBehaviour : BaseTile
 
     private void Awake()
     {
-        behaviourManager = FindObjectOfType<BehaviourManager>();
-        undoState    = FindObjectOfType<PlayerUndoStateBridge>();
+        if (behaviourManager == null) behaviourManager = FindObjectOfType<BehaviourManager>();
+        if (undoState == null)        undoState        = FindObjectOfType<PlayerUndoStateBridge>();
 
         _tilemap     = GetComponentInParent<Tilemap>();
         _effectSound = GetComponentInParent<AudioSource>();
@@ -420,12 +424,11 @@ public class TileBehaviour : BaseTile
         if (animator == null) animator = GetComponent<Animator>();
         animator.enabled = IsAnimationTile();
 
-        if (player == null) player = FindObjectOfType<PlayerBehaviour>();
+        if (player == null)     player     = FindObjectOfType<PlayerBehaviour>();
+        if (mapManager == null) mapManager = FindObjectOfType<MapManager>();
 
         if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
             AutoLinkTeleport();
-
-        mapManager = FindObjectOfType<MapManager>();
 
         _collider = GetComponent<Collider2D>();
         if (IsPlayerActionTile() || currentTileType == TileType.ToggleTargeted)
@@ -468,7 +471,8 @@ public class TileBehaviour : BaseTile
 
     private void OnEnable()
     {
-        GameEvents.ColorToggleTriggered += HandleColorToggle;
+        GameEvents.ColorToggleTriggered  += HandleColorToggle;
+        GameEvents.TileLogicTurnStarted  += OnTileLogicTurn;
 
         switch (currentTileType)
         {
@@ -493,13 +497,14 @@ public class TileBehaviour : BaseTile
 
     private void OnDisable()
     {
-        GameEvents.ColorToggleTriggered -= HandleColorToggle;
-        GameEvents.ToggleTriggered      -= HandleToggle;
-        GameEvents.PlayerActed          -= HandleToggle;
-        GameEvents.PlayerMoved          -= HandleToggle;
-        GameEvents.PlayerRotated        -= HandleToggle;
-        GameEvents.TileIconRotated      -= RotateTileIcon;
-        GameEvents.AfterMapRotated      -= OnAfterMapRotated;
+        GameEvents.ColorToggleTriggered  -= HandleColorToggle;
+        GameEvents.TileLogicTurnStarted  -= OnTileLogicTurn;
+        GameEvents.ToggleTriggered       -= HandleToggle;
+        GameEvents.PlayerActed           -= HandleToggle;
+        GameEvents.PlayerMoved           -= HandleToggle;
+        GameEvents.PlayerRotated         -= HandleToggle;
+        GameEvents.TileIconRotated       -= RotateTileIcon;
+        GameEvents.AfterMapRotated       -= OnAfterMapRotated;
     }
 
     private void HandleColorToggle(TileColor color)
@@ -605,51 +610,62 @@ public class TileBehaviour : BaseTile
         iconRenderer.sprite = nextIcon;
     }
 
+    // OnTriggerEnter2D: 점유 등록만 담당. 실제 로직은 타일 로직 턴에서 처리
     protected override void OnPlayerEnter(PlayerBehaviour pb)
     {
-        _isPlayerOnMe = true;
-
-        if (IsUndoOr || _isWaitPlayerExit) return;
-
-        if (currentTileType == TileType.TrapToggle)
-        {
-            if (!isToggled) pb.PlayExplosion();
-            return;
-        }
-
-        if (IsAnimationTile())
-        {
-            CheckOccupantsAfterToggle();
-            return;
-        }
-
-        behaviourManager.ExecuteCommand(new TileCommand(this, pb: pb));
+        _isPlayerOnMe  = true;
+        _pendingPlayer = pb;
     }
 
     protected override void OnEnemyEnter(EnemyBehaviour enemy)
     {
         _isEnemyOnMe      = true;
         _currentEnemyOnMe = enemy;
+        _pendingEnemy     = enemy;
+    }
 
-        if (IsUndoOr || _isWaitEnemyExit || enemy.IsDead) return;
+    // 타일 로직 턴: BehaviourManager가 시퀀스를 제어하며 발동
+    private void OnTileLogicTurn()
+    {
+        var pb = _pendingPlayer;
+        var eb = _pendingEnemy;
+        _pendingPlayer = null;
+        _pendingEnemy  = null;
 
-        if (currentTileType == TileType.TrapToggle)
+        // 플레이어 로직
+        if (pb != null && !IsUndoOr && !_isWaitPlayerExit)
         {
-            if (!isToggled) enemy.PlayExplosion();
-            return;
+            if (currentTileType == TileType.TrapToggle)
+            {
+                if (!isToggled) pb.PlayExplosion();
+            }
+            else if (IsAnimationTile())
+            {
+                CheckOccupantsAfterToggle();
+            }
+            else
+            {
+                behaviourManager.ExecuteCommand(new TileCommand(this, pb: pb));
+            }
         }
 
-        // 적에게 반응하는 타일만 허용 (Ice, Stop)
-        switch (currentTileType)
+        // 적 로직 (Ice, Stop, TrapToggle에만 반응)
+        if (eb != null && !eb.IsDead && !IsUndoOr && !_isWaitEnemyExit)
         {
-            case TileType.Ice:
-            case TileType.Stop:
-                break;
-            default:
-                return;
+            if (currentTileType == TileType.TrapToggle)
+            {
+                if (!isToggled) eb.PlayExplosion();
+            }
+            else if (currentTileType == TileType.Ice || currentTileType == TileType.Stop)
+            {
+                behaviourManager.ExecuteCommand(new TileCommand(this, eb: eb));
+            }
         }
 
-        behaviourManager.ExecuteCommand(new TileCommand(this, eb: enemy));
+        // 플레이어가 타일을 완전히 벗어난 후 한 턴이 지나야 wait 플래그를 해제한다.
+        // OnTriggerExit2D에서 즉시 해제하면 같은 프레임 내 물리 jitter로 인한
+        // 재진입 시 _pendingPlayer가 재설정되어 RotateTile 등이 연속 발동하는 버그가 있었음.
+        if (!_isPlayerOnMe) _isWaitPlayerExit = false;
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -657,9 +673,6 @@ public class TileBehaviour : BaseTile
         if (other.CompareTag("Player"))
         {
             _isPlayerOnMe = false;
-
-            if (!mapManager.IsRotating)
-                _isWaitPlayerExit = false;
 
             if (currentTileType == TileType.Breakable &&
                 _currentHit >= CurrentBreakHitCount   &&
