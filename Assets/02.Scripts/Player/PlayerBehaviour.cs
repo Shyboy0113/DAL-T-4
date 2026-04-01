@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public enum KeyType       { None = 0, Alt = 1, F4 = 2, Tab = 3 }
 public enum PlayerDirection { Right, Down, Left, Up }
@@ -21,6 +22,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] private SoundEffectPlayer         soundEffectPlayer;
     [SerializeField] private AudioClip                 triggerSound;
     [SerializeField] private AudioClip                 cancelSound;
+    [SerializeField] private AudioClip                 whistleSound;
     [SerializeField] private PlayerShadow              playerShadow;
     #endregion
 
@@ -183,16 +185,24 @@ public class PlayerBehaviour : MonoBehaviour
         GameEvents.BeforeMapRotated    += FreezePlayerPhysicalLogic;
         GameEvents.AfterMapRotated     += FreezePlayerPhysicalLogic;
         GameEvents.ChatCommandSuicide  += PlayExplosion;
+        GameEvents.PhysicsTurnStarted  += OnPhysicsTurn;
+        
+        // chat command로 whistle Sound를 내는 이벤트
+        GameEvents.ChatCommandWhistle += PlayWhistleSound;
+
     }
 
     private void OnDisable()
     {
-        GameEvents.PlayerDied          -= OnPlayerDied;
-        GameEvents.StageCleared        -= StopParticle;
-        GameEvents.InputLockChanged    -= SetInputLock;
-        GameEvents.BeforeMapRotated    -= FreezePlayerPhysicalLogic;
-        GameEvents.AfterMapRotated     -= FreezePlayerPhysicalLogic;
-        GameEvents.ChatCommandSuicide  -= PlayExplosion;
+        GameEvents.PlayerDied -= OnPlayerDied;
+        GameEvents.StageCleared -= StopParticle;
+        GameEvents.InputLockChanged -= SetInputLock;
+        GameEvents.BeforeMapRotated -= FreezePlayerPhysicalLogic;
+        GameEvents.AfterMapRotated -= FreezePlayerPhysicalLogic;
+        GameEvents.ChatCommandSuicide -= PlayExplosion;
+        GameEvents.PhysicsTurnStarted -= OnPhysicsTurn;
+
+        GameEvents.ChatCommandWhistle -= PlayWhistleSound;
     }
 
     private void Start()
@@ -207,8 +217,6 @@ public class PlayerBehaviour : MonoBehaviour
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
 
         UpdateParticle();
-
-        Debug.Log(TotalActionCount);
     }
 
     #endregion
@@ -245,10 +253,19 @@ public class PlayerBehaviour : MonoBehaviour
     {
         SetInputLock(true);
 
-        yield return new WaitForSeconds(0.1f);
-        CheckForGround();
+        yield return new WaitForSeconds(0.075f); // 물리 엔진이 이동을 처리할 때까지 대기
 
-        yield return new WaitForSeconds(0.05f); // 총 0.15s 후
+        if (!undoRedoState.IsUndo)
+        {
+            // 타일 로직 턴: OnTriggerEnter에서 등록한 pending 효과 실행
+            GameEvents.RaiseTileLogicTurnStarted();
+            yield return null;
+
+            // 물리 턴: Player/Enemy 낙사 판정
+            GameEvents.RaisePhysicsTurnStarted();
+            yield return null;
+        }
+
         // Ice 위에서는 Stop 타일 진입 시 StopIceAndFinish()가 ActionFinished를 발화합니다.
         // 일반 이동은 여기서 발화합니다.
         if (!undoRedoState.IsUndo && !_isOnIce)
@@ -257,8 +274,15 @@ public class PlayerBehaviour : MonoBehaviour
             GameEvents.RaisePlayerActionFinished();
         }
 
-        yield return new WaitForSeconds(0.05f); // 총 0.2s 후
+        yield return new WaitForSeconds(0.075f);
         SetInputLock(false);
+    }
+
+    // 물리 턴에서 낙사 판정
+    private void OnPhysicsTurn()
+    {
+        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+        CheckForGround();
     }
 
     public void RotateArrow(bool immediate = false)
@@ -406,6 +430,7 @@ public class PlayerBehaviour : MonoBehaviour
         playerAnimator.PlayExplosion();
         GameEvents.RaisePlayerDied();
         GameEvents.RaiseInputLockChanged(false);
+        _isEnemyActing = false;
     }
 
     private void OnPlayerDied()
@@ -523,9 +548,9 @@ public class PlayerBehaviour : MonoBehaviour
 
     #region Init
 
-    public void InitPlayer(Vector3? spawnPosition = null)
+    public void InitPlayer()
     {
-
+        
         _isInputLocked = false;
         _isMapBusy = false;
         _isEnemyActing = false;
@@ -553,7 +578,8 @@ public class PlayerBehaviour : MonoBehaviour
         playerAnimator.PlayIdle();
         playerAnimator.RotateArrow(_playerDirection, immediate: true);
 
-        transform.position = spawnPosition ?? new Vector3(0.5f, 0.5f, 0f);
+        transform.position = FindStartPosition();
+        
         Physics2D.SyncTransforms();
 
         playerShadow?.Show();
@@ -562,4 +588,33 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     #endregion
+
+    private void PlayWhistleSound()
+    {
+        soundEffectPlayer.PlaySoundEffect(whistleSound);
+    }
+    
+    private Vector3 FindStartPosition()
+    {
+        var tiles = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None);
+        foreach (var tile in tiles)
+        {
+            if (tile.currentTileType == TileType.Start)
+            {
+                return tile.transform.position;
+            }
+        }
+        
+        Debug.Log("시작 지점을 찾지 못했습니다!");
+        return new Vector3(0.5f, 0.5f, 0f);
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            PlayExplosion();
+        }
+    }
 }

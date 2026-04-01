@@ -69,6 +69,9 @@ public class MapManager : MonoBehaviour
             mapFirstRoot   = linker.mapFirstRoot;
             mapSecondRoot  = linker.mapSecondRoot;
             Init();
+            
+            GameEvents.RaiseMapInitialized();
+            
         }
     }
 
@@ -202,6 +205,8 @@ public class MapManager : MonoBehaviour
 
         _accumulatedRotation += angle;
         Vector3 targetRotation = new Vector3(0, 0, _accumulatedRotation);
+        
+        Debug.Log("현재 회전 발생");
 
         mapPivot
             .DORotate(targetRotation, rotateDuration, RotateMode.Fast)
@@ -245,16 +250,6 @@ public class MapManager : MonoBehaviour
             renderTexture       = renderTextureSnapshot
         };
 
-        Debug.Log($"[SaveMapState]\n" +
-                  $"  pivotPosition: {state.pivotPosition}\n" +
-                  $"  zRotation: {state.zRotation}\n" +
-                  $"  firstRootPosition: {state.firstRootPosition}\n" +
-                  $"  secondRootPosition: {state.secondRootPosition}\n" +
-                  $"  tileIconZRotation: {state.tileIconZRotation}\n" +
-                  $"  accumulatedRotation: {state.accumulatedRotation}\n" +
-                  $"  isFirst: {state.isFirst}\n" +
-                  $"  renderTexture: {state.renderTexture?.name}");
-
         _undoMapHistory.Push(state);
     }
 
@@ -262,14 +257,10 @@ public class MapManager : MonoBehaviour
     {
         if (_undoMapHistory.Count <= 0)
         {
-            Debug.Log("[MapManager] RestoreMapState: 히스토리 없음");
             return;
         }
 
         MapState lastState = _undoMapHistory.Pop();
-        
-        Debug.Log($"[MapManager] 복원 전 - isFirst: {_isFirst}, playerZ: {player.transform.position.z}");
-        Debug.Log($"[MapManager] 복원할 상태 - isFirst: {lastState.isFirst}, renderTexture: {lastState.renderTexture?.name}");
         
         mapPivot.position = lastState.pivotPosition;
         mapPivot.rotation = Quaternion.Euler(0, 0, lastState.zRotation);
@@ -285,8 +276,6 @@ public class MapManager : MonoBehaviour
         if (_isFirst) ActivateFirst();
         else          ActivateSecond();
         
-        Debug.Log($"[MapManager] 복원 후 - isFirst: {_isFirst}, playerZ: {player.transform.position.z}");
-
         // RenderTexture 복원
         screen.texture = lastState.renderTexture;
         _currentRenderTexture = lastState.renderTexture;

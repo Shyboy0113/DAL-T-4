@@ -48,14 +48,23 @@ public class EnemyBehaviour : MonoBehaviour
         GameEvents.AfterMapRotated   += FreezeEnemyPhysicalLogic;
         GameEvents.ChatCommandDance  += OnChatDance;
         GameEvents.ChatCommandLove   += OnChatLove;
+        GameEvents.PhysicsTurnStarted += OnPhysicsTurn;
     }
 
     private void OnDisable()
     {
-        GameEvents.BeforeMapRotated  -= FreezeEnemyPhysicalLogic;
-        GameEvents.AfterMapRotated   -= FreezeEnemyPhysicalLogic;
-        GameEvents.ChatCommandDance  -= OnChatDance;
-        GameEvents.ChatCommandLove   -= OnChatLove;
+        GameEvents.BeforeMapRotated   -= FreezeEnemyPhysicalLogic;
+        GameEvents.AfterMapRotated    -= FreezeEnemyPhysicalLogic;
+        GameEvents.ChatCommandDance   -= OnChatDance;
+        GameEvents.ChatCommandLove    -= OnChatLove;
+        GameEvents.PhysicsTurnStarted -= OnPhysicsTurn;
+    }
+
+    // 물리 턴에서 낙사 판정
+    private void OnPhysicsTurn()
+    {
+        if (IsDead) return;
+        CheckForGround();
     }
 
     private void OnChatDance()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
@@ -19,6 +20,17 @@ public class EnemyManager : MonoBehaviour
     {
         InsertEnemy(); // Inspector 창에서 적이 할당돼있지 않을 때, 자동으로 할당
     }
+
+    void OnEnable()
+    {
+        GameEvents.MapInitialized += SpawnEnemies;
+    }
+
+    void OnDisable()
+    {
+        GameEvents.MapInitialized -= SpawnEnemies;
+    }
+    
 
     private void InsertEnemy()
     {
@@ -40,7 +52,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public void SpawnEnemies(int enemyNum)
+    public void SpawnEnemies()
     {
         int map1Layer = LayerMask.NameToLayer("Map 1");
         int map2Layer = LayerMask.NameToLayer("Map 2");
@@ -62,7 +74,7 @@ public class EnemyManager : MonoBehaviour
         foreach (var pos in map1Spawns) spawnList.Add((pos, map1Layer));
         foreach (var pos in map2Spawns) spawnList.Add((pos, map2Layer));
 
-        int activeCount = Mathf.Min(enemyNum, spawnList.Count);
+        int activeCount = Mathf.Min(spawnList.Count, _enemies.Count);
 
         for (int i = 0; i < _enemies.Count; i++)
         {
@@ -88,6 +100,12 @@ public class EnemyManager : MonoBehaviour
         }
     }
     
+    public void StopAllEnemiesTurn()
+    {
+        StopAllCoroutines();
+        IsAnyEnemyActing = false;
+    }
+
     // 플레이어 이동 -> 타일맵 효과 적용 -> 적 턴 넘어감(이 때 호출됨)
     public void StartAllEnemiesTurn(Vector3 playerPosition)
     {
@@ -97,21 +115,27 @@ public class EnemyManager : MonoBehaviour
     private IEnumerator IStartAllEnemiesTurn(Vector3 playerPosition)
     {
         IsAnyEnemyActing = true;
-        
+
         foreach (var enemy in _enemies)
         {
-            if (enemy.IsDead) continue; // 죽은 적은 제외
-            
-            // 각 적에게 플레이어의 위치를 주고 행동하게 함
-            // 추후에 알고리즘을 넣어 동선을 짜야 함
-            enemy.TakeTurn(playerPosition);
-            
-            // 적의 이동/공격 애니메이션이 끝날 때까지 대기 시간을 부여함
-            yield return new WaitForSeconds(delayTime);
-        }
-        
-        IsAnyEnemyActing = false;
+            if (!enemy.gameObject.activeSelf || enemy.IsDead) continue;
 
+            enemy.TakeTurn(playerPosition);
+            yield return new WaitForSeconds(delayTime);
+
+            // 타일 로직 턴: 이동 중 등록된 타일 효과 실행 (TrapToggle 사망 등)
+            GameEvents.RaiseTileLogicTurnStarted();
+            yield return null;
+
+            // 물리 턴: Player/Enemy 낙사 판정
+            GameEvents.RaisePhysicsTurnStarted();
+            yield return null;
+
+            // 플레이어가 이번 적의 행동으로 사망했다면 나머지 적은 행동하지 않음
+            if (GameManager.Instance.isGameOver) break;
+        }
+
+        IsAnyEnemyActing = false;
     }
     
 }
