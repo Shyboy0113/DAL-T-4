@@ -28,7 +28,9 @@ public class StageLoader : MonoBehaviour
             // 1. 기존 스테이지 제거
             if (_currentStageObject != null)
             {
-                Destroy(_currentStageObject);
+                // Destroy는 프레임 끝에 처리되어 SpawnEnemies 실행 시
+                // 구 스테이지 타일이 씬에 남아 spawn 포인트가 중복 계산되는 버그 방지
+                DestroyImmediate(_currentStageObject);
             }
             
             _currentStageObject = Instantiate(stageData.stagePrefab, mapParent);
@@ -39,9 +41,8 @@ public class StageLoader : MonoBehaviour
                 mapManager.InitializeNewStage(_currentStageObject);
             }
             
-            ResetPlayerStatus();
             CenterCamerasOnTiles();
-            if (enemyManager != null) enemyManager.SpawnEnemies(stageData.enemyNum);
+            
             secondMapScreenPanel?.Refresh();
 
             GameManager.Instance.canUseF4 = stageData.canUseF4;
@@ -104,25 +105,6 @@ public class StageLoader : MonoBehaviour
             var pos = map2Camera.transform.position;
             map2Camera.transform.position = new Vector3(map2Center.x, map2Center.y, pos.z);
         }
-    }
-
-    private void ResetPlayerStatus()
-    {
-        var player = FindObjectOfType<PlayerBehaviour>();
-        if (player == null) return;
-
-        Vector3? spawnPos = null;
-        var tiles = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None);
-        foreach (var tile in tiles)
-        {
-            if (tile.currentTileType == TileType.Start)
-            {
-                spawnPos = tile.transform.position;
-                break;
-            }
-        }
-
-        player.InitPlayer(spawnPos);
     }
 
 }
