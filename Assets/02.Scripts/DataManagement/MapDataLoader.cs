@@ -56,7 +56,6 @@ public class MapDataLoader : MonoBehaviour
         {
             string json = File.ReadAllText(path);
             gameData = JsonUtility.FromJson<GameData>(json);
-            Debug.Log($"Loaded {gameData.chapters.Count} chapters.");
         }
         else
         {
@@ -72,7 +71,6 @@ public class MapDataLoader : MonoBehaviour
         {
             string json = textAsset.text;
             gameData = JsonUtility.FromJson<GameData>(json);
-            Debug.Log($"Loaded {gameData.chapters.Count} chapters from Resources.");
         }
         else
         {
@@ -90,8 +88,7 @@ public class MapDataLoader : MonoBehaviour
                 foreach (var st in ch.stages)
                 {
                     if (st.stageNum == stage)
-                    {
-                        Debug.Log($"Stage {st.stageName} is loaded!");                        
+                    {                   
                         return st;
                     }
                 }

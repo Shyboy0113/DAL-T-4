@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using DG.Tweening;
@@ -283,16 +284,19 @@ public class ChatPanel : MonoBehaviour
     private void ClearAll()
     {
         foreach (TextMeshProUGUI msg in _messages)
-            FadeOut(msg);
+            StartCoroutine(IFadeOut(msg));
 
         _messages.Clear();
     }
 
-    private void FadeOut(TextMeshProUGUI msg)
+    private IEnumerator IFadeOut(TextMeshProUGUI msg)
     {
+        yield return new WaitForSeconds(1.0f);
+        
         msg.DOFade(0f, fadeDuration).OnComplete(() =>
         {
             if (msg != null) Destroy(msg.gameObject);
         });
     }
+    
 }

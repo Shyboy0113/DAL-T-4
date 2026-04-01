@@ -35,8 +35,6 @@ public class Bootstrapper : MonoBehaviour
 #if UNITY_EDITOR
         string previousScene = EditorPrefs.GetString(PreviousSceneKey);
         EditorPrefs.DeleteKey(PreviousSceneKey);
-        
-        Debug.Log($"복귀할 씬: {previousScene}");
 
         if (!string.IsNullOrEmpty(previousScene))
         {
@@ -46,9 +44,8 @@ public class Bootstrapper : MonoBehaviour
 
             // 목적지 씬을 활성 씬으로 명시적 설정
             Scene destination = SceneManager.GetSceneByPath(previousScene);
-            Debug.Log($"destination 유효: {destination.IsValid()} / 이름: {destination.name}");
+            
             SceneManager.SetActiveScene(destination);
-            Debug.Log($"활성씬 변경 후: {SceneManager.GetActiveScene().name}");
             
             // 3. Bootstrap 씬만 언로드
             yield return SceneManager.UnloadSceneAsync(bootstrapScene.Name);
@@ -64,8 +61,6 @@ public class Bootstrapper : MonoBehaviour
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(defaultGroup.mainScene.Name));
 
         // Bootstrap 씬만 언로드
-        Debug.Log($"언로드 시도: {bootstrapScene.Name}");
         yield return SceneManager.UnloadSceneAsync(bootstrapScene.Name);
-        Debug.Log($"언로드 완료 / 현재 활성씬: {SceneManager.GetActiveScene().name}");
     }
 }
