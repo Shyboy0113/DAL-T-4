@@ -163,9 +163,9 @@ public class EnemyBehaviour : MonoBehaviour
     {
         Physics2D.SyncTransforms();
 
-        Transform activeMapRoot = mapManager.GetActiveMapRoot();
+        Transform ownMapRoot = GetOwnMapRoot();
 
-        if (activeMapRoot == null)
+        if (ownMapRoot == null)
         {
             PlayExplosion();
             return;
@@ -177,10 +177,8 @@ public class EnemyBehaviour : MonoBehaviour
 
         foreach (var col in hitColliders)
         {
-            // 반드시 activeMapRoot의 자식 타일인지 먼저 확인
-            // 이전: IsChildOf 블록 바깥에서 hasGround=true를 설정해
-            //        적/플레이어 등 다른 콜라이더에도 hasGround=true가 되던 버그 수정
-            if (!col.transform.IsChildOf(activeMapRoot)) continue;
+            // 반드시 자신이 속한 맵 루트의 자식 타일인지 먼저 확인
+            if (!col.transform.IsChildOf(ownMapRoot)) continue;
 
             if (col.TryGetComponent(out TileBehaviour tile))
             {
@@ -299,7 +297,8 @@ public class EnemyBehaviour : MonoBehaviour
     public void TakeTurn(Vector3 playerPosition)
     {
         if (_isDead) return;
-        
+        if (!IsOnSameMapAsPlayer()) return; // 플레이어와 다른 맵이면 스킵
+
         // 1. AI 로직: playerPosition을 향해 이동할 Vector3 계산
         Vector3 nextPosition = CalculateMove(playerPosition);
         // 2. 적 이동 명령 생성 및 매니저를 통한 실행
@@ -309,6 +308,23 @@ public class EnemyBehaviour : MonoBehaviour
         {
             behaviourManager.ExecuteCommand(moveCommand);
         }
+    }
+
+    // 적이 플레이어와 같은 맵(레이어)에 있는지 확인
+    private bool IsOnSameMapAsPlayer()
+    {
+        int map1Layer = LayerMask.NameToLayer("Map 1");
+        bool enemyOnMap1  = gameObject.layer == map1Layer;
+        bool playerOnMap1 = mapManager.IsFirstRoot();
+        return enemyOnMap1 == playerOnMap1;
+    }
+
+    // 적 자신이 속한 맵 루트 반환 (activeMapRoot 고정 사용 시 다른 맵이 활성화되면 잘못된 루트를 참조하는 문제 방지)
+    private Transform GetOwnMapRoot()
+    {
+        return IsOnSameMapAsPlayer()
+            ? mapManager.GetActiveMapRoot()
+            : mapManager.GetInactiveMapRoot();
     }
 
     #region EnemyAI
