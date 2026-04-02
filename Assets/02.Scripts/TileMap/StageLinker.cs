@@ -6,4 +6,5 @@ public class StageLinker : MonoBehaviour
     public Transform mapPivot;
     public GameObject mapFirstRoot;
     public GameObject mapSecondRoot;
+    public GameObject mapStaticRoot;
 }

@@ -39,7 +39,8 @@ public class MapManager : MonoBehaviour
     [SerializeField] private float     rotateDuration;
     [SerializeField] private GameObject mapFirstRoot;
     [SerializeField] private GameObject mapSecondRoot;
-
+    [SerializeField] private GameObject mapStaticRoot;
+    
     [SerializeField] private RawImage screen;
     [SerializeField] private RenderTexture mapFirstRenderTexture;
     [SerializeField] private RenderTexture mapSecondRenderTexture;
@@ -48,6 +49,7 @@ public class MapManager : MonoBehaviour
     private GameObject _currentRoot;
     private Transform  _activatedRoot;
     private Transform  _deactivatedRoot;
+    private Transform _staticRoot;
 
     [SerializeField] private PlayerBehaviour player;
 
@@ -68,6 +70,8 @@ public class MapManager : MonoBehaviour
             mapPivot       = linker.mapPivot;
             mapFirstRoot   = linker.mapFirstRoot;
             mapSecondRoot  = linker.mapSecondRoot;
+            mapStaticRoot  = linker.mapStaticRoot;
+            
             Init();
             
             GameEvents.RaiseMapInitialized();
@@ -82,6 +86,7 @@ public class MapManager : MonoBehaviour
 
         _activatedRoot   = mapFirstRoot.transform;
         _deactivatedRoot = mapSecondRoot.transform;
+        _staticRoot = mapStaticRoot.transform;
 
         _accumulatedRotation = 0f;
         _tileIconZRotation   = 0f;
@@ -164,6 +169,7 @@ public class MapManager : MonoBehaviour
 
     public Transform GetActiveMapRoot()   => _activatedRoot;
     public Transform GetInactiveMapRoot() => _deactivatedRoot;
+    public Transform GetStaticRoot() => _staticRoot;
 
     private void OnEnable()
     {

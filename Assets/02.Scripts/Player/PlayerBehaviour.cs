@@ -410,12 +410,13 @@ public class PlayerBehaviour : MonoBehaviour
         Physics2D.SyncTransforms();
 
         Transform activeRoot = mapManager.GetActiveMapRoot();
+        Transform staticRoot = mapManager.GetStaticRoot();
         if (activeRoot == null) { PlayExplosion(); return; }
 
         bool hasGround = false;
         foreach (var col in Physics2D.OverlapPointAll(transform.position))
         {
-            if (col.transform.IsChildOf(activeRoot)) { hasGround = true; break; }
+            if (col.transform.IsChildOf(activeRoot) || col.transform.IsChildOf(staticRoot)) { hasGround = true; break; }
         }
 
         if (!hasGround) PlayExplosion();
