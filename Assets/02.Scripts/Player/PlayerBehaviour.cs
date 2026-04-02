@@ -251,6 +251,9 @@ public class PlayerBehaviour : MonoBehaviour
 
     private IEnumerator MoveSequence()
     {
+        // 시퀀스 시작 시점의 Ice 상태를 캡처합니다.
+        // TileLogicTurn 중 StopIceAndFinish()/_isOnIce가 바뀌어도 이중 발화를 방지합니다.
+        bool startedOnIce = _isOnIce;
         SetInputLock(true);
 
         yield return new WaitForSeconds(0.075f); // 물리 엔진이 이동을 처리할 때까지 대기
@@ -266,9 +269,9 @@ public class PlayerBehaviour : MonoBehaviour
             yield return null;
         }
 
-        // Ice 위에서는 Stop 타일 진입 시 StopIceAndFinish()가 ActionFinished를 발화합니다.
-        // 일반 이동은 여기서 발화합니다.
-        if (!undoRedoState.IsUndo && !_isOnIce)
+        // Ice 위에서는 Stop/StartTeleport 타일이 StopIceAndFinish()로 ActionFinished를 발화합니다.
+        // 일반 이동(비Ice)은 여기서 발화합니다.
+        if (!undoRedoState.IsUndo && !startedOnIce)
         {
             GameEvents.RaisePlayerMoved(moveCount);
             GameEvents.RaisePlayerActionFinished();

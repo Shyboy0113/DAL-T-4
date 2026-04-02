@@ -212,7 +212,16 @@ public class TileBehaviour : BaseTile
                 break;
 
             case TileType.StartTeleport:
-                if (teleportTarget && pb != null) pb.TeleportTo(teleportTarget.transform.position);
+                if (teleportTarget && pb != null)
+                {
+                    bool wasOnIce = pb.IsOnIce();
+                    pb.TeleportTo(teleportTarget.transform.position);
+                    // Ice 슬라이딩 중 텔레포트: continueIceAfterTeleport 토글로 동작 분기
+                    // false(기본): EndTeleport 도착 즉시 멈춤 (Stop 타일과 동일 효과)
+                    // true       : EndTeleport 도착 후 같은 방향으로 Ice 슬라이딩 유지
+                    if (wasOnIce && !continueIceAfterTeleport)
+                        pb.StopIceAndFinish();
+                }
                 break;
 
             case TileType.EndTeleport: break;
@@ -382,6 +391,11 @@ public class TileBehaviour : BaseTile
 
     [Header("Teleport")]
     [SerializeField] private TileBehaviour teleportTarget;
+    /// <summary>
+    /// true  : Ice 슬라이딩 중 텔레포트 → EndTeleport 도착 후 Ice 유지 (계속 미끄러짐)
+    /// false : Ice 슬라이딩 중 텔레포트 → EndTeleport 도착 후 Ice 종료 (Stop 타일과 동일)
+    /// </summary>
+    [SerializeField] private bool continueIceAfterTeleport = false;
 
     private void AutoLinkTeleport()
     {
