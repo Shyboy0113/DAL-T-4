@@ -1410,6 +1410,7 @@ GameObject:
   - component: {fileID: 301112578}
   - component: {fileID: 301112577}
   - component: {fileID: 301112580}
+  - component: {fileID: 301112581}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1537,6 +1538,22 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &301112581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301112576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e19208672ccacb4b9c6eed40c71d439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTransform: {fileID: 1639864500}
+  edgeThreshold: 0.4
+  scrollStep: 2
+  tweenDuration: 0.25
 --- !u!1 &306749979
 GameObject:
   m_ObjectHideFlags: 0
@@ -5599,7 +5616,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 183
+    m_Bits: 439
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: a40c9d581d6c1d84184330424cd21d78, type: 2}
   m_TargetDisplay: 0
@@ -7632,8 +7649,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  activeColor: {r: 1, g: 1, b: 1, a: 0.76862746}
-  deActiveColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.76862746}
   leftButton: {fileID: 1056355186}
   rightButton: {fileID: 2139439552}
 --- !u!1 &1139805364
@@ -7693,7 +7708,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 119
+    m_Bits: 375
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: baa88828d0886224e916ab8955545824, type: 2}
   m_TargetDisplay: 0
@@ -9532,6 +9547,50 @@ MonoBehaviour:
   enterTextLabel: {fileID: 826230262}
   chatAudioSource: {fileID: 0}
   whistleSound: {fileID: 0}
+--- !u!1 &1464522534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1464522535}
+  - component: {fileID: 1464522536}
+  m_Layer: 0
+  m_Name: AchievementManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1464522535
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464522534}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.0300856, y: 1.1628592, z: -0.050423134}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1464522536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464522534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb14acb6d2d015b478144bf1664f1a8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1479012809
 GameObject:
   m_ObjectHideFlags: 0
@@ -12858,6 +12917,7 @@ MonoBehaviour:
   rotateDuration: 0.5
   mapFirstRoot: {fileID: 0}
   mapSecondRoot: {fileID: 0}
+  mapStaticRoot: {fileID: 0}
   screen: {fileID: 2007340506}
   mapFirstRenderTexture: {fileID: 8400000, guid: baa88828d0886224e916ab8955545824, type: 2}
   mapSecondRenderTexture: {fileID: 8400000, guid: a40c9d581d6c1d84184330424cd21d78, type: 2}
@@ -14331,3 +14391,4 @@ SceneRoots:
   - {fileID: 172311542}
   - {fileID: 17866535}
   - {fileID: 346564709}
+  - {fileID: 1464522535}
