@@ -161,6 +161,8 @@ public class TileBehaviour : BaseTile
 
         _isWaitPlayerExit = false;
         _isWaitEnemyExit  = false;
+        _pendingPlayer    = null;
+        _pendingEnemy     = null;
 
         UpdateVisuals(true);
 
@@ -627,7 +629,8 @@ public class TileBehaviour : BaseTile
     protected override void OnPlayerEnter(PlayerBehaviour pb)
     {
         _isPlayerOnMe  = true;
-        _pendingPlayer = pb;
+        if (!IsUndoOr)
+            _pendingPlayer = pb;
     }
 
     protected override void OnEnemyEnter(EnemyBehaviour enemy)
