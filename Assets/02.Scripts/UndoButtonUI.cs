@@ -12,9 +12,6 @@ public class UndoButtonUI : MonoBehaviour
     private TextMeshProUGUI _text; // 혹은 이미지 사용 시 Image
     private CanvasGroup _canvasGroup; // 투명도 조절용 (권장)
 
-    [SerializeField] private Color activeColor = new Color(255f/255f, 255f/255f, 255f/255f, 196f/255f);
-    [SerializeField] private Color deActiveColor = new Color (0.75f, 0.75f, 0.75f, 196f/255f);
-
     // Button의 Navigation 관련 할당
     [SerializeField] private Button leftButton;  // Map Button
     [SerializeField] private Button rightButton; // Restart Button
@@ -69,12 +66,10 @@ public class UndoButtonUI : MonoBehaviour
         if (isActive)
         {
             _canvasGroup.alpha = 1f;
-            if (_text != null) _text.color = activeColor; // 원래 색
         }
         else
         {
             _canvasGroup.alpha = 0.75f; // 반투명
-            if (_text != null) _text.color = deActiveColor; // 회색
         }
     }
 }
