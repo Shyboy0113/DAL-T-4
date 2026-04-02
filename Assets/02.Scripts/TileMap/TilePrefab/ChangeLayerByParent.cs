@@ -1,8 +1,8 @@
-/*
- *  TilePrefab에 붙어서 프리팹과 자식 오브젝트들의 Layer를 부모 TileMap의 Layer로 설정
- */
-
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class ChangeLayerByParent : MonoBehaviour
 {
@@ -13,11 +13,16 @@ public class ChangeLayerByParent : MonoBehaviour
 
     private void OnValidate()
     {
-        ApplyParentLayer();
+#if UNITY_EDITOR
+        // OnValidate 안에서 직접 레이어를 바꾸면 Canvas의 SendMessage가 터지므로 지연 호출
+        EditorApplication.delayCall += ApplyParentLayer;
+#endif
     }
 
     private void ApplyParentLayer()
     {
+        if (this == null) return; // delayCall 시점에 오브젝트가 파괴됐을 수 있음
+
         if (transform.parent != null)
         {
             int parentLayer = transform.parent.gameObject.layer;
@@ -33,6 +38,5 @@ public class ChangeLayerByParent : MonoBehaviour
         {
             SetLayerRecursively(child.gameObject, newLayer);
         }
-        
     }
 }
