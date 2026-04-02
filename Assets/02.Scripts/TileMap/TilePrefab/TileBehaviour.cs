@@ -523,8 +523,11 @@ public class TileBehaviour : BaseTile
         GameEvents.TileIconRotated += RotateTileIcon;
         GameEvents.AfterMapRotated += OnAfterMapRotated;
 
-        // Stop / StartTeleport 타일만 IceTileLogicTurnStarted를 구독
-        if (currentTileType == TileType.Stop || currentTileType == TileType.StartTeleport)
+        // Ice 슬라이딩 중 자동 반응해야 하는 타일만 IceTileLogicTurnStarted를 구독
+        if (currentTileType == TileType.Stop             ||
+            currentTileType == TileType.StartTeleport    ||
+            currentTileType == TileType.FirstDestination ||
+            currentTileType == TileType.SecondDestination)
             GameEvents.IceTileLogicTurnStarted += OnIceTileLogicTurn;
     }
 
