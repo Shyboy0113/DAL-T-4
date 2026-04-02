@@ -280,7 +280,6 @@ public class TileBehaviour : BaseTile
                 if (pb != null && iconRenderer.enabled)
                 {
                     iconRenderer.enabled       = false;
-                    backgroundRenderer.enabled = false;
                     _collider.enabled          = false;
                     GameEvents.RaiseStarCollected();
                 }
@@ -679,7 +678,7 @@ public class TileBehaviour : BaseTile
         // 플레이어가 타일을 완전히 벗어난 후 한 턴이 지나야 wait 플래그를 해제한다.
         // OnTriggerExit2D에서 즉시 해제하면 같은 프레임 내 물리 jitter로 인한
         // 재진입 시 _pendingPlayer가 재설정되어 RotateTile 등이 연속 발동하는 버그가 있었음.
-        if (!_isPlayerOnMe) _isWaitPlayerExit = false;
+        if (!_isPlayerOnMe && !mapManager.IsRotating) _isWaitPlayerExit = false;
     }
 
     private void OnTriggerExit2D(Collider2D other)
@@ -727,6 +726,8 @@ public class TileBehaviour : BaseTile
 
     private void RotateTileIcon(float angle)
     {
+        if (LayerMask.LayerToName(gameObject.layer) == "Static") return;
+        
         transform.DORotate(new Vector3(0, 0, angle), 0.5f, RotateMode.LocalAxisAdd)
             .SetEase(Ease.OutBounce);
     }
