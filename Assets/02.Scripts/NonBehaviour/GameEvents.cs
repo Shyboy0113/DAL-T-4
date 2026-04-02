@@ -30,6 +30,10 @@ public static class GameEvents
     public static event Action TileLogicTurnStarted;
     public static void RaiseTileLogicTurnStarted() => TileLogicTurnStarted?.Invoke();
 
+    // Ice 슬라이딩 중 매 물리 스텝 후 발화 — Stop/StartTeleport 타일만 수신
+    public static event Action IceTileLogicTurnStarted;
+    public static void RaiseIceTileLogicTurnStarted() => IceTileLogicTurnStarted?.Invoke();
+
     // 타일 로직 턴 후, Player/Enemy가 낙사 등 물리 사망 여부를 판정하는 턴
     public static event Action PhysicsTurnStarted;
     public static void RaisePhysicsTurnStarted() => PhysicsTurnStarted?.Invoke();

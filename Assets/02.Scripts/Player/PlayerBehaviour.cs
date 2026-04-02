@@ -113,6 +113,8 @@ public class PlayerBehaviour : MonoBehaviour
                 _slideCoroutine = null;
             }
             _rigidbody2D.velocity = Vector2.zero;
+            // Ice 종료 시 입력 잠금 해제 (슬라이딩 중 잠근 것을 복원)
+            SetInputLock(false);
         }
     }
 
@@ -142,6 +144,16 @@ public class PlayerBehaviour : MonoBehaviour
                 _rigidbody2D.velocity = Vector2.zero;
                 yield break;
             }
+
+            // 낙사(PlayExplosion → EnableIceMode(false))로 ice가 종료된 경우 중단
+            if (!_isOnIce) yield break;
+
+            // Stop / StartTeleport 타일 자동 발동
+            // (해당 타일만 IceTileLogicTurnStarted를 구독하므로 다른 타일에는 영향 없음)
+            GameEvents.RaiseIceTileLogicTurnStarted();
+
+            // Stop 또는 StopAfterTeleport로 ice가 종료된 경우 중단
+            if (!_isOnIce) yield break;
         }
     }
     #endregion
@@ -158,7 +170,6 @@ public class PlayerBehaviour : MonoBehaviour
     private IEnumerator WaitForGameManager()
     {
         yield return new WaitUntil(() => GameManager.Instance != null);
-        GameManager.Instance.RegisterStackManager(this);
     }
     
     #region Lifecycle
@@ -278,7 +289,8 @@ public class PlayerBehaviour : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.075f);
-        SetInputLock(false);
+        // Ice 슬라이딩 중에는 잠금 유지 (EnableIceMode(false) 호출 시 해제됨)
+        if (!_isOnIce) SetInputLock(false);
     }
 
     // 물리 턴에서 낙사 판정
@@ -543,7 +555,9 @@ public class PlayerBehaviour : MonoBehaviour
 
         _rigidbody2D.simulated = true;
         CheckForGround();
-        SetInputLock(false);
+        // Ice 슬라이딩 중 텔레포트는 입력 잠금을 해제하지 않음
+        // (슬라이딩이 계속되거나, StopIceAndFinish에서 해제됨)
+        if (!_isOnIce) SetInputLock(false);
     }
 
     public bool IsFirstTile() => mapManager.IsFirstRoot();

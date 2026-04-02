@@ -522,16 +522,21 @@ public class TileBehaviour : BaseTile
 
         GameEvents.TileIconRotated += RotateTileIcon;
         GameEvents.AfterMapRotated += OnAfterMapRotated;
+
+        // Stop / StartTeleport 타일만 IceTileLogicTurnStarted를 구독
+        if (currentTileType == TileType.Stop || currentTileType == TileType.StartTeleport)
+            GameEvents.IceTileLogicTurnStarted += OnIceTileLogicTurn;
     }
 
     private void OnDisable()
     {
-        GameEvents.ColorToggleTriggered  -= HandleColorToggle;
-        GameEvents.TileLogicTurnStarted  -= OnTileLogicTurn;
-        GameEvents.ToggleTriggered       -= HandleToggle;
-        GameEvents.PlayerActed           -= HandleToggle;
-        GameEvents.PlayerMoved           -= HandleToggle;
-        GameEvents.PlayerRotated         -= HandleToggle;
+        GameEvents.ColorToggleTriggered    -= HandleColorToggle;
+        GameEvents.TileLogicTurnStarted    -= OnTileLogicTurn;
+        GameEvents.IceTileLogicTurnStarted -= OnIceTileLogicTurn;
+        GameEvents.ToggleTriggered         -= HandleToggle;
+        GameEvents.PlayerActed             -= HandleToggle;
+        GameEvents.PlayerMoved             -= HandleToggle;
+        GameEvents.PlayerRotated           -= HandleToggle;
         GameEvents.TileIconRotated       -= RotateTileIcon;
         GameEvents.AfterMapRotated       -= OnAfterMapRotated;
     }
@@ -696,6 +701,19 @@ public class TileBehaviour : BaseTile
         // OnTriggerExit2D에서 즉시 해제하면 같은 프레임 내 물리 jitter로 인한
         // 재진입 시 _pendingPlayer가 재설정되어 RotateTile 등이 연속 발동하는 버그가 있었음.
         if (!_isPlayerOnMe && !mapManager.IsRotating) _isWaitPlayerExit = false;
+    }
+
+    // Ice 슬라이딩 전용 타일 로직 턴 (Slide 코루틴에서 매 물리 스텝 후 발화)
+    // Stop / StartTeleport 타일만 이 이벤트를 구독함
+    private void OnIceTileLogicTurn()
+    {
+        if (_pendingPlayer == null || IsUndoOr || _isWaitPlayerExit) return;
+        // 다른 타일이 먼저 처리되어 ice가 이미 종료됐을 경우 실행하지 않음
+        if (!_pendingPlayer.IsOnIce()) return;
+
+        var pb = _pendingPlayer;
+        _pendingPlayer = null;
+        behaviourManager.ExecuteCommand(new TileCommand(this, pb: pb));
     }
 
     private void OnTriggerExit2D(Collider2D other)
