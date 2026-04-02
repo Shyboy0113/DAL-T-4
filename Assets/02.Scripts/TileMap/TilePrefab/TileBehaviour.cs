@@ -82,6 +82,9 @@ public class TileBehaviour : BaseTile
     [SerializeField] private TileType manualTileType;
     public TileType currentTileType => tileData != null ? tileData.tileType : manualTileType;
 
+    // Star 타일이 수집되었는지 여부 (미션 달성 판정에서 사용)
+    public bool IsCollected => currentTileType == TileType.Star && !iconRenderer.enabled;
+
     [SerializeField] private Sprite[] tileSprites;
 
     [Header("Renderers")]
@@ -270,6 +273,17 @@ public class TileBehaviour : BaseTile
                 break;
 
             case TileType.ConditionalToggle:
+                break;
+
+            case TileType.Star:
+                // 플레이어가 처음 밟았을 때만 수집 처리 (이미 수집된 타일 재발동 방지)
+                if (pb != null && iconRenderer.enabled)
+                {
+                    iconRenderer.enabled       = false;
+                    backgroundRenderer.enabled = false;
+                    _collider.enabled          = false;
+                    GameEvents.RaiseStarCollected();
+                }
                 break;
         }
 

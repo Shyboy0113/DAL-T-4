@@ -65,6 +65,7 @@ public class Game_PauseCanvas : MonoBehaviour
     public void StageSelectButton()
     {
         GameManager.Instance.isPaused = false;
+        GameEvents.RaiseStageAbandoned(GameManager.Instance.chapter, GameManager.Instance.stage);
         cutoutFade.FadeOut(() =>
         {
             StartCoroutine(SceneLoader.LoadScene(stageSelectScene));
@@ -74,6 +75,7 @@ public class Game_PauseCanvas : MonoBehaviour
     public void TitleButton()
     {
         GameManager.Instance.isPaused = false;
+        GameEvents.RaiseStageAbandoned(GameManager.Instance.chapter, GameManager.Instance.stage);
         cutoutFade.FadeOut(() =>
         {
             StartCoroutine(SceneLoader.LoadScene(introScene));
@@ -82,6 +84,7 @@ public class Game_PauseCanvas : MonoBehaviour
 
     public void QuitButton()
     {
+        GameEvents.RaiseStageAbandoned(GameManager.Instance.chapter, GameManager.Instance.stage);
         Application.Quit();
     }
 

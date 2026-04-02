@@ -79,6 +79,15 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void EnqueueCommand(ICommand command, KeyType keyType, AudioClip sound)
     {
+        // 키 사용 횟수 증가 (미션 달성 판정 + 누적 도전과제 추적용)
+        switch (keyType)
+        {
+            case KeyType.Alt: GameManager.Instance.pushedNumberALT++; break;
+            case KeyType.F4:  GameManager.Instance.pushedNumberF4++;  break;
+            case KeyType.Tab: GameManager.Instance.pushedNumberTAB++; break;
+        }
+        GameEvents.RaiseKeyUsed(keyType);
+
         bool isMapChange = playerBehaviour.HandleInput(keyType);
 
         if (isMapChange)

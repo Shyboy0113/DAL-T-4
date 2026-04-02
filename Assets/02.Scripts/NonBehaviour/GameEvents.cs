@@ -124,4 +124,33 @@ public static class GameEvents
     // MapManager에서 맵 스폰이 끝난 뒤, EnemyManager에서 MapManager의 타일맵을 참조하여 적을 스폰시키기 위한 이벤트
     public static event Action MapInitialized;
     public static void RaiseMapInitialized() => MapInitialized?.Invoke();
+    
+    
+    
+    
+    // Steam의 도전과제 및 유저 플레이 타임 및 이탈율을 로그로 기록하기 위한 이벤트
+    #region StageRecorder
+    
+    public static event Action<int, int> StageRecordStarted;   // chapter, stage
+    public static event Action StageRecordEnded; // 세션 종료 (챕터/스테이지/시간은 StageRecorder 내부에서 추적)
+    public static event Action<int, int> StageAbandoned;        // StageSelect이동/종료 시
+
+    public static void RaiseStageRecordStarted(int ch, int st) =>
+        StageRecordStarted?.Invoke(ch, st);
+    public static void RaiseStageRecordEnded() => StageRecordEnded?.Invoke();
+    public static void RaiseStageAbandoned(int ch, int st) => StageAbandoned?.Invoke(ch, st);
+
+    #endregion
+
+    #region Mission Tracking
+
+    // Star 타일을 플레이어가 밟아 수집했을 때
+    public static event Action StarCollected;
+    public static void RaiseStarCollected() => StarCollected?.Invoke();
+
+    // ALT / F4 / TAB 키를 사용할 때마다 발생 (누적 도전과제 추적용)
+    public static event Action<KeyType> KeyUsed;
+    public static void RaiseKeyUsed(KeyType keyType) => KeyUsed?.Invoke(keyType);
+
+    #endregion
 }

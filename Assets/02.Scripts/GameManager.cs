@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Windows;
 using Input = UnityEngine.Input;
 
 public class GameManager : MonoBehaviour
@@ -8,19 +8,14 @@ public class GameManager : MonoBehaviour
     
     private void OnEnable()
     {
-        // StackManager가 보내는 방송을 구독합니다.
         GameEvents.StageCleared += GameClear;
-        GameEvents.PlayerDied += HandleGameOver;
-        
-        
+        GameEvents.PlayerDied   += HandleGameOver;
     }
 
     private void OnDisable()
     {
-        // 오브젝트가 비활성화될 때 구독을 해제합니다. (메모리 누수 방지)
         GameEvents.StageCleared -= GameClear;
-        GameEvents.PlayerDied -= HandleGameOver;
-        
+        GameEvents.PlayerDied   -= HandleGameOver;
     }
 
     public void HandleGameOver()
@@ -156,52 +151,89 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ✅ JSON 데이터에서 현재 스테이지 데이터 불러오기
+    // JSON 데이터에서 현재 스테이지 데이터 불러오기
     private void LoadStageData(int chap, int stg)
     {
         chapter = chap;
-        stage = stg;
+        stage   = stg;
 
-        // 현재 맵 데이터 불러오기
-        currentStageData = _mapDataLoader.GetStageData(chapter, stage);
-
-        // ✅ JSON 세이브 데이터 불러오기
+        currentStageData    = _mapDataLoader.GetStageData(chapter, stage);
         currentProgressData = _jsonDataManager.GetStageData(chapter, stage);
     }
 
-    // ✅ JSON에 현재 진행 데이터 저장
+    // 스테이지 클리어 시 진행 데이터 저장 (항상 최신 chapter/stage 기준으로 가져옴)
     private void SaveStageProgress()
     {
-        if (currentProgressData == null)
+        currentStageData    = _mapDataLoader.GetStageData(chapter, stage);
+        currentProgressData = _jsonDataManager.GetStageData(chapter, stage);
+
+        if (currentProgressData == null || currentStageData == null)
         {
-            Debug.LogError("Stage progress data is null!");
+            Debug.LogError($"Stage data not found for {chapter}-{stage}!");
             return;
         }
 
-        // 게임 클리어 및 도전과제 반영
-        currentProgressData.isCleared = true;
+        currentProgressData.isCleared             = true;
         currentProgressData.isFirstMissionCleared = true;
 
-        if (currentStageData.limitNumberALT >= pushedNumberALT &&
-            currentStageData.limitNumberF4 >= pushedNumberF4 &&
-            currentStageData.limitNumberTAB >= pushedNumberTAB)
-        {
-            currentProgressData.isSecondMissionCleared = true;
+        CheckAndSaveMission(currentStageData.secondMissionType, currentStageData,
+            ref currentProgressData.isSecondMissionCleared);
+        CheckAndSaveMission(currentStageData.thirdMissionType, currentStageData,
+            ref currentProgressData.isThirdMissionCleared);
 
-            // 기존 값보다 작을 경우 갱신
-            currentProgressData.minALT = Mathf.Min(currentProgressData.minALT, pushedNumberALT);
-            currentProgressData.minF4 = Mathf.Min(currentProgressData.minF4, pushedNumberF4);
-            currentProgressData.minTAB = Mathf.Min(currentProgressData.minTAB, pushedNumberTAB);
-        }
-
-        if (currentTime <= currentStageData.limitTime)
-        {
-            currentProgressData.isThirdMissionCleared = true;
-            currentProgressData.minClearTime = Mathf.Min(currentProgressData.minClearTime, currentTime);
-        }
-
-        // JSON에 저장
         _jsonDataManager.SaveStageData(currentProgressData);
+    }
+
+    private void CheckAndSaveMission(MissionType type, StageData data, ref bool result)
+    {
+        if (result) return; // 이미 달성한 미션은 스킵
+
+        switch (type)
+        {
+            case MissionType.MoveCountLimit:
+                if (data.limitNumberALT >= pushedNumberALT &&
+                    data.limitNumberF4  >= pushedNumberF4  &&
+                    data.limitNumberTAB >= pushedNumberTAB)
+                {
+                    result = true;
+                    currentProgressData.minALT = Mathf.Min(currentProgressData.minALT, pushedNumberALT);
+                    currentProgressData.minF4  = Mathf.Min(currentProgressData.minF4,  pushedNumberF4);
+                    currentProgressData.minTAB = Mathf.Min(currentProgressData.minTAB, pushedNumberTAB);
+                }
+                break;
+
+            case MissionType.TimeLimit:
+                if (currentTime <= data.limitTime)
+                {
+                    result = true;
+                    currentProgressData.minClearTime = Mathf.Min(currentProgressData.minClearTime, currentTime);
+                }
+                break;
+
+            case MissionType.KillAllEnemies:
+                var enemies = FindObjectsByType<EnemyBehaviour>(FindObjectsSortMode.None)
+                    .Where(e => e.gameObject.activeSelf).ToArray();
+                if (enemies.Length > 0 && enemies.All(e => e.IsDead))
+                    result = true;
+                break;
+
+            case MissionType.CollectAllStars:
+                var stars = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None)
+                    .Where(t => t.currentTileType == TileType.Star).ToArray();
+                if (stars.Length > 0 && stars.All(t => t.IsCollected))
+                    result = true;
+                break;
+
+            case MissionType.NoSpecificFeature:
+                result = data.forbiddenFeature switch
+                {
+                    ForbiddenFeature.ALT => pushedNumberALT == 0,
+                    ForbiddenFeature.F4  => pushedNumberF4  == 0,
+                    ForbiddenFeature.TAB => pushedNumberTAB == 0,
+                    _                    => false
+                };
+                break;
+        }
     }
 
     // ✅ 다음 스테이지 해금

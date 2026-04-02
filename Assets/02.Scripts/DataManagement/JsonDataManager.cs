@@ -17,8 +17,13 @@ public class StageProgressData
     public int minTAB = int.MaxValue;
 
     public bool isCleared = false;
-    public bool isAppeared = true; //���� �������� Ŭ���� ��, ���� ���������� �ر�
+    public bool isAppeared = true; // 다음 스테이지가 클리어 됐을 때, 해당 스테이지가 표시됨
     public float minClearTime = float.MaxValue;
+
+    // 플레이 분석 데이터
+    public float totalPlayTime = 0f; // 스테이지에 머문 누적 시간 (초)
+    public int   attemptCount  = 0;  // 클리어 or 리스타트 횟수
+    public int   abandonCount  = 0;  // StageSelect 이동 or 게임 종료 횟수
 
     public StageProgressData(int chapter, int stage)
     {

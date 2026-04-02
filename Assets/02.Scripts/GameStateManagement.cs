@@ -141,7 +141,10 @@ public class GameStateManagement : MonoBehaviour
     {
         if (_isProcessing) return; //이미 실행 중이면 무시
         _isProcessing = true;
-        
+
+        // 현재 세션 종료 기록 (클리어 또는 리스타트 모두 시도 횟수로 카운트)
+        GameEvents.RaiseStageRecordEnded();
+
         GameEvents.RaiseInputLockChanged(true); // _isInputLocked true로 설정
         
         if (_isRestart) StartCoroutine(IWait(0f));
