@@ -45,14 +45,9 @@ public class StageLoader : MonoBehaviour
             
             secondMapScreenPanel?.Refresh();
 
-            GameManager.Instance.canUseF4 = stageData.canUseF4;
-            GameManager.Instance.canUseLeftALT = stageData.canUseLeftALT;
-            GameManager.Instance.canUseTAB = stageData.canUseTAB;
-            GameManager.Instance.hasSecondMap = stageData.hasSecondMap;
-            
             if (SoundManager.Instance != null)
             {
-                SoundManager.Instance.RenewalBGM(stageData.audioClip, stageData.stageName);
+                SoundManager.Instance.RenewalBGM(stageData.bgmClip, stageData.stageName);
             }
 
             // 분석 세션 시작 (StageRecorder가 수신)

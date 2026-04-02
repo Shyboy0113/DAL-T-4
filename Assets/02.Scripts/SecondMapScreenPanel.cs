@@ -43,7 +43,7 @@ public class SecondMapScreenPanel : MonoBehaviour
 
     private void UpdatePanel()
     {
-        bool hasSecondMap = GameManager.Instance.hasSecondMap;
+        bool hasSecondMap = GameManager.Instance.currentStageData?.hasSecondMap ?? false;
 
         noMapOverlay.SetActive(!hasSecondMap);
 

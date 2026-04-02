@@ -42,13 +42,13 @@ public class PlayerInputHandler : MonoBehaviour
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
 
         // 플레이어 액션
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && GameManager.Instance.canUseLeftALT)
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && (GameManager.Instance.currentStageData?.canUseLeftALT ?? true))
             EnqueueCommand(new ClockwiseRotateCommand(playerBehaviour), KeyType.Alt, rotateSound);
 
-        if (Input.GetKeyDown(KeyCode.Tab) && GameManager.Instance.canUseTAB)
+        if (Input.GetKeyDown(KeyCode.Tab) && (GameManager.Instance.currentStageData?.canUseTAB ?? false))
             EnqueueCommand(new CounterClockwiseRotateCommand(playerBehaviour), KeyType.Tab, rotateSound);
 
-        if (Input.GetKeyDown(KeyCode.F4) && GameManager.Instance.canUseF4)
+        if (Input.GetKeyDown(KeyCode.F4) && (GameManager.Instance.currentStageData?.canUseF4 ?? true))
             EnqueueCommand(new MoveCommand(playerBehaviour), KeyType.F4, moveSound);
     }
 
@@ -57,7 +57,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (playerBehaviour.CheckSkip()) return;
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
-        if (!GameManager.Instance.canUseLeftALT) return;
+        if (!(GameManager.Instance.currentStageData?.canUseLeftALT ?? true)) return;
         EnqueueCommand(new ClockwiseRotateCommand(playerBehaviour), KeyType.Alt, rotateSound);
     }
 
@@ -65,7 +65,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (playerBehaviour.CheckSkip()) return;
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
-        if (!GameManager.Instance.canUseTAB) return;
+        if (!(GameManager.Instance.currentStageData?.canUseTAB ?? false)) return;
         EnqueueCommand(new CounterClockwiseRotateCommand(playerBehaviour), KeyType.Tab, rotateSound);
     }
 
@@ -73,7 +73,7 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (playerBehaviour.CheckSkip()) return;
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
-        if (!GameManager.Instance.canUseF4) return;
+        if (!(GameManager.Instance.currentStageData?.canUseF4 ?? true)) return;
         EnqueueCommand(new MoveCommand(playerBehaviour), KeyType.F4, moveSound);
     }
 

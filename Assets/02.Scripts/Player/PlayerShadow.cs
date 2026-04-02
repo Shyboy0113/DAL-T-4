@@ -33,7 +33,7 @@ public class PlayerShadow : MonoBehaviour
     private void LateUpdate()
     {
         if (!shadowRenderer.enabled) return;
-        if (!GameManager.Instance.hasSecondMap) { shadowRenderer.enabled = false; return; }
+        if (!(GameManager.Instance.currentStageData?.hasSecondMap ?? false)) { shadowRenderer.enabled = false; return; }
 
         UpdateLayerAndZ();
         SyncSprite();
@@ -61,7 +61,7 @@ public class PlayerShadow : MonoBehaviour
 
     public void Show()
     {
-        shadowRenderer.enabled = GameManager.Instance.hasSecondMap;
+        shadowRenderer.enabled = GameManager.Instance.currentStageData?.hasSecondMap ?? false;
     }
 
     private void Hide()
