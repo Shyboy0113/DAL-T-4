@@ -118,15 +118,13 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    /// Stop 타일 진입 시 호출 — 슬라이딩 중단 후 ActionFinished 발화
+    /// Stop / StartTeleport(stop) 타일 진입 시 호출 — 슬라이딩 중단 후 ActionFinished 발화
+    /// PlayerMoved는 Ice 진입 시 MoveSequence에서 이미 발화했으므로 여기서는 발화하지 않습니다.
     public void StopIceAndFinish()
     {
         EnableIceMode(false);
         if (!undoRedoState.IsUndo)
-        {
-            GameEvents.RaisePlayerMoved(moveCount);
             GameEvents.RaisePlayerActionFinished();
-        }
     }
 
     private IEnumerator Slide(Vector2 direction)
@@ -280,12 +278,15 @@ public class PlayerBehaviour : MonoBehaviour
             yield return null;
         }
 
-        // Ice 위에서는 Stop/StartTeleport 타일이 StopIceAndFinish()로 ActionFinished를 발화합니다.
-        // 일반 이동(비Ice)은 여기서 발화합니다.
+        // 비Ice 이동은 여기서 PlayerMoved + PlayerActionFinished를 모두 발화합니다.
+        // Ice 타일 진입 시에는 PlayerMoved만 발화하고(토글 카운터 갱신),
+        // PlayerActionFinished는 슬라이딩이 완전히 끝날 때 StopIceAndFinish()에서 발화합니다.
         if (!undoRedoState.IsUndo && !startedOnIce)
         {
             GameEvents.RaisePlayerMoved(moveCount);
-            GameEvents.RaisePlayerActionFinished();
+            // _isOnIce: Ice 타일을 방금 밟아 슬라이딩이 시작됐으면 발화 보류
+            if (!_isOnIce)
+                GameEvents.RaisePlayerActionFinished();
         }
 
         yield return new WaitForSeconds(0.075f);
