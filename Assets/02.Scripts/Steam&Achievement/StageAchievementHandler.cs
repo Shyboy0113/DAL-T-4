@@ -7,15 +7,14 @@ using Steamworks;
 /// 스테이지 클리어 시 도전과제 달성 여부를 확인하고 Steam 업적을 처리합니다.
 /// 상태를 갖지 않으며 GameEvents만 구독합니다 (싱글톤 없음).
 ///
-/// ★ Steam 파트너 대시보드에서 아래 업적 ID들을 등록해야 합니다.
-///   ACH_FIRST_CLEAR       - 첫 스테이지 클리어
-///   ACH_KILL_ALL_ENEMIES  - 모든 적 퇴치 미션 달성
-///   ACH_COLLECT_ALL_STARS - 모든 STAR 수집 미션 달성
-///   ACH_MOVE_LIMIT        - 제한 횟수 내 클리어 미션 달성
-///   ACH_NO_FEATURE        - 특정 기능 미사용 클리어 미션 달성
-///   ACH_TIME_LIMIT        - 제한 시간 내 클리어 미션 달성
+/// ★ Steam 파트너 대시보드에 스테이지별로 아래 형식의 업적 ID를 등록해야 합니다.
+///   ACH_CH{챕터}_ST{스테이지}_M{미션번호}
+///   예) ACH_CH1_ST1_M1  → 1-1 스테이지 1번 미션
+///       ACH_CH1_ST1_M2  → 1-1 스테이지 2번 미션
+///       ACH_CH1_ST1_M3  → 1-1 스테이지 3번 미션
+///       ACH_CH2_ST3_M2  → 2-3 스테이지 2번 미션
 /// </summary>
-public class AchievementHandler : MonoBehaviour
+public class StageAchievementHandler : MonoBehaviour
 {
     private void OnEnable()
     {
@@ -29,6 +28,29 @@ public class AchievementHandler : MonoBehaviour
         GameEvents.PlayerDied   -= OnPlayerDied;
     }
 
+#if UNITY_EDITOR && !DISABLESTEAMWORKS
+    // 에디터에서 테스트할 챕터/스테이지 범위를 지정합니다.
+    [SerializeField] private int debugChapter = 1;
+    [SerializeField] private int debugStageFrom = 1;
+    [SerializeField] private int debugStageTo   = 5;
+
+    private void Start()
+    {
+        if (!SteamManager.Initialized) return;
+
+        for (int st = debugStageFrom; st <= debugStageTo; st++)
+        {
+            for (int m = 1; m <= 3; m++)
+            {
+                SteamUserStats.ClearAchievement(GetMissionAchievementId(debugChapter, st, m));
+            }
+        }
+        SteamUserStats.StoreStats();
+
+        Debug.Log($"[AchievementHandler] 에디터 시작: CH{debugChapter} ST{debugStageFrom}~{debugStageTo} 업적 초기화 완료");
+    }
+#endif
+
     // ─────────────────────────────────────────────────────────────────
     // 이벤트 핸들러
     // ─────────────────────────────────────────────────────────────────
@@ -38,27 +60,21 @@ public class AchievementHandler : MonoBehaviour
         var gm = GameManager.Instance;
         if (gm == null) return;
 
-        // 1번 미션: 스테이지 클리어 (항상)
-        TryUnlock("ACH_FIRST_CLEAR");
+        var progress  = gm.currentProgressData;
+        var stageData = gm.currentStageData;
+        if (progress == null || stageData == null) { StoreStats(); return; }
 
-        // 2번 / 3번 미션 달성 여부에 따라 업적 해제
-        // GameManager.SaveStageProgress()는 StageCleared 구독 순서상 이 핸들러보다 먼저 실행됩니다
-        var progress = gm.currentProgressData;
-        if (progress == null) { StoreStats(); return; }
+        int ch = stageData.chapterNum;
+        int st = stageData.stageNum;
+
+        if (progress.isFirstMissionCleared)
+            TryUnlock(GetMissionAchievementId(ch, st, 1));
 
         if (progress.isSecondMissionCleared)
-        {
-            var stageData = gm.currentStageData;
-            if (stageData != null)
-                TryUnlock(GetMissionAchievementId(stageData.secondMissionType));
-        }
+            TryUnlock(GetMissionAchievementId(ch, st, 2));
 
         if (progress.isThirdMissionCleared)
-        {
-            var stageData = gm.currentStageData;
-            if (stageData != null)
-                TryUnlock(GetMissionAchievementId(stageData.thirdMissionType));
-        }
+            TryUnlock(GetMissionAchievementId(ch, st, 3));
 
         StoreStats();
     }
@@ -70,21 +86,17 @@ public class AchievementHandler : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────────────
-    // 미션 타입 → 업적 ID 매핑
-    // Steam 파트너 대시보드에 등록한 ID와 일치해야 합니다
+    // 업적 ID 생성
+    // Steam 파트너 대시보드에 등록한 ID와 형식이 일치해야 합니다
     // ─────────────────────────────────────────────────────────────────
 
-    private static string GetMissionAchievementId(MissionType type)
+    /// <summary>
+    /// 챕터·스테이지·미션 번호(1~3)로 Steam 업적 ID를 생성합니다.
+    /// 예: GetMissionAchievementId(1, 3, 2) → "ACH_CH1_ST3_M2"
+    /// </summary>
+    public static string GetMissionAchievementId(int chapter, int stage, int missionNumber)
     {
-        return type switch
-        {
-            MissionType.KillAllEnemies    => "ACH_KILL_ALL_ENEMIES",
-            MissionType.CollectAllStars   => "ACH_COLLECT_ALL_STARS",
-            MissionType.MoveCountLimit    => "ACH_MOVE_LIMIT",
-            MissionType.NoSpecificFeature => "ACH_NO_FEATURE",
-            MissionType.TimeLimit         => "ACH_TIME_LIMIT",
-            _                             => null
-        };
+        return $"ACH_CH{chapter}_ST{stage}_M{missionNumber}";
     }
 
     // ─────────────────────────────────────────────────────────────────

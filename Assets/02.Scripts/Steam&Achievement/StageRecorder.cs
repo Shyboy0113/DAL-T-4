@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class StageRecorder : MonoBehaviour
 {
-    [SerializeField] private JsonDataManager dataManager;
+    private JsonDataManager DataManager => GameManager.Instance.jsonDataManager;
 
     private float _sessionStart;
     private int   _currentChapter;
@@ -56,9 +56,9 @@ public class StageRecorder : MonoBehaviour
 
         SavePlayTime();
 
-        var data = dataManager.GetStageData(_currentChapter, _currentStage);
+        var data = DataManager.GetStageData(_currentChapter, _currentStage);
         data.attemptCount++;
-        dataManager.SaveStageData(data);
+        DataManager.SaveStageData(data);
     }
 
     // Game_PauseCanvas의 StageSelect / 타이틀 / 종료 버튼 클릭 시 발화
@@ -78,15 +78,15 @@ public class StageRecorder : MonoBehaviour
     private void SavePlayTime()
     {
         float elapsed = Time.time - _sessionStart;
-        var data = dataManager.GetStageData(_currentChapter, _currentStage);
+        var data = DataManager.GetStageData(_currentChapter, _currentStage);
         data.totalPlayTime += elapsed;
-        dataManager.SaveStageData(data);
+        DataManager.SaveStageData(data);
     }
 
     private void IncrementAbandon(int ch, int st)
     {
-        var data = dataManager.GetStageData(ch, st);
+        var data = DataManager.GetStageData(ch, st);
         data.abandonCount++;
-        dataManager.SaveStageData(data);
+        DataManager.SaveStageData(data);
     }
 }

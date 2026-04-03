@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
     
     // 선택한 맵 정보
     public SO_StageData currentStageData;
-    public StageProgressData currentProgressData; // ✅ 현재 진행 데이터 추가
+    public StageProgressData currentProgressData; // 현재 진행 데이터 추가
     public JsonDataManager jsonDataManager;
     
     public int chapter;
@@ -75,15 +75,25 @@ public class GameManager : MonoBehaviour
 
         currentTime += Time.deltaTime;
     }
+    
+    public void InitStageData(int ch, int st, SO_StageData stageData)
+    {
+        chapter = ch;
+        stage   = st;
+        currentStageData    = stageData;
+        currentProgressData = jsonDataManager.GetStageData(ch, st);
+
+        ResetData();
+    }
 
     public void GameClear()
     {
         isCleared = true;
 
-        // GameManager 초기화 호출
-        GoToNextScene();
-        
         SaveStageProgress();
+
+        // 데이터 저장 후 초기화
+        GoToNextScene();
     }
 
     public void GoToNextScene()
@@ -116,7 +126,6 @@ public class GameManager : MonoBehaviour
         }
 
         currentProgressData.isCleared             = true;
-        currentProgressData.isFirstMissionCleared = true;
 
         CheckAndSaveMission(currentStageData.firstMissionType, currentStageData,
             ref currentProgressData.isFirstMissionCleared);
@@ -140,6 +149,10 @@ public class GameManager : MonoBehaviour
 
         switch (type)
         {
+            case MissionType.StageClear:
+                result = true;
+                break;
+            
             case MissionType.MoveCountLimit:
                 if (data.limitNumberALT >= pushedNumberALT &&
                     data.limitNumberF4  >= pushedNumberF4  &&

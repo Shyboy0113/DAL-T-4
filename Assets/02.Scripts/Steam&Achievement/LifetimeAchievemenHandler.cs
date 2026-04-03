@@ -4,18 +4,13 @@ using Steamworks;
 #endif
 
 /// <summary>
-/// 세션을 초월한 누적 플레이 데이터를 PlayerPrefs에 기록하고,
+/// 세션을 초월한 누적 플레이 데이터를 JsonDataManager(GlobalStatsData)에 기록하고,
 /// 임계치 달성 시 Steam 업적을 해제합니다.
 /// 싱글톤 없이 GameEvents만 구독합니다.
 /// </summary>
-public class AchievementManager : MonoBehaviour
+public class LifetimeAchievemenHandler : MonoBehaviour
 {
-    // ── PlayerPrefs 키 ────────────────────────────────────────────────
-    private const string KeyLifetimeALT  = "ach_lifetime_alt";
-    private const string KeyLifetimeF4   = "ach_lifetime_f4";
-    private const string KeyLifetimeTAB  = "ach_lifetime_tab";
-    private const string KeyTotalDeaths  = "ach_total_deaths";
-    private const string KeyTotalClears  = "ach_total_clears";
+    private JsonDataManager _jsonDataManager => GameManager.Instance.jsonDataManager;
 
     // ── 임계치 (Steam 업적 조건) ──────────────────────────────────────
     private const int ThresholdALT    = 100;  // ALT를 누적 100회 → ACH_SPIN_100
@@ -38,57 +33,57 @@ public class AchievementManager : MonoBehaviour
     // ─────────────────────────────────────────────────────────────────
     // 이벤트 핸들러
     // ─────────────────────────────────────────────────────────────────
-
+    
     private void OnKeyUsed(KeyType keyType)
     {
+        var stats = _jsonDataManager.GetGlobalStats();
+
         switch (keyType)
         {
             case KeyType.Alt:
-                int alt = PlayerPrefs.GetInt(KeyLifetimeALT, 0) + 1;
-                PlayerPrefs.SetInt(KeyLifetimeALT, alt);
-                if (alt >= ThresholdALT) TryUnlock("ACH_SPIN_100");
+                stats.lifetimeALT++;
+                if (stats.lifetimeALT >= ThresholdALT) TryUnlock("ACH_SPIN_100");
                 break;
 
             case KeyType.F4:
-                int f4 = PlayerPrefs.GetInt(KeyLifetimeF4, 0) + 1;
-                PlayerPrefs.SetInt(KeyLifetimeF4, f4);
+                stats.lifetimeF4++;
                 break;
 
             case KeyType.Tab:
-                int tab = PlayerPrefs.GetInt(KeyLifetimeTAB, 0) + 1;
-                PlayerPrefs.SetInt(KeyLifetimeTAB, tab);
+                stats.lifetimeTAB++;
                 break;
         }
-        PlayerPrefs.Save();
+
+        _jsonDataManager.SaveGlobalStats();
         StoreStats();
     }
 
     private void OnPlayerDied()
     {
-        int deaths = PlayerPrefs.GetInt(KeyTotalDeaths, 0) + 1;
-        PlayerPrefs.SetInt(KeyTotalDeaths, deaths);
-        PlayerPrefs.Save();
+        var stats = _jsonDataManager.GetGlobalStats();
+        stats.totalDeaths++;
+        _jsonDataManager.SaveGlobalStats();
 
-        if (deaths >= ThresholdDeaths) TryUnlock("ACH_DEATH_50");
+        if (stats.totalDeaths >= ThresholdDeaths) TryUnlock("ACH_DEATH_50");
         StoreStats();
     }
 
     private void OnStageCleared()
     {
-        int clears = PlayerPrefs.GetInt(KeyTotalClears, 0) + 1;
-        PlayerPrefs.SetInt(KeyTotalClears, clears);
-        PlayerPrefs.Save();
+        var stats = _jsonDataManager.GetGlobalStats();
+        stats.totalClears++;
+        _jsonDataManager.SaveGlobalStats();
     }
 
     // ─────────────────────────────────────────────────────────────────
     // 외부 조회용 (UI 디버그 패널 등)
     // ─────────────────────────────────────────────────────────────────
 
-    public int GetLifetimeALT()  => PlayerPrefs.GetInt(KeyLifetimeALT, 0);
-    public int GetLifetimeF4()   => PlayerPrefs.GetInt(KeyLifetimeF4,  0);
-    public int GetLifetimeTAB()  => PlayerPrefs.GetInt(KeyLifetimeTAB, 0);
-    public int GetTotalDeaths()  => PlayerPrefs.GetInt(KeyTotalDeaths, 0);
-    public int GetTotalClears()  => PlayerPrefs.GetInt(KeyTotalClears, 0);
+    public int GetLifetimeALT()  => _jsonDataManager.GetGlobalStats().lifetimeALT;
+    public int GetLifetimeF4()   => _jsonDataManager.GetGlobalStats().lifetimeF4;
+    public int GetLifetimeTAB()  => _jsonDataManager.GetGlobalStats().lifetimeTAB;
+    public int GetTotalDeaths()  => _jsonDataManager.GetGlobalStats().totalDeaths;
+    public int GetTotalClears()  => _jsonDataManager.GetGlobalStats().totalClears;
 
     // ─────────────────────────────────────────────────────────────────
     // Steamworks 유틸
