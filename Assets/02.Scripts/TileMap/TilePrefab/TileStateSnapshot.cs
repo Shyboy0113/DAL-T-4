@@ -9,9 +9,10 @@ public class TileStateSnapshot
     public int playerRotationCount;
     public int playerTotalActionCount;
     public Quaternion rotation;
-    public bool isVisible; // Breakable 타일의 파괴 여부 체크용
+    public bool isVisible;   // Breakable 타일의 파괴 여부 체크용
+    public bool isShaking;   // Breakable 타일의 흔들림 상태
 
-    public TileStateSnapshot(int hit, bool toggled, int moveCount, int rotationCount, int totalActionCount, Quaternion rot, bool visible)
+    public TileStateSnapshot(int hit, bool toggled, int moveCount, int rotationCount, int totalActionCount, Quaternion rot, bool visible, bool shaking)
     {
         hitCount = hit;
         isToggled = toggled;
@@ -20,5 +21,6 @@ public class TileStateSnapshot
         playerTotalActionCount = totalActionCount;
         rotation = rot;
         isVisible = visible;
+        isShaking = shaking;
     }
 }

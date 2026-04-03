@@ -59,16 +59,19 @@ public class TileBehaviour : BaseTile
     [SerializeField] private List<SO_TileData> allDataAssets;
     [SerializeField] private SO_TileData       tileData;
 
-    [Header("Individual Overrides")]
-    [SerializeField] private OverridableInt   maxActivationCount;
+    [Header("Breakable Tile Data")]
+    [SerializeField] private OverridableInt   maxBreakCount;
     [SerializeField] private OverridableInt   breakHitCount;
     [SerializeField] private OverridableFloat breakDelay;
+    
+    [Header("Toggle Tile Data")]
     [SerializeField] private OverridableInt   toggleActivationCount;
 
+    [Header("Color Tile Data")]
     [SerializeField] private TileColor overrideColor      = TileColor.White;
     [SerializeField] private int       overrideTeleportID = 0;
 
-    private int   CurrentMaxActivationCount    => maxActivationCount.GetValue(tileData ? tileData.baseMaxActivationCount : -1);
+    private int   CurrentMaxBreakCount    => maxBreakCount.GetValue(tileData ? tileData.baseMaxBreakCount : -1);
     private int   CurrentBreakHitCount         => breakHitCount.GetValue(tileData ? tileData.baseBreakHitCount : 2);
     private float CurrentBreakDelay            => breakDelay.GetValue(tileData ? tileData.baseBreakDelay : 0.5f);
     private int   CurrentToggleActivationCount => toggleActivationCount.GetValue(tileData ? tileData.baseToggleActivationCount : 2);
@@ -108,10 +111,13 @@ public class TileBehaviour : BaseTile
     [SerializeField] private AudioClip rotationSound;
     [SerializeField] private AudioClip crackSound;
     [SerializeField] private AudioClip breakSound;
+    [SerializeField] private AudioClip starSound;
 
     [Header("Breakable")]
     [SerializeField] private Sprite[] breakableSprites;
     private int _currentHit = 0;
+    private Coroutine _shakeCoroutine;
+    private bool      _isShaking = false;
 
     [Header("Toggle")]
     [SerializeField] private bool isToggled = false;
@@ -143,7 +149,8 @@ public class TileBehaviour : BaseTile
             player ? player.rotationCount    : 0,
             player ? player.TotalActionCount : 0,
             transform.rotation,
-            iconRenderer.enabled
+            iconRenderer.enabled,
+            _isShaking
         );
     }
 
@@ -163,6 +170,11 @@ public class TileBehaviour : BaseTile
         _isWaitEnemyExit  = false;
         _pendingPlayer    = null;
         _pendingEnemy     = null;
+
+        StopShake();
+
+        if (snapshot.isShaking && _shakeCoroutine == null)
+            _shakeCoroutine = StartCoroutine(ShakeUntilBreak());
 
         UpdateVisuals(true);
 
@@ -230,6 +242,8 @@ public class TileBehaviour : BaseTile
                 _currentHit++;
                 UpdateSprite();
                 if (crackSound) _effectSound.PlayOneShot(crackSound);
+                if (_currentHit >= CurrentMaxBreakCount && _shakeCoroutine == null)
+                    _shakeCoroutine = StartCoroutine(ShakeUntilBreak());
                 break;
 
             case TileType.Ice:
@@ -293,6 +307,7 @@ public class TileBehaviour : BaseTile
                     iconRenderer.enabled       = false;
                     _collider.enabled          = false;
                     GameEvents.RaiseStarCollected();
+                    if (starSound) _effectSound.PlayOneShot(starSound);
                 }
                 break;
         }
@@ -450,6 +465,9 @@ public class TileBehaviour : BaseTile
         _tilemap     = GetComponentInParent<Tilemap>();
         _effectSound = GetComponentInParent<AudioSource>();
 
+        if (currentTileType == TileType.Breakable)
+            _currentHit = CurrentBreakHitCount;
+
         if (animator == null) animator = GetComponent<Animator>();
         animator.enabled = IsAnimationTile();
 
@@ -492,6 +510,9 @@ public class TileBehaviour : BaseTile
                 #endif
             }
         }
+
+        if (currentTileType == TileType.Breakable)
+            _currentHit = CurrentBreakHitCount;
 
         UpdateCountText(0);
         UpdateVisuals(true);
@@ -631,9 +652,9 @@ public class TileBehaviour : BaseTile
 
         if (currentTileType == TileType.Breakable && breakableSprites?.Length > 0)
         {
-            nextIcon = _currentHit == 0
-                ? tileSprites[(int)TileType.Breakable]
-                : breakableSprites[Mathf.Clamp(_currentHit - 1, 0, breakableSprites.Length - 1)];
+            int remaining    = CurrentMaxBreakCount - _currentHit;
+            int spriteIndex  = Mathf.Clamp(remaining - 1, 0, breakableSprites.Length - 1);
+            nextIcon = breakableSprites[spriteIndex];
         }
         else if (currentTileType == TileType.ToggleTargeted || IsPlayerActionTile())
         {
@@ -726,7 +747,7 @@ public class TileBehaviour : BaseTile
             _isPlayerOnMe = false;
 
             if (currentTileType == TileType.Breakable &&
-                _currentHit >= CurrentBreakHitCount   &&
+                _currentHit >= CurrentMaxBreakCount   &&
                 gameObject.activeInHierarchy)
             {
                 StartCoroutine(BreakTile());
@@ -753,13 +774,36 @@ public class TileBehaviour : BaseTile
         yield return new WaitForSeconds(CurrentBreakDelay);
 
         if (IsUndoOr) yield break;
-        if (_currentHit < CurrentBreakHitCount) yield break;
+        if (_currentHit < CurrentMaxBreakCount) yield break;
+
+        StopShake();
 
         iconRenderer.enabled       = false;
         backgroundRenderer.enabled = false;
         _collider.enabled          = false;
 
         if (breakSound) _effectSound.PlayOneShot(breakSound);
+    }
+
+    private IEnumerator ShakeUntilBreak()
+    {
+        _isShaking = true;
+        while (_isShaking)
+        {
+            yield return transform
+                .DOShakePosition(0.25f, new Vector3(0.06f, 0.06f, 0f), 30, 90f, false, true)
+                .WaitForCompletion();
+        }
+    }
+
+    private void StopShake()
+    {
+        if (_shakeCoroutine == null) return;
+        _isShaking = false;
+        StopCoroutine(_shakeCoroutine);
+        _shakeCoroutine = null;
+        transform.DOKill();
+        transform.localPosition = Vector3.zero;
     }
 
     private void RotateTileIcon(float angle)
