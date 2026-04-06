@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviour
                     result = true;
                 break;
 
-            case MissionType.CollectAllStars:
+            case MissionType.CollectStar:
                 var stars = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None)
                     .Where(t => t.currentTileType == TileType.Star).ToArray();
                 if (stars.Length > 0 && stars.All(t => t.IsCollected))

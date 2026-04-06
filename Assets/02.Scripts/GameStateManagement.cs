@@ -174,16 +174,12 @@ public class GameStateManagement : MonoBehaviour
             {
                 nextChapter++;
                 nextStage = 1;
-
-                // 다음 챕터도 존재하지 않는다면 (게임 클리어)
+                
+                // 추후 게임 클리어 관련 업적이나 축하 메세지 로직 추가
                 if (!stageLoader.LoadStage(nextChapter, nextStage))
                 {
-                    // 추후 게임 클리어 관련 업적이나 축하 메세지 로직 추가
-                    if (!stageLoader.LoadStage(nextChapter, nextStage))
-                    {
-                        StartCoroutine(SceneLoader.LoadScene(stageSelectScene));
-                    }
-                }
+                    StartCoroutine(SceneLoader.LoadScene(stageSelectScene));
+                }    
             }
 
             GameManager.Instance.chapter = nextChapter;

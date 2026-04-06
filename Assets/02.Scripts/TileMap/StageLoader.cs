@@ -49,6 +49,8 @@ public class StageLoader : MonoBehaviour
             {
                 SoundManager.Instance.RenewalBGM(stageData.bgmClip, stageData.stageName);
             }
+            
+            GameManager.Instance.InitStageData(chapterNum, stageNum, stageData);
 
             // 분석 세션 시작 (StageRecorder가 수신)
             GameEvents.RaiseStageRecordStarted(chapterNum, stageNum);
