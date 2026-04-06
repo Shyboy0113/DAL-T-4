@@ -50,6 +50,7 @@ public class PlayerAnimator : MonoBehaviour
 
     public void PlayClear()
     {
+        iconSpriteRenderer.enabled = false;
         animator.Play("Clear");
         arrow.SetActive(false);
     }
