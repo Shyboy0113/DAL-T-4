@@ -505,9 +505,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8660d7e38238ea6469ecf3d6907974ab, type: 2}
   - {fileID: 11400000, guid: 06e07edbcc11ba8458a255d40b23df71, type: 2}
   tileData: {fileID: 11400000, guid: 7b4ce66101976884892dbb9343d18309, type: 2}
-  maxActivationCount:
+  maxBreakCount:
     UseOverride: 0
-    OverrideValue: 0
+    OverrideValue: 4
   breakHitCount:
     UseOverride: 0
     OverrideValue: 0
@@ -515,7 +515,7 @@ MonoBehaviour:
     UseOverride: 0
     OverrideValue: 0
   toggleActivationCount:
-    UseOverride: 1
+    UseOverride: 0
     OverrideValue: 2
   overrideColor: -1
   overrideTeleportID: 1
@@ -552,10 +552,12 @@ MonoBehaviour:
   rotationSound: {fileID: 8300000, guid: 1c1baf53e73a70a458a1dbea2768b151, type: 3}
   crackSound: {fileID: 8300000, guid: 0fd2b5920bf112347a0aa74d9e2f78b4, type: 3}
   breakSound: {fileID: 8300000, guid: 2f881375b96639f49856bef4a9a3221f, type: 3}
+  starSound: {fileID: 8300000, guid: 62439643b9040e944ac9975d6477ebfd, type: 3}
   breakableSprites:
-  - {fileID: 21300000, guid: 38290fe7ce89f174fa95300c93f07093, type: 3}
-  - {fileID: 21300000, guid: 41e601b9a09aa0d4a9e54aa39c98dac1, type: 3}
   - {fileID: 21300000, guid: beb7b245bbe7398428be67e9ba549f69, type: 3}
+  - {fileID: 21300000, guid: 41e601b9a09aa0d4a9e54aa39c98dac1, type: 3}
+  - {fileID: 21300000, guid: 38290fe7ce89f174fa95300c93f07093, type: 3}
+  - {fileID: 21300000, guid: fd8c0b2698ccffd4381340c2a5001a30, type: 3}
   isToggled: 0
   toggleOnSprite: {fileID: 21300000, guid: b23a15ba896d9f44db21f8eaba152682, type: 3}
   player: {fileID: 0}
@@ -563,6 +565,7 @@ MonoBehaviour:
   mapManager: {fileID: 0}
   countText: {fileID: 8407074332212949285}
   teleportTarget: {fileID: 0}
+  continueIceAfterTeleport: 0
 --- !u!82 &5937775037576796057
 AudioSource:
   m_ObjectHideFlags: 0
