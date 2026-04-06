@@ -13,17 +13,9 @@ public class StageSelectionMarker : MonoBehaviour, ISelectHandler, IDeselectHand
     [SerializeField]
     private Color selectedColor = Color.yellow;
     
-    private AudioSource _audioSource;
-    [SerializeField] private AudioClip navigationClip;
-    
     // 인스펙터에서 켜고 끌 화살표(마커) 오브젝트를 연결
     public Image selectionCircle;
     public TMP_Text selectionText;
-
-    private void Awake()
-    {
-        _audioSource = GetComponent<AudioSource>();
-    }
 
     private void OnEnable()
     {
@@ -36,8 +28,6 @@ public class StageSelectionMarker : MonoBehaviour, ISelectHandler, IDeselectHand
     {
         if(selectionCircle is not null) selectionCircle.color = selectedColor;
         if(selectionText is not null) selectionText.color = selectedColor;
-        
-        if(navigationClip is not null) _audioSource.PlayOneShot(navigationClip); // 선택 시 효과음
     }
 
     // 이 오브젝트가 선택 해제되었을 때 EventSystem이 자동으로 호출하는 함수
