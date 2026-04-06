@@ -7,6 +7,8 @@ public class Option_UIHandler : MonoBehaviour
     public SO_UIEvent optionEvent;
     public GameObject panel; // 옵션 UI 패널
 
+    public Option_ResolutionUI resolutionUI;
+    
     private void Awake()
     {
         if (panel != null)
@@ -43,17 +45,39 @@ public class Option_UIHandler : MonoBehaviour
         {
             if (GameManager.Instance.isOption)
             {
+                if (resolutionUI != null)
+                {
+                    resolutionUI.CancelChange();
+                }
+                
                 optionEvent.Raise(false);
             }
         }
         
+    }
+    
+    // OK 버튼의 OnClick에 연결
+    public void OnOKButtonClicked()
+    {
+        if (resolutionUI != null)
+            resolutionUI.ApplyAndClose();
+        
+        optionEvent.Raise(false);
+    }
+
+    // Cancel 버튼의 OnClick에 연결
+    public void OnCancelButtonClicked()
+    {
+        if (resolutionUI != null)
+            resolutionUI.CancelChange();
+        
+        optionEvent.Raise(false);
     }
 
     private void HandleOptionToggle(bool active)
     {
         if (panel == null || GameManager.Instance == null) return;
 
-        // 3. 현재 상태와 요청받은 상태가 다를 때만 실행 (중복 방지)
         if (panel.activeSelf != active)
         {
             panel.SetActive(active);
