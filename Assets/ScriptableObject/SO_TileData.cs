@@ -8,8 +8,8 @@ public class SO_TileData : ScriptableObject
     public TileType tileType;
 
     [Header("Base Stats")]
-    public int baseMaxActivationCount = -1; // -1은 무제한
-    public int baseBreakHitCount = 2;
+    public int baseMaxBreakCount = 4;
+    public int baseBreakHitCount = 0;
     public float baseBreakDelay = 0.5f;
 
     [Header("Base Toggle Settings")]

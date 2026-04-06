@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: SO_Help
   m_EditorClassIdentifier: 
   tileType: 20
-  baseMaxActivationCount: -1
-  baseBreakHitCount: 2
+  baseMaxBreakCount: 4
+  baseBreakHitCount: 0
   baseBreakDelay: 0.5
   baseToggleActivationCount: 2
   baseColor: -1

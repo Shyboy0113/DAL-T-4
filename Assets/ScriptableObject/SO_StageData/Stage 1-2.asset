@@ -15,11 +15,19 @@ MonoBehaviour:
   stageDescription: "\uD0A4 \uC2DC\uD000\uC2A4 \uCD08\uAE30\uD654\uC5D0 \uB300\uD55C
     \uC124\uBA85"
   stagePrefab: {fileID: 2685018636728712195, guid: 5d42063439dc8724aa8ea6f118c0580c, type: 3}
+  bgmClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   chapterNum: 1
   stageNum: 2
-  audioClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   canUseF4: 1
   canUseLeftALT: 1
   canUseTAB: 0
-  enemyNum: 0
   hasSecondMap: 0
+  limitNumberALT: 0
+  limitNumberF4: 0
+  limitNumberTAB: 0
+  limitTime: 0
+  steamAchievementKey: CLEAR_CH1_ST2
+  firstMissionType: 0
+  secondMissionType: 0
+  thirdMissionType: 0
+  forbiddenFeature: 0

@@ -14,12 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageDescription: "ALT\uB97C 3\uBC88 \uB20C\uB7EC\uC11C \uBC18\uC2DC\uACC4 \uBC29\uD5A5\uC73C\uB85C
     \uD68C\uC804\uD558\uB294 \uB85C\uC9C1\uC744 \uAC00\uB974\uCE68"
-  stagePrefab: {fileID: 2685018636728712195, guid: aec527446baf9ed418144751fb344c01, type: 3}
+  stagePrefab: {fileID: 2685018636728712195, guid: de5c1bff176e09240b1a1bb76c22a15c, type: 3}
+  bgmClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   chapterNum: 1
   stageNum: 4
-  audioClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   canUseF4: 1
   canUseLeftALT: 1
   canUseTAB: 0
-  enemyNum: 0
   hasSecondMap: 0
+  limitNumberALT: 0
+  limitNumberF4: 0
+  limitNumberTAB: 0
+  limitTime: 0
+  steamAchievementKey: CLEAR_CH1_ST4
+  firstMissionType: 0
+  secondMissionType: 0
+  thirdMissionType: 0
+  forbiddenFeature: 0

@@ -14,11 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageDescription: 
   stagePrefab: {fileID: 2685018636728712195, guid: 9cdca96b8dc5d6d4b8780b3dbc6f9404, type: 3}
+  bgmClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   chapterNum: 1
   stageNum: 7
-  audioClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   canUseF4: 1
   canUseLeftALT: 1
   canUseTAB: 0
-  enemyNum: 0
   hasSecondMap: 0
+  limitNumberALT: 0
+  limitNumberF4: 0
+  limitNumberTAB: 0
+  limitTime: 0
+  steamAchievementKey: CLEAR_CH1_ST7
+  firstMissionType: 0
+  secondMissionType: 0
+  thirdMissionType: 0
+  forbiddenFeature: 0
