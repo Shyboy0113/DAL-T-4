@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using System;
+using TMPro;
 
 /// <summary>
 /// 스테이지 셀렉트 월드맵의 각 스테이지 노드.

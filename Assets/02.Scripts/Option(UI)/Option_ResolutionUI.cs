@@ -31,6 +31,8 @@ public class Option_ResolutionUI : MonoBehaviour
     {
         // CutoutFade 컴포넌트를 씬에서 찾아옴
         _cutoutFade = FindObjectOfType<CutoutFade>(); 
+        
+        InitializeResolutions();
     }
     
     private void OnEnable()
@@ -50,7 +52,6 @@ public class Option_ResolutionUI : MonoBehaviour
     void Start()
     {
         InitializeFullscreen();
-        InitializeResolutions();
         ApplySavedResolution();
     }
 

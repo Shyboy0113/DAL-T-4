@@ -12,7 +12,9 @@ public class StageSelectManagement : MonoBehaviour
     [SerializeField] private CutoutFade        cutoutFade;
     [SerializeField] private StageSelectPlayer selectPlayer;
     [SerializeField] private SceneReference    gameScene;
-
+    [SerializeField] private SceneReference    introScene;
+    [SerializeField] private SceneReference    stageSelectScene;
+    
     /// <summary>씬 시작 시 포커스를 맞출 첫 번째 노드 (보통 마지막으로 클리어한 스테이지)</summary>
     [SerializeField] private StageNode defaultNode;
 
@@ -55,14 +57,7 @@ public class StageSelectManagement : MonoBehaviour
     private void Update()
     {
         if (_isTransitioning) return;
-
-        // F4로도 진입 가능하게 (게임 내 이동 키 컨벤션 유지)
-        if (Input.GetKeyDown(KeyCode.F4))
-        {
-            var selected = EventSystem.current?.currentSelectedGameObject;
-            selected?.GetComponent<StageNode>()?.Confirm();
-        }
-
+        
         if (Input.GetKeyDown(KeyCode.Escape))
             ReturnToMenu();
     }
@@ -72,6 +67,7 @@ public class StageSelectManagement : MonoBehaviour
         if (_isTransitioning || node?.stageData == null) return;
         _isTransitioning = true;
 
+        EventSystem.current.SetSelectedGameObject(null);
         selectPlayer.Lock();
 
         GameManager.Instance.chapter = node.stageData.chapterNum;
@@ -87,7 +83,16 @@ public class StageSelectManagement : MonoBehaviour
 
         selectPlayer?.Lock();
         cutoutFade.FadeOut(() =>
-            UnityEngine.SceneManagement.SceneManager.LoadScene(0));
+            StartCoroutine(SceneLoader.LoadScene(introScene)));
+    }
+
+    public void ReloadStageSelectScene()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+        selectPlayer?.Lock();
+        
+        cutoutFade.FadeOut(() =>
+            StartCoroutine(SceneLoader.LoadScene(stageSelectScene)));
     }
 
     // 잠기지 않은 노드 중 stageNum이 가장 낮은 것을 반환
