@@ -98,7 +98,8 @@ public class JsonDataManager : MonoBehaviour
         string key = $"{chapter}-{stage}";
         if (!stageDataDict.ContainsKey(key))
         {
-            stageDataDict[key] = new StageProgressData(chapter, stage);
+            // isAppeared 기본값(true)이 아닌 false로 생성 — 세이브에 없는 스테이지는 잠김 상태
+            stageDataDict[key] = new StageProgressData(chapter, stage) { isAppeared = false };
         }
         return stageDataDict[key];
     }
@@ -115,6 +116,31 @@ public class JsonDataManager : MonoBehaviour
     public void SaveGlobalStats()
     {
         SaveAllData();
+    }
+
+    /// <summary>저장 파일을 삭제하고 Resources의 기본 데이터로 복원합니다.</summary>
+    public void ResetAllData()
+    {
+        if (File.Exists(filePath))
+            File.Delete(filePath);
+
+        stageDataDict = new Dictionary<string, StageProgressData>();
+        globalStats   = new GlobalStatsData();
+
+        TextAsset textAsset = Resources.Load<TextAsset>("StageData");
+        if (textAsset != null)
+        {
+            var saveData  = JsonUtility.FromJson<SaveData>(textAsset.text);
+            stageDataDict = saveData.ToDictionary();
+            globalStats   = saveData.globalStats ?? new GlobalStatsData();
+        }
+
+        // 1-1은 리셋 후에도 반드시 진입 가능해야 함
+        var firstStage = GetStageData(1, 1);
+        firstStage.isAppeared = true;
+        SaveAllData();
+
+        Debug.Log("세이브 데이터가 초기화되었습니다.");
     }
 }
 
