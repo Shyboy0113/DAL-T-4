@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Eflatun.SceneReference;
+using System.Collections;
 
 /// <summary>
 /// 스테이지 셀렉트 씬의 진입점.
@@ -72,8 +73,9 @@ public class StageSelectManagement : MonoBehaviour
 
         GameManager.Instance.chapter = node.stageData.chapterNum;
         GameManager.Instance.stage   = node.stageData.stageNum;
-
-        cutoutFade.FadeOut(() => StartCoroutine(SceneLoader.LoadScene(gameScene)));
+        
+        StartCoroutine(IFadeOut(1.0f));
+        
     }
 
     public void ReturnToMenu()
@@ -111,4 +113,18 @@ public class StageSelectManagement : MonoBehaviour
         }
         return best;
     }
+
+    private IEnumerator IWait(float time)
+    {
+        yield return new WaitForSeconds(time);
+    }
+
+    private IEnumerator IFadeOut(float time)
+    {
+        yield return IWait(time);
+        
+        cutoutFade.FadeOut(() => StartCoroutine(SceneLoader.LoadScene(gameScene)));
+        
+    }
+    
 }

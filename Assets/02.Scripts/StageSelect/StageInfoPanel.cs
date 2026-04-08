@@ -34,17 +34,28 @@ public class StageInfoPanel : MonoBehaviour
     [SerializeField] private MissionRowUI mission1;
     [SerializeField] private MissionRowUI mission2;
     [SerializeField] private MissionRowUI mission3;
-
+    
     private void Awake()
     {
         if (canvasGroup != null) canvasGroup.alpha = 0f;
         gameObject.SetActive(false);
     }
 
-    public void Show(StageNode node)
+    public void Show(StageNode node, RectTransform nodeRect, Vector2 offset)
     {
         if (node?.stageData == null) return;
 
+        // 패널 위치 계산 — 화면 중앙 기준 좌/우 반전
+        var panelRect = GetComponent<RectTransform>();
+        Vector2 nodeScreenPos = RectTransformUtility.WorldToScreenPoint(
+            null, nodeRect.position);
+
+        float screenCenter = Screen.width * 0.5f;
+        float sign = nodeScreenPos.x < screenCenter ? 1f : -1f;
+
+        panelRect.position = nodeRect.position;
+        panelRect.anchoredPosition += new Vector2(offset.x * sign, offset.y);
+        
         var data     = node.stageData;
         var jdm      = GameManager.Instance?.jsonDataManager;
         var progress = jdm?.GetStageData(data.chapterNum, data.stageNum);

@@ -27,7 +27,7 @@ MonoBehaviour:
   limitNumberTAB: 0
   limitTime: 0
   steamAchievementKey: CLEAR_CH1_ST3
-  firstMissionType: 0
+  firstMissionType: 1
   secondMissionType: 0
   thirdMissionType: 0
   forbiddenFeature: 0

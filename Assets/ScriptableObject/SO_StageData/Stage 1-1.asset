@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stage 1-1
   m_EditorClassIdentifier: 
   stageDescription: "F4 \uC870\uC791\uBC95\uC5D0 \uB300\uD55C \uC124\uBA85 \uC2A4\uD14C\uC774\uC9C0"
-  stagePrefab: {fileID: 2685018636728712195, guid: e9d94691a8e862a4b9cd0b13102dfdee, type: 3}
+  stagePrefab: {fileID: 2685018636728712195, guid: a09c3c9026e6fb14a89ef6df89d1a3ea, type: 3}
   bgmClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   chapterNum: 1
   stageNum: 1
@@ -26,7 +26,7 @@ MonoBehaviour:
   limitNumberTAB: 0
   limitTime: 0
   steamAchievementKey: CLEAR_CH1_ST1
-  firstMissionType: 0
+  firstMissionType: 1
   secondMissionType: 0
   thirdMissionType: 0
   forbiddenFeature: 0

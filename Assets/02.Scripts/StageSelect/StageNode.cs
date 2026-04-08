@@ -27,12 +27,16 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] private GameObject clearEffectObject;
     [SerializeField] private GameObject lockedOverlay;
 
+    [Header("Info Panel Offset")]
+    [SerializeField] private Vector2 panelOffset;
+
+    [SerializeField] private StageInfoPanel infoPanel;
+    
     // 플레이어가 이 노드에서 확인 입력을 눌렀을 때 발동
     public event Action<StageNode> OnConfirmed;
 
     private NodeState         _state;
     private Vector3           _originScale;
-    private StageInfoPanel    _infoPanel;
     private StageSelectPlayer _selectPlayer;
     private Button            _button;
 
@@ -41,7 +45,7 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     private void Awake()
     {
         _originScale  = transform.localScale;
-        _infoPanel    = FindObjectOfType<StageInfoPanel>(true);
+        infoPanel.gameObject.SetActive(false);
         _selectPlayer = FindObjectOfType<StageSelectPlayer>();
         _button       = GetComponent<Button>();
 
@@ -87,7 +91,7 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
         _selectPlayer?.MoveTo(GetComponent<RectTransform>());
 
         // 정보 패널 갱신
-        _infoPanel?.Show(this);
+        infoPanel?.Show(this, GetComponent<RectTransform>(), panelOffset);
 
         // 선택 강조 애니메이션
         transform.DOKill();
@@ -99,7 +103,7 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         transform.DOKill();
         transform.localScale = _originScale;
-        _infoPanel?.Hide();
+        infoPanel?.Hide();
     }
 
     // ── 진입 확인 ────────────────────────────────────────────────────
