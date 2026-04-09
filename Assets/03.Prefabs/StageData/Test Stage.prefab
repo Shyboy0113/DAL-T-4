@@ -49,6 +49,7 @@ MonoBehaviour:
   mapPivot: {fileID: 8472849335830768402}
   mapFirstRoot: {fileID: 7913548835788325989}
   mapSecondRoot: {fileID: 3637021470267711539}
+  mapStaticRoot: {fileID: 0}
 --- !u!1 &3637021470267711539
 GameObject:
   m_ObjectHideFlags: 0

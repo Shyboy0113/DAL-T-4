@@ -21,7 +21,8 @@ public class CanvasEventSystemFocusKeeper : MonoBehaviour
                 other.enabled = false;
         }
 
-        if (firstSelectedObject != null && EventSystem.current != null)
+        // 비활성 오브젝트를 선택하면 오작동할 수 있으므로 activeInHierarchy 검사 추가
+        if (firstSelectedObject != null && firstSelectedObject.activeInHierarchy && EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(firstSelectedObject);
     }
 
@@ -36,29 +37,22 @@ public class CanvasEventSystemFocusKeeper : MonoBehaviour
         }
     }
 
-    // --- 2. 포커스 유지 및 복구 (매 프레임 감시) ---
+    // --- 포커스 유지 및 복구 (매 프레임 감시) ---
     void Update()
     {
-        // 현재 선택된 오브젝트를 가져옵니다.
         GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
-        
-        Debug.Log(currentSelected);
 
-        // 만약 선택된 것이 없다면 (마우스 클릭 등으로 포커스가 사라졌다면)
         if (currentSelected == null)
         {
-            // 하지만 마지막으로 선택했던 기록이 남아있다면
-            if (currentSelected == null)
+            // 포커스가 사라졌을 때 마지막 선택 오브젝트로 복구
+            if (_dropdownOpened && ResolutionDropdown != null)
             {
-                if (_dropdownOpened && ResolutionDropdown != null)
-                {
-                    EventSystem.current.SetSelectedGameObject(ResolutionDropdown);
-                    _dropdownOpened = false;
-                }
-                else if (_lastSelectedObject != null)
-                {
-                    EventSystem.current.SetSelectedGameObject(_lastSelectedObject);
-                }
+                EventSystem.current.SetSelectedGameObject(ResolutionDropdown);
+                _dropdownOpened = false;
+            }
+            else if (_lastSelectedObject != null)
+            {
+                EventSystem.current.SetSelectedGameObject(_lastSelectedObject);
             }
         }
         else

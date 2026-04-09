@@ -61,6 +61,9 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     /// <summary>세이브 데이터를 읽어 노드의 시각 상태를 갱신합니다.</summary>
     public void RefreshVisuals()
     {
+        // 비활성 오브젝트에서 호출될 경우 Awake()가 아직 실행되지 않았을 수 있으므로 lazy init
+        if (_button == null) _button = GetComponent<Button>();
+
         _state = GetCurrentState();
 
         // 잠금 상태면 버튼 비활성화 (EventSystem 네비게이션에서 건너뜀)
