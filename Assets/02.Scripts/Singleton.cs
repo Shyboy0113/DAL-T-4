@@ -10,39 +10,34 @@ using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private static readonly object lockObject = new();
-    
     private static T instance;
 
     public static T Instance
     {
         get
         {
-            // Thread safe
-            lock (lockObject)
+            if (!instance)
             {
-                // 만약 객체가 저장되지 않았다면,
-                if (!instance)
-                {
-                    // 씬에서 객체를 찾는다.
-                    instance = (T)FindObjectOfType(typeof(T));
-
-                    // 못찾았다면 객체 생성이 안 된 것이기 때문에 Resources 폴더에서 Prefab을 가져온다.
-                    if (!instance)
-                    {
-                        instance = Instantiate(Resources.Load<T>("Singleton/" + typeof(T).Name));
-                    }
-                    DontDestroyOnLoad(instance.gameObject);
-                }
+                instance = FindObjectOfType<T>();
+                if (instance) DontDestroyOnLoad(instance.gameObject);
             }
             return instance;
         }
     }
-    
+
+    protected virtual void Awake()
+    {
+        if (instance && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this as T;
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void OnDestroy()
     {
-        instance = null;
+        if (instance == this) instance = null;
     }
-   
-
 }

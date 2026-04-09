@@ -50,7 +50,7 @@ public class JsonDataManager : MonoBehaviour
 
     private void Awake()
     {
-        filePath = Path.Combine(Application.persistentDataPath, "stageData.json");
+        filePath = Path.Combine(Application.persistentDataPath, "StageData.json");
 
         // 현재 세이브 파일 저장 위치 표기
         Debug.Log("세이브 파일 경로: " + filePath);

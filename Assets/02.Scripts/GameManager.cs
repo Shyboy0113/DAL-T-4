@@ -2,34 +2,8 @@
 using System.Linq;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    #region Singleton
-
-    public static GameManager Instance { get; private set; }
-    
-    void Awake()
-    {
-        // 싱글톤 구현
-        if (Instance == null)
-        {
-            Instance = this;
-            
-            DontDestroyOnLoad(gameObject);
-        }
-        else Destroy(gameObject);
-    }
-    
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-    }
-
-    #endregion
-    
     private void OnEnable()
     {
         GameEvents.StageCleared += GameClear;

@@ -11,7 +11,7 @@ public static class BootstrapLoader
     private const string BootstrapSceneName = "Bootstrapper";
 
 #if UNITY_EDITOR
-    private const string PreviousSceneKey = "DAL-T4.PreviousScenePath";
+    private const string PreviousSceneKey = "DALT-4.PreviousScenePath";
 #endif
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

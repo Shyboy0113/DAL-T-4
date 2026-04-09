@@ -29,10 +29,8 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         GameEvents.PlayerDied   -= OnPlayerDied;
         GameEvents.StageCleared -= OnStageCleared;
     }
-
-    // ─────────────────────────────────────────────────────────────────
+    
     // 이벤트 핸들러
-    // ─────────────────────────────────────────────────────────────────
     
     private void OnKeyUsed(KeyType keyType)
     {
@@ -75,20 +73,17 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         _jsonDataManager.SaveGlobalStats();
     }
 
-    // ─────────────────────────────────────────────────────────────────
     // 외부 조회용 (UI 디버그 패널 등)
-    // ─────────────────────────────────────────────────────────────────
 
     public int GetLifetimeALT()  => _jsonDataManager.GetGlobalStats().lifetimeALT;
     public int GetLifetimeF4()   => _jsonDataManager.GetGlobalStats().lifetimeF4;
     public int GetLifetimeTAB()  => _jsonDataManager.GetGlobalStats().lifetimeTAB;
     public int GetTotalDeaths()  => _jsonDataManager.GetGlobalStats().totalDeaths;
     public int GetTotalClears()  => _jsonDataManager.GetGlobalStats().totalClears;
-
-    // ─────────────────────────────────────────────────────────────────
-    // Steamworks 유틸
-    // ─────────────────────────────────────────────────────────────────
-
+    
+    
+    #region Steamworks Utility
+    
     private static void TryUnlock(string achievementId)
     {
         if (string.IsNullOrEmpty(achievementId)) return;
@@ -105,4 +100,6 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         SteamUserStats.StoreStats();
 #endif
     }
+    #endregion
+
 }

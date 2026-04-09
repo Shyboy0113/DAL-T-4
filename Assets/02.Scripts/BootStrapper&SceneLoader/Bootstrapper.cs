@@ -9,7 +9,7 @@ using UnityEditor;
 public class Bootstrapper : MonoBehaviour
 {
 #if UNITY_EDITOR
-    private const string PreviousSceneKey = "DAL-T4.PreviousScenePath";
+    private const string PreviousSceneKey = "DALT-4.PreviousScenePath";
 #endif
 
     [SerializeField] private SO_SceneGroup defaultGroup;
@@ -33,8 +33,10 @@ public class Bootstrapper : MonoBehaviour
         }
 
 #if UNITY_EDITOR
+        
+        // BootstrapperOnLoad.cs에서 설정한 EditorPrefs의 previousSceneKey를 가져옴
         string previousScene = EditorPrefs.GetString(PreviousSceneKey);
-        EditorPrefs.DeleteKey(PreviousSceneKey);
+        EditorPrefs.DeleteKey(PreviousSceneKey); // 불러왔으니 삭제 
 
         if (!string.IsNullOrEmpty(previousScene))
         {
