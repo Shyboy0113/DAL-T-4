@@ -94,9 +94,9 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
         infoPanel?.Show(this, GetComponent<RectTransform>(), panelOffset);
 
         // 선택 강조 애니메이션
-        transform.DOKill();
-        transform.localScale = _originScale;
-        transform.DOPunchScale(Vector3.one * 0.2f, 0.25f, 6, 0.5f);
+        infoPanel?.transform.DOKill();
+        if(infoPanel != null) infoPanel.transform.localScale = _originScale* 4;
+        infoPanel?.transform.DOPunchScale(Vector3.one * 0.2f, 0.25f, 6, 0.5f);
     }
 
     public void OnDeselect(BaseEventData eventData)
