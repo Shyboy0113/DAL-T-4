@@ -3,18 +3,42 @@ using UnityEngine;
 using Steamworks;
 #endif
 
-/// <summary>
-/// 세션을 초월한 누적 플레이 데이터를 JsonDataManager(GlobalStatsData)에 기록하고,
-/// 임계치 달성 시 Steam 업적을 해제합니다.
-/// 싱글톤 없이 GameEvents만 구독합니다.
-/// </summary>
 public class LifetimeAchievemenHandler : MonoBehaviour
 {
     private JsonDataManager _jsonDataManager => GameManager.Instance.jsonDataManager;
 
-    // ── 임계치 (Steam 업적 조건) ──────────────────────────────────────
-    private const int ThresholdALT    = 100;  // ALT를 누적 100회 → ACH_SPIN_100
-    private const int ThresholdDeaths = 50;   // 누적 사망 50회 → ACH_DEATH_50
+    // ── 누적 업적 임계치 ──────────────────────────────────────────────
+    private static readonly (int threshold, string id)[] AltMilestones =
+    {
+        (100,  "ACH_SPIN_100"),
+        (500,  "ACH_SPIN_500"),
+        (1000, "ACH_SPIN_1000")
+    };
+
+    private static readonly (int threshold, string id)[] F4Milestones =
+    {
+        (100, "ACH_F4_100"),
+        (500, "ACH_F4_500")
+    };
+
+    private static readonly (int threshold, string id)[] TabMilestones =
+    {
+        (100, "ACH_TAB_100"),
+        (500, "ACH_TAB_500")
+    };
+
+    private static readonly (int threshold, string id)[] DeathMilestones =
+    {
+        (50,  "ACH_DEATH_50"),
+        (100, "ACH_DEATH_100"),
+        (500, "ACH_DEATH_500")
+    };
+
+    private static readonly (int threshold, string id)[] ClearMilestones =
+    {
+        (10, "ACH_CLEAR_10"),
+        (50, "ACH_CLEAR_50")
+    };
 
     private void OnEnable()
     {
@@ -29,9 +53,11 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         GameEvents.PlayerDied   -= OnPlayerDied;
         GameEvents.StageCleared -= OnStageCleared;
     }
-    
+
+    // ─────────────────────────────────────────────────────────────────
     // 이벤트 핸들러
-    
+    // ─────────────────────────────────────────────────────────────────
+
     private void OnKeyUsed(KeyType keyType)
     {
         var stats = _jsonDataManager.GetGlobalStats();
@@ -40,15 +66,17 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         {
             case KeyType.Alt:
                 stats.lifetimeALT++;
-                if (stats.lifetimeALT >= ThresholdALT) TryUnlock("ACH_SPIN_100");
+                CheckMilestones(AltMilestones, stats.lifetimeALT);
                 break;
 
             case KeyType.F4:
                 stats.lifetimeF4++;
+                CheckMilestones(F4Milestones, stats.lifetimeF4);
                 break;
 
             case KeyType.Tab:
                 stats.lifetimeTAB++;
+                CheckMilestones(TabMilestones, stats.lifetimeTAB);
                 break;
         }
 
@@ -62,7 +90,7 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         stats.totalDeaths++;
         _jsonDataManager.SaveGlobalStats();
 
-        if (stats.totalDeaths >= ThresholdDeaths) TryUnlock("ACH_DEATH_50");
+        CheckMilestones(DeathMilestones, stats.totalDeaths);
         StoreStats();
     }
 
@@ -71,19 +99,36 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         var stats = _jsonDataManager.GetGlobalStats();
         stats.totalClears++;
         _jsonDataManager.SaveGlobalStats();
+
+        CheckMilestones(ClearMilestones, stats.totalClears);
+        StoreStats();
     }
 
-    // 외부 조회용 (UI 디버그 패널 등)
+    // ─────────────────────────────────────────────────────────────────
+    // 임계치 일괄 판정
+    // ─────────────────────────────────────────────────────────────────
+
+    private static void CheckMilestones((int threshold, string id)[] milestones, int currentValue)
+    {
+        foreach (var (threshold, id) in milestones)
+        {
+            if (currentValue >= threshold)
+                TryUnlock(id);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // 외부 조회용
+    // ─────────────────────────────────────────────────────────────────
 
     public int GetLifetimeALT()  => _jsonDataManager.GetGlobalStats().lifetimeALT;
     public int GetLifetimeF4()   => _jsonDataManager.GetGlobalStats().lifetimeF4;
     public int GetLifetimeTAB()  => _jsonDataManager.GetGlobalStats().lifetimeTAB;
     public int GetTotalDeaths()  => _jsonDataManager.GetGlobalStats().totalDeaths;
     public int GetTotalClears()  => _jsonDataManager.GetGlobalStats().totalClears;
-    
-    
+
     #region Steamworks Utility
-    
+
     private static void TryUnlock(string achievementId)
     {
         if (string.IsNullOrEmpty(achievementId)) return;
@@ -100,6 +145,6 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         SteamUserStats.StoreStats();
 #endif
     }
-    #endregion
 
+    #endregion
 }

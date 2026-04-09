@@ -17,13 +17,12 @@ public class StageProgressData
     public int minTAB = int.MaxValue;
 
     public bool isCleared = false;
-    public bool isAppeared = true; // 다음 스테이지가 클리어 됐을 때, 해당 스테이지가 표시됨
+    public bool isAppeared = true;
     public float minClearTime = float.MaxValue;
 
-    // 플레이 분석 데이터
-    public float totalPlayTime = 0f; // 스테이지에 머문 누적 시간 (초)
-    public int   attemptCount  = 0;  // 클리어 or 리스타트 횟수
-    public int   abandonCount  = 0;  // StageSelect 이동 or 게임 종료 횟수
+    public float totalPlayTime = 0f;
+    public int   attemptCount  = 0;
+    public int   abandonCount  = 0;
 
     public StageProgressData(int chapter, int stage)
     {
@@ -77,10 +76,7 @@ public class JsonDataManager : MonoBehaviour
     private void Awake()
     {
         filePath = Path.Combine(Application.persistentDataPath, "StageData.json");
-
-        // 현재 세이브 파일 저장 위치 표기
         Debug.Log("세이브 파일 경로: " + filePath);
-
         LoadAllData();
     }
 
@@ -99,7 +95,6 @@ public class JsonDataManager : MonoBehaviour
             Debug.Log("저장 파일이 없습니다. 새롭게 시작합니다.");
         }
 
-        // 1-1은 항상 진입 가능해야 함
         var firstStage = GetStageData(1, 1);
         firstStage.isAppeared = true;
     }
@@ -115,7 +110,6 @@ public class JsonDataManager : MonoBehaviour
         string key = $"{chapter}-{stage}";
         if (!stageDataDict.ContainsKey(key))
         {
-            // isAppeared 기본값(true)이 아닌 false로 생성 — 세이브에 없는 스테이지는 잠김 상태
             stageDataDict[key] = new StageProgressData(chapter, stage) { isAppeared = false };
         }
         return stageDataDict[key];
@@ -135,7 +129,51 @@ public class JsonDataManager : MonoBehaviour
         SaveAllData();
     }
 
-    /// <summary>저장 파일을 삭제하고 Resources의 기본 데이터로 복원합니다.</summary>
+    // ─────────────────────────────────────────────────────────────────
+    // 챕터/전체 클리어 판정 헬퍼
+    // ─────────────────────────────────────────────────────────────────
+
+    public bool IsChapterCleared(int chapter, int stagesPerChapter)
+    {
+        for (int st = 1; st <= stagesPerChapter; st++)
+        {
+            var data = GetStageData(chapter, st);
+            if (!data.isCleared) return false;
+        }
+        return true;
+    }
+
+    public bool IsChapterPerfect(int chapter, int stagesPerChapter)
+    {
+        for (int st = 1; st <= stagesPerChapter; st++)
+        {
+            var data = GetStageData(chapter, st);
+            if (!data.isFirstMissionCleared || 
+                !data.isSecondMissionCleared || 
+                !data.isThirdMissionCleared)
+                return false;
+        }
+        return true;
+    }
+
+    public bool IsAllCleared(int totalChapters, int stagesPerChapter)
+    {
+        for (int ch = 1; ch <= totalChapters; ch++)
+        {
+            if (!IsChapterCleared(ch, stagesPerChapter)) return false;
+        }
+        return true;
+    }
+
+    public bool IsAllPerfect(int totalChapters, int stagesPerChapter)
+    {
+        for (int ch = 1; ch <= totalChapters; ch++)
+        {
+            if (!IsChapterPerfect(ch, stagesPerChapter)) return false;
+        }
+        return true;
+    }
+
     public void ResetAllData()
     {
         if (File.Exists(filePath))
@@ -144,15 +182,6 @@ public class JsonDataManager : MonoBehaviour
         stageDataDict = new Dictionary<string, StageProgressData>();
         globalStats   = new GlobalStatsData();
 
-        TextAsset textAsset = Resources.Load<TextAsset>("StageData");
-        if (textAsset != null)
-        {
-            var saveData  = JsonUtility.FromJson<SaveData>(textAsset.text);
-            stageDataDict = saveData.ToDictionary();
-            globalStats   = saveData.globalStats ?? new GlobalStatsData();
-        }
-
-        // 1-1은 리셋 후에도 반드시 진입 가능해야 함
         var firstStage = GetStageData(1, 1);
         firstStage.isAppeared = true;
         SaveAllData();
@@ -160,4 +189,3 @@ public class JsonDataManager : MonoBehaviour
         Debug.Log("세이브 데이터가 초기화되었습니다.");
     }
 }
-

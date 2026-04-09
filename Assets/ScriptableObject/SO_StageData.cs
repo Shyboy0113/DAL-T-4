@@ -20,14 +20,12 @@ public class SO_StageData : ScriptableObject
 {
     [Header("기본 정보")]
     public string stageDescription;
-    public GameObject stagePrefab; // 타일맵이 저장돼있는 프리팹
-    
-    // 해당 스테이지에서 사용할 BGM
+    public GameObject stagePrefab;
     public AudioClip bgmClip;
     
     [Header("스테이지 번호")]
-    public int chapterNum; // 챕터 번호
-    public int stageNum; // 하위 스테이지 번호
+    public int chapterNum;
+    public int stageNum;
     public string stageName => chapterNum + "-" + stageNum;
     
     [Header("기능 제한 (Feature Limits)")]
@@ -45,11 +43,13 @@ public class SO_StageData : ScriptableObject
     public float limitTime;
     public string steamAchievementKey;
     
-    // 미션 타입
     public MissionType firstMissionType = MissionType.None;
     public MissionType secondMissionType = MissionType.None;
     public MissionType thirdMissionType = MissionType.None;
     
     public ForbiddenFeature forbiddenFeature = ForbiddenFeature.None;
     
+    [Header("스피드런 업적")]
+    [Tooltip("이 시간(초) 이내에 클리어하면 스피드런 업적 달성. 0이면 기본값(30초) 사용.")]
+    public float speedRunTime = 0f;
 }
