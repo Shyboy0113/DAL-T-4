@@ -17,6 +17,12 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 68e33166a68cc23419c8e4d73909b5ce
   m_SerializeEntries:
+  - m_GUID: 243397d45dfadbb4a9b1690a19381da3
+    m_Address: Game Sequence Strings_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4cf67464052601f43b495ffc0d83fb21
     m_Address: StageSelect Strings_en
     m_ReadOnly: 1
@@ -24,8 +30,22 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 69dad4c5a6478ab4a845823d25094ed1
+    m_Address: Game Menu Strings_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8b6ff26fe8c06cb4884de9de90cc1414
     m_Address: Intro Strings_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 912c6b6ab90a19c4191d16f9d468d09f
+    m_Address: Game Chat Strings_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

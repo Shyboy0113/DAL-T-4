@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Eflatun.SceneReference;
 using System.Collections;
+using UnityEngine.UI;
 
 /// <summary>
 /// 스테이지 셀렉트 씬의 진입점.
@@ -95,6 +96,9 @@ public class StageSelectManagement : MonoBehaviour
 
         // null 대신 Return Button — null이면 FocusKeeper가 즉시 _lastSelectedObject로 복구해 OnSelect 재발화함
         EventSystem.current.SetSelectedGameObject(returnButton);
+        if (returnButton != null)
+            returnButton.GetComponent<Button>().interactable = false;
+        
         selectPlayer.Lock();
 
         GameManager.Instance.chapter = node.stageData.chapterNum;

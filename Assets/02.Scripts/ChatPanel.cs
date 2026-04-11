@@ -5,51 +5,31 @@ using TMPro;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization.Settings;
 
-/// <summary>
-/// 게임 이벤트 알림 + 플레이어 직접 채팅을 Chat Panel에 표시합니다.
-///
-/// [메시지 유지 정책]
-/// - 메시지는 스테이지 리셋 / 클리어 전까지 자동으로 사라지지 않습니다.
-/// - maxMessages 초과 시 가장 오래된 메시지를 즉시 제거하고 새 메시지를 추가합니다.
-/// - FadeOut은 ClearAll 시 전체 메시지에 일괄 적용됩니다.
-///
-/// [채팅 커맨드 / 이스터에그]
-/// - 입력 문자열에서 등록된 키워드가 처음 등장하는 위치 기준으로 커맨드 하나를 실행합니다.
-/// - 대소문자 무관, 부분 일치 허용.
-///
-/// [욕설 필터]
-/// - _profanityList에 등록된 단어를 첫 글자 + *** 형태로 치환합니다.
-///
-/// [씬 설정]
-/// - messagePrefab  : TextMeshProUGUI 프리팹
-/// - content        : VerticalLayoutGroup + ContentSizeFitter 자식 오브젝트
-/// - chatInputField : TMP_InputField (기본 비활성 상태)
-/// </summary>
 public class ChatPanel : MonoBehaviour
 {
-    // ── 커맨드 데이터 ─────────────────────────────────────────────────────────
     private readonly struct ChatCommand
     {
-        public readonly string[] Keywords;   // 대소문자 무관 부분 일치
-        public readonly string   EasterEgg;  // null이면 시스템 메시지 없음
-        public readonly Action   Effect;     // null이면 미구현
+        public readonly string[] Keywords;
+        public readonly string   EasterEggKey; // String Table 키
+        public readonly Action   Effect;
 
-        public ChatCommand(string[] keywords, string easterEgg, Action effect)
+        public ChatCommand(string[] keywords, string easterEggKey, Action effect)
         {
-            Keywords   = keywords;
-            EasterEgg  = easterEgg;
-            Effect     = effect;
+            Keywords     = keywords;
+            EasterEggKey = easterEggKey;
+            Effect       = effect;
         }
     }
 
-    // ── 욕설 목록 (소문자로 작성) ────────────────────────────────────────────
     private static readonly string[] ProfanityList =
     {
         "fuck", "shit", "bitch", "bastard", "cock", "dick", "pussy", "cunt", "sex", "ass",
+        "씨발", "시발", "ㅅㅂ", "ㅆㅂ", "병신", "ㅂㅅ", "지랄", "ㅈㄹ",
+        "개새끼", "새끼", "ㅅㄲ", "미친", "꺼져", "닥쳐", "존나", "ㅈㄴ",
     };
 
-    // ── Inspector ────────────────────────────────────────────────────────────
     [Header("메시지 설정")]
     [SerializeField] private TextMeshProUGUI messagePrefab;
     [SerializeField] private Transform       content;
@@ -61,56 +41,55 @@ public class ChatPanel : MonoBehaviour
     [SerializeField] private TMP_Text       enterTextLabel;
 
     [Header("채팅 커맨드 효과음")]
-    [SerializeField] private AudioSource chatAudioSource; // 채팅 전용 AudioSource
+    [SerializeField] private AudioSource chatAudioSource;
     [SerializeField] private AudioClip   whistleSound;
 
-    // ── 런타임 ───────────────────────────────────────────────────────────────
+    [Header("로컬라이징")]
+    [SerializeField] private string stringTableName = "Game Chat Strings";
+
     private readonly List<TextMeshProUGUI> _messages = new();
     private ChatCommand[]                  _chatCommands;
     private int                            _lastClosedFrame = -1;
     private GameObject                     _previousSelected;
 
-    // ── 초기화 ───────────────────────────────────────────────────────────────
     private void Awake()
     {
-        // 커맨드 등록 ─ 키워드 배열, 시스템 메시지, 효과
-        // counterrotate는 rotate보다 앞에 둬야 위치 비교에서 정확히 구분됩니다.
         _chatCommands = new[]
         {
             new ChatCommand(
-                keywords  : new[] { "suicide" },
-                easterEgg : "<color=#FF4444>[!!!]</color> <color=#FFAAAA>스스로 자멸을 선택했습니다...</color>",
-                effect    : GameEvents.RaiseChatCommandSuicide
+                keywords     : new[] { "suicide" },
+                easterEggKey : "chat_suicide",
+                effect       : GameEvents.RaiseChatCommandSuicide
             ),
             new ChatCommand(
-                keywords  : new[] { "counterrotate", "counter rotate" },
-                easterEgg : "<color=#AAAAFF>[CCW]</color> <color=#FFFFFF>반시계 회전을 시도합니다.</color>",
-                effect    : GameEvents.RaiseChatCommandRotateCCW
+                keywords     : new[] { "counterrotate", "counter rotate" },
+                easterEggKey : "chat_ccw",
+                effect       : GameEvents.RaiseChatCommandRotateCCW
             ),
             new ChatCommand(
-                keywords  : new[] { "rotate" },
-                easterEgg : "<color=#AAAAFF>[CW]</color>  <color=#FFFFFF>시계 회전을 시도합니다.</color>",
-                effect    : GameEvents.RaiseChatCommandRotateCW
+                keywords     : new[] { "rotate" },
+                easterEggKey : "chat_cw",
+                effect       : GameEvents.RaiseChatCommandRotateCW
             ),
             new ChatCommand(
-                keywords  : new[] { "move" },
-                easterEgg : "<color=#AAFFAA>[>>]</color>  <color=#FFFFFF>이동을 시도합니다.</color>",
-                effect    : GameEvents.RaiseChatCommandMove
+                keywords     : new[] { "move" },
+                easterEggKey : "chat_move",
+                effect       : GameEvents.RaiseChatCommandMove
             ),
             new ChatCommand(
-                keywords  : new[] { "dance" },
-                easterEgg : "<color=#FFDD44>[DANCE]</color> <color=#FFFFFF>적들이 춤을 춥니다!</color>",
-                effect    : GameEvents.RaiseChatCommandDance
+                keywords     : new[] { "dance" },
+                easterEggKey : "chat_dance",
+                effect       : GameEvents.RaiseChatCommandDance
             ),
             new ChatCommand(
-                keywords  : new[] { "i love you" },
-                easterEgg : "<color=#FF88CC>[LOVE]</color> <color=#FFFFFF>적들이 감동받았습니다!</color>",
-                effect    : GameEvents.RaiseChatCommandLove
+                keywords     : new[] { "i love you" },
+                easterEggKey : "chat_love",
+                effect       : GameEvents.RaiseChatCommandLove
             ),
             new ChatCommand(
-                keywords  : new[] { "whistle" },
-                easterEgg : "<color=#AAFFFF>[~♪]</color>  <color=#FFFFFF>휘파람 소리가 울립니다.</color>",
-                effect    : PlayWhistle
+                keywords     : new[] { "whistle" },
+                easterEggKey : "chat_whistle",
+                effect       : PlayWhistle
             ),
         };
     }
@@ -140,7 +119,6 @@ public class ChatPanel : MonoBehaviour
         chatInputField.onSubmit.AddListener(OnChatSubmit);
     }
 
-    // ── Update ───────────────────────────────────────────────────────────────
     private void Update()
     {
         if (!chatInputField.gameObject.activeSelf &&
@@ -153,6 +131,12 @@ public class ChatPanel : MonoBehaviour
 
         if (chatInputField.gameObject.activeSelf && Input.GetKeyDown(KeyCode.Escape))
             CloseChatInput();
+    }
+
+    // ── 로컬라이즈 헬퍼 ──────────────────────────────────────────────────────
+    private string L(string key)
+    {
+        return LocalizationSettings.StringDatabase.GetLocalizedString(stringTableName, key);
     }
 
     // ── 채팅 입력 열기 / 닫기 ────────────────────────────────────────────────
@@ -187,19 +171,16 @@ public class ChatPanel : MonoBehaviour
 
         if (string.IsNullOrEmpty(trimmed)) return;
 
-        // 욕설 필터 적용 후 메시지 출력
         string filtered = ApplyProfanityFilter(trimmed);
-        AddMessage($"<color=#AAFFAA>[나]</color> <color=#FFFFFF>{filtered}</color>");
+        AddMessage($"{L("chat_me")} <color=#FFFFFF>{filtered}</color>");
 
-        // 커맨드 / 이스터에그 처리
+        if (filtered != trimmed)
+            AddMessage(L("chat_profanity"));
+
         ProcessChatCommand(trimmed);
     }
-
+    
     // ── 욕설 필터 ─────────────────────────────────────────────────────────────
-    /// <summary>
-    /// 등록된 욕설을 '첫 글자 + *' 형태로 치환합니다. (대소문자 유지)
-    /// 예: "FUCK" → "F***", "Sex" → "S**"
-    /// </summary>
     private static string ApplyProfanityFilter(string text)
     {
         foreach (string word in ProfanityList)
@@ -216,9 +197,6 @@ public class ChatPanel : MonoBehaviour
     }
 
     // ── 커맨드 처리 ───────────────────────────────────────────────────────────
-    /// <summary>
-    /// 입력 문자열에서 가장 앞에 등장하는 키워드의 커맨드를 실행합니다.
-    /// </summary>
     private void ProcessChatCommand(string original)
     {
         string lower   = original.ToLower();
@@ -243,8 +221,8 @@ public class ChatPanel : MonoBehaviour
 
         ChatCommand cmd = _chatCommands[bestIdx];
 
-        if (!string.IsNullOrEmpty(cmd.EasterEgg))
-            AddMessage(cmd.EasterEgg);
+        if (!string.IsNullOrEmpty(cmd.EasterEggKey))
+            AddMessage(L(cmd.EasterEggKey));
 
         cmd.Effect?.Invoke();
     }
@@ -258,13 +236,13 @@ public class ChatPanel : MonoBehaviour
 
     // ── 게임 이벤트 메시지 ────────────────────────────────────────────────────
     private void OnPlayerDied()
-        => AddMessage("<color=#FF4444>[사망]</color> <color=#FFFFFF>플레이어가 사망했습니다.</color>");
+        => AddMessage(L("chat_died"));
 
     private void OnEnemyDied()
-        => AddMessage("<color=#4488FF>[처치]</color> <color=#FFFFFF>적이 처치됐습니다.</color>");
+        => AddMessage(L("chat_enemy_died"));
 
     private void OnStageRestarted()
-        => AddMessage("<color=#FFDD44>[재시작]</color> <color=#FFFFFF>스테이지가 재시작됐습니다.</color>");
+        => AddMessage(L("chat_restart"));
 
     // ── 메시지 관리 ───────────────────────────────────────────────────────────
     private void AddMessage(string text)
@@ -292,11 +270,10 @@ public class ChatPanel : MonoBehaviour
     private IEnumerator IFadeOut(TextMeshProUGUI msg)
     {
         yield return new WaitForSeconds(1.0f);
-        
+
         msg.DOFade(0f, fadeDuration).OnComplete(() =>
         {
             if (msg != null) Destroy(msg.gameObject);
         });
     }
-    
 }

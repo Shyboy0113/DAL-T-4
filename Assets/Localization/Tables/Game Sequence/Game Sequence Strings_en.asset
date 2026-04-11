@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Game Sequence Strings_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 396019705be8c6c428330b50333cd10c, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 7152205824
+    m_Localized: <color=red>M</color>AP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17168203776
+    m_Localized: '<color=red>ctrl+z</color>
+
+      Undo'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19345047552
+    m_Localized: '<color=red>R</color>E
+
+      START'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21375090688
+    m_Localized: '<color=red>Esc</color>
+
+      Menu'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 785208180736
+    m_Localized: Enter Text...
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

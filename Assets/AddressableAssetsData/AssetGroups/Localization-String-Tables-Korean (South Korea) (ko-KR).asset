@@ -24,8 +24,28 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 330a8fd9a6200894abc6b0149fe298d2
+    m_Address: Game Sequence Strings_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8bb87180b5958de459328d55674aeb20
     m_Address: StageSelect Strings_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a74a47b719c16f14a8f0c90f015eaef9
+    m_Address: Game Menu Strings_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c05f39ef3513ad7418a64d459757baf3
+    m_Address: Game Chat Strings_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR

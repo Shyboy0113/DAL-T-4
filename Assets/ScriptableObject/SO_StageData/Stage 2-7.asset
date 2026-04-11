@@ -27,6 +27,7 @@ MonoBehaviour:
   limitTime: 0
   steamAchievementKey: CLEAR_CH2_ST7
   firstMissionType: 1
-  secondMissionType: 0
-  thirdMissionType: 0
-  forbiddenFeature: 0
+  secondMissionType: 6
+  thirdMissionType: 5
+  forbiddenFeature: 3
+  speedRunTime: 0
