@@ -9,6 +9,9 @@ using DG.Tweening;
 [RequireComponent(typeof(RectTransform))]
 public class StageSelectPlayer : MonoBehaviour
 {
+    [Header("Offset")]
+    [SerializeField] private float yOffset = 1.0f;
+    
     [Header("Movement")]
     [SerializeField] private float moveTime  = 0.25f;
     [SerializeField] private Ease  moveEase  = Ease.OutSine;
@@ -43,7 +46,7 @@ public class StageSelectPlayer : MonoBehaviour
         if (playSound) PlaySound(moveSound);
 
         RectTr.DOKill();
-        RectTr.DOAnchorPos(GetAnchoredPositionOf(target), moveTime).SetEase(moveEase);
+        RectTr.DOAnchorPos(GetAnchoredPositionOf(target)+ new Vector2(0,yOffset), moveTime).SetEase(moveEase);
     }
 
     /// <summary>
@@ -53,7 +56,7 @@ public class StageSelectPlayer : MonoBehaviour
     {
         if (target == null) return;
         RectTr.DOKill();
-        RectTr.anchoredPosition = GetAnchoredPositionOf(target);
+        RectTr.anchoredPosition = GetAnchoredPositionOf(target) + new Vector2(0, yOffset);
     }
 
     // target의 월드 위치를 이 RectTransform의 부모 기준 로컬 좌표로 변환합니다.
