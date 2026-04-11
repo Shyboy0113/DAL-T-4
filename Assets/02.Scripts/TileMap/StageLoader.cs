@@ -1,9 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[System.Serializable]
+public class ChapterStageList
+{
+    public List<SO_StageData> stages = new List<SO_StageData>();
+}
+
 public class StageLoader : MonoBehaviour
 {
-    [SerializeField] private List<SO_StageData> stageList;
+    [SerializeField] private List<ChapterStageList> chapterList;
     [SerializeField] private Transform mapParent; // Tilemap Grid
 
     [Header("Sub Cameras (RenderTexture)")]
@@ -20,44 +26,40 @@ public class StageLoader : MonoBehaviour
 
     public bool LoadStage(int chapterNum, int stageNum)
     {
-        SO_StageData stageData = stageList.Find(
-            x => x.chapterNum == chapterNum && x.stageNum == stageNum);
+        if (chapterNum < 1 || chapterNum > chapterList.Count) return false;
+        var chapter = chapterList[chapterNum - 1];
+        if (stageNum < 1 || stageNum > chapter.stages.Count) return false;
 
-        if (stageData != null)
+        SO_StageData stageData = chapter.stages[stageNum - 1];
+        if (stageData == null) return false;
+
+        // 1. 기존 스테이지 제거
+        if (_currentStageObject != null)
         {
-            // 1. 기존 스테이지 제거
-            if (_currentStageObject != null)
-            {
-                // Destroy는 프레임 끝에 처리되어 SpawnEnemies 실행 시
-                // 구 스테이지 타일이 씬에 남아 spawn 포인트가 중복 계산되는 버그 방지
-                DestroyImmediate(_currentStageObject);
-            }
-            
-            _currentStageObject = Instantiate(stageData.stagePrefab, mapParent);
-            
-            var mapManager = FindObjectOfType<MapManager>();
-            if (mapManager != null)
-            {
-                mapManager.InitializeNewStage(_currentStageObject);
-            }
-            
-            CenterCamerasOnTiles();
-            
-            secondMapScreenPanel?.Refresh();
-
-            if (SoundManager.Instance != null)
-            {
-                SoundManager.Instance.RenewalBGM(stageData.bgmClip, stageData.stageName);
-            }
-            
-            GameManager.Instance.InitStageData(chapterNum, stageNum, stageData);
-
-            // 분석 세션 시작 (StageRecorder가 수신)
-            GameEvents.RaiseStageRecordStarted(chapterNum, stageNum);
-
-            return true; //로드 성공
+            // Destroy는 프레임 끝에 처리되어 SpawnEnemies 실행 시
+            // 구 스테이지 타일이 씬에 남아 spawn 포인트가 중복 계산되는 버그 방지
+            DestroyImmediate(_currentStageObject);
         }
-        return false;
+
+        _currentStageObject = Instantiate(stageData.stagePrefab, mapParent);
+
+        var mapManager = FindObjectOfType<MapManager>();
+        if (mapManager != null)
+            mapManager.InitializeNewStage(_currentStageObject);
+
+        CenterCamerasOnTiles();
+
+        secondMapScreenPanel?.Refresh();
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.RenewalBGM(stageData.bgmClip, stageData.stageName);
+
+        GameManager.Instance.InitStageData(chapterNum, stageNum, stageData);
+
+        // 분석 세션 시작 (StageRecorder가 수신)
+        GameEvents.RaiseStageRecordStarted(chapterNum, stageNum);
+
+        return true;
     }
 
     private void CenterCamerasOnTiles()

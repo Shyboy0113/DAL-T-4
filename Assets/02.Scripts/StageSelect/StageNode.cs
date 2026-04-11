@@ -27,6 +27,11 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     [SerializeField] private GameObject clearEffectObject;
     [SerializeField] private GameObject lockedOverlay;
 
+    [Header("Stars")]
+    [SerializeField] private GameObject star1;
+    [SerializeField] private GameObject star2;
+    [SerializeField] private GameObject star3;
+
     [Header("Info Panel Offset")]
     [SerializeField] private Vector2 panelOffset;
 
@@ -39,6 +44,9 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     private Vector3           _originScale;
     private StageSelectPlayer _selectPlayer;
     private Button            _button;
+    private bool              _isPanelOpen;
+
+    public bool IsPanelOpen => _isPanelOpen;
 
     public NodeState CurrentState => _state;
 
@@ -82,6 +90,29 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
         if (availableObject != null) availableObject.SetActive(_state == NodeState.Available);
         if (lockedOverlay    != null) lockedOverlay.SetActive(_state == NodeState.Locked);
         if (clearEffectObject != null) clearEffectObject.SetActive(_state == NodeState.Cleared);
+
+        RefreshStars();
+    }
+
+    private void RefreshStars()
+    {
+        int cleared = 0;
+
+        if (stageData != null)
+        {
+            var jdm      = GameManager.Instance?.jsonDataManager;
+            var progress = jdm?.GetStageData(stageData.chapterNum, stageData.stageNum);
+            if (progress != null)
+            {
+                if (progress.isFirstMissionCleared)  cleared++;
+                if (progress.isSecondMissionCleared) cleared++;
+                if (progress.isThirdMissionCleared)  cleared++;
+            }
+        }
+
+        if (star1 != null) star1.SetActive(cleared >= 1);
+        if (star2 != null) star2.SetActive(cleared >= 2);
+        if (star3 != null) star3.SetActive(cleared >= 3);
     }
 
     public bool CanEnter() => _state != NodeState.Locked;
@@ -90,33 +121,51 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     public void OnSelect(BaseEventData eventData)
     {
-        // 플레이어 캐릭터를 이 노드 위치로 이동
+        // 플레이어 캐릭터를 이 노드 위치로 이동 (패널은 스페이스바 입력 시 표시)
         _selectPlayer?.MoveTo(GetComponent<RectTransform>());
-
-        // 정보 패널 갱신
-        infoPanel?.Show(this, GetComponent<RectTransform>(), panelOffset);
-
-        // 선택 강조 애니메이션
-        infoPanel?.transform.DOKill();
-        if(infoPanel != null) infoPanel.transform.localScale = _originScale* 4;
-        infoPanel?.transform.DOPunchScale(Vector3.one * 0.2f, 0.25f, 6, 0.5f);
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         transform.DOKill();
         transform.localScale = _originScale;
+        ClosePanel();
+    }
+
+    /// <summary>열려 있는 패널을 닫습니다. Esc 입력 시 StageSelectManagement에서도 호출합니다.</summary>
+    public void ClosePanel()
+    {
+        if (!_isPanelOpen) return;
         infoPanel?.Hide();
+        _isPanelOpen = false;
     }
 
     // ── 진입 확인 ────────────────────────────────────────────────────
 
-    /// <summary>Enter/Space(Button.onClick) 또는 F4(StageSelectManagement) 입력 시 호출됩니다.</summary>
+    /// <summary>
+    /// Space/Enter(Button.onClick) 입력 시 호출됩니다.
+    /// 패널이 닫혀 있으면 패널을 열고, 열려 있으면 스테이지로 진입합니다.
+    /// </summary>
     public void Confirm()
     {
         if (!CanEnter()) return;
-        _selectPlayer?.PlayEnterSound();
-        OnConfirmed?.Invoke(this);
+
+        if (!_isPanelOpen)
+        {
+            infoPanel?.Show(this, GetComponent<RectTransform>(), panelOffset);
+            if (infoPanel != null)
+            {
+                infoPanel.transform.DOKill();
+                infoPanel.transform.localScale = _originScale * 4;
+                infoPanel.transform.DOPunchScale(Vector3.one * 0.2f, 0.25f, 6, 0.5f);
+            }
+            _isPanelOpen = true;
+        }
+        else
+        {
+            _selectPlayer?.PlayEnterSound();
+            OnConfirmed?.Invoke(this);
+        }
     }
 
     // ── 상태 계산 ────────────────────────────────────────────────────

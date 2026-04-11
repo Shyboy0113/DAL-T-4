@@ -4536,14 +4536,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f97f42b438d1ca244bdb83c711397a31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageList:
-  - {fileID: 11400000, guid: 729f1526a1e3e2d48832fe9f25a761a4, type: 2}
-  - {fileID: 11400000, guid: 36dd54eb78ecabd4b8cd8b3dcc524013, type: 2}
-  - {fileID: 11400000, guid: a285de3b37df96b4aa76d091f93f1e60, type: 2}
-  - {fileID: 11400000, guid: 0d9469f7045795f489517ef32721c5b1, type: 2}
-  - {fileID: 11400000, guid: 23afbba8b0d2cef45bdd2eef202871c1, type: 2}
-  - {fileID: 11400000, guid: bc675214d297dbe49acc131f7eb32307, type: 2}
-  - {fileID: 11400000, guid: 89b68d8bbe4749f418aa6a9f505eca1a, type: 2}
+  chapterList:
+  - stages:
+    - {fileID: 11400000, guid: 729f1526a1e3e2d48832fe9f25a761a4, type: 2}
+    - {fileID: 11400000, guid: 36dd54eb78ecabd4b8cd8b3dcc524013, type: 2}
+    - {fileID: 11400000, guid: a285de3b37df96b4aa76d091f93f1e60, type: 2}
+    - {fileID: 11400000, guid: 0d9469f7045795f489517ef32721c5b1, type: 2}
+    - {fileID: 11400000, guid: 23afbba8b0d2cef45bdd2eef202871c1, type: 2}
+    - {fileID: 11400000, guid: bc675214d297dbe49acc131f7eb32307, type: 2}
+    - {fileID: 11400000, guid: 89b68d8bbe4749f418aa6a9f505eca1a, type: 2}
+    - {fileID: 11400000, guid: d7afef848eaaaa44d9cc61209e712368, type: 2}
+    - {fileID: 11400000, guid: a14a4e271feedd443ac4249df8c8d696, type: 2}
+    - {fileID: 11400000, guid: 799fa0f135434574ebe25d414ffe87f4, type: 2}
+    - {fileID: 11400000, guid: 002cfbb020a681d40af60a69c707da07, type: 2}
+    - {fileID: 11400000, guid: 18ef93386e7bdb042ad5489bf6083425, type: 2}
+    - {fileID: 11400000, guid: 752a71137d5e3034ca7582870cc67a5f, type: 2}
+    - {fileID: 11400000, guid: b16b1d4165c6ebf4e85389339dc3b4e2, type: 2}
+    - {fileID: 11400000, guid: d354dd7058b7c4c45b6a4e706434676a, type: 2}
+  - stages:
+    - {fileID: 11400000, guid: 07a802e00581023468b39afb9517b420, type: 2}
+    - {fileID: 11400000, guid: 018ede0f71f9a7d4b836a9b756dfd9fc, type: 2}
+    - {fileID: 11400000, guid: 98c5bcd2e36dd4f44b1b153c4e02e238, type: 2}
+    - {fileID: 11400000, guid: 6069d5b86ec19f44f94cbd76c444339a, type: 2}
+    - {fileID: 11400000, guid: 6e9673c3a463edd45a54d4393fbe5034, type: 2}
+    - {fileID: 11400000, guid: 80e357d39a1066f4b9f289b6a42dcc21, type: 2}
+    - {fileID: 11400000, guid: 5013c28ae5a89694db77ab287b42ea8b, type: 2}
+    - {fileID: 11400000, guid: 3754e62888e260343b21dd5beb289093, type: 2}
+    - {fileID: 11400000, guid: 9d5fd0105d15f5241866bcf3477018b5, type: 2}
+    - {fileID: 11400000, guid: c0a9f080ca4f17649b53842fa00ac8d7, type: 2}
+    - {fileID: 11400000, guid: 9d2db11504d924b4f8f9ba4d7e575ba7, type: 2}
+    - {fileID: 11400000, guid: 7946e50fac4cb334388521e4533b83c7, type: 2}
+    - {fileID: 11400000, guid: 3a905c5db25586547a58ef91be1a6eb9, type: 2}
+    - {fileID: 11400000, guid: eeb3451e18d3bcb499aeb30fd1c1eace, type: 2}
+    - {fileID: 11400000, guid: 8cf6c7fd9e71a1f49a88dd544201a717, type: 2}
+  - stages:
+    - {fileID: 11400000, guid: ac18a0c726757414ca9556c9258938f9, type: 2}
+    - {fileID: 11400000, guid: dc158a36451f00841a720214010288fe, type: 2}
+    - {fileID: 11400000, guid: 07f6901060bda5e4f94b51cece965950, type: 2}
+    - {fileID: 11400000, guid: 2f3fb24b87e17f9489a3b421f161892d, type: 2}
+    - {fileID: 11400000, guid: 9b2ec6dfcc614b74fa501aa42ce34828, type: 2}
+    - {fileID: 11400000, guid: e7c5186724fe834418d932bb08625d44, type: 2}
+    - {fileID: 11400000, guid: 4bc37f5654ca46f45a2903bcdc015b78, type: 2}
+    - {fileID: 11400000, guid: b7eb5ea7f2cca234ea8ce0e25bb772da, type: 2}
+    - {fileID: 11400000, guid: f79a9e955a9e48b48b5502b72d6ce811, type: 2}
+    - {fileID: 11400000, guid: aea9ca5297d48ff47b52f4c99aae55fb, type: 2}
+    - {fileID: 11400000, guid: 7c1a621520618974e97895ba9ca186da, type: 2}
+    - {fileID: 11400000, guid: b2cd66da5feb5d1468bcb118cb90ac3b, type: 2}
+    - {fileID: 11400000, guid: 7834f64e8a401f04f924a895362c0f56, type: 2}
+    - {fileID: 11400000, guid: 74f42bd205ef97643a26897406244866, type: 2}
+    - {fileID: 11400000, guid: 1e71346c0292a9740a00bae18a5c9bd8, type: 2}
+  - stages:
+    - {fileID: 11400000, guid: 9b10ecfd61f95c147b640453391de338, type: 2}
+    - {fileID: 11400000, guid: 07fe5e06c209fbf41b053c1506f69cf8, type: 2}
+    - {fileID: 11400000, guid: 241509259c84c604d9a48bc7342c7135, type: 2}
+    - {fileID: 11400000, guid: 11be9a9fd732c3d4a9bdd1df499161ad, type: 2}
+    - {fileID: 11400000, guid: 6d25c2a259cf744489b57918791aede9, type: 2}
+    - {fileID: 11400000, guid: a23a6d5a776af2446ae040f145a9faa8, type: 2}
+    - {fileID: 11400000, guid: b2a83584ddd462944b6e545502c0563d, type: 2}
+    - {fileID: 11400000, guid: 34c036eb97e91a3468164b635b7ff9cd, type: 2}
+    - {fileID: 11400000, guid: 866e2929635890a48ba45035f808f5dd, type: 2}
+    - {fileID: 11400000, guid: e96889c63700cf040b3944fce36c77d0, type: 2}
+    - {fileID: 11400000, guid: 582bf736303ed5d439035adfd3ef4e37, type: 2}
+    - {fileID: 11400000, guid: 1149666412158744a90c78d28418884f, type: 2}
+    - {fileID: 11400000, guid: 6602c17e609439744a0371435bd44569, type: 2}
+    - {fileID: 11400000, guid: 4178983a6d161384e8f1dfcd4cfa6a4d, type: 2}
+    - {fileID: 11400000, guid: 7d2bf6862dc68d443929c5bf4699eaa1, type: 2}
   mapParent: {fileID: 646907079}
   map1Camera: {fileID: 1139805366}
   map2Camera: {fileID: 987032174}
@@ -12919,7 +12976,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1812244042
 RectTransform:
   m_ObjectHideFlags: 0

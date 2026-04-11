@@ -86,7 +86,14 @@ public class StageSelectManagement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E)) TrySwitchChapter(+1);
 
         if (Input.GetKeyDown(KeyCode.Escape))
-            ReturnToMenu();
+        {
+            // 패널이 열려 있으면 패널만 닫고, 닫혀 있으면 메뉴로 복귀
+            var selectedNode = EventSystem.current.currentSelectedGameObject?.GetComponent<StageNode>();
+            if (selectedNode != null && selectedNode.IsPanelOpen)
+                selectedNode.ClosePanel();
+            else
+                ReturnToMenu();
+        }
     }
 
     private void OnNodeConfirmed(StageNode node)
