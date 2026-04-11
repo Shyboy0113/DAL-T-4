@@ -1,0 +1,263 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: StageData Strings_ko-KR
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: ko-KR
+  m_SharedData: {fileID: 11400000, guid: aa000000000000000000000000000002, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 3000000000000
+    m_Localized: "F4로 이동해 목적지에 도달하세요. 별도 잊지 말고 챙기세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000001
+    m_Localized: "경로가 꺾여 있습니다. ALT를 세 번 연속으로 눌러 좁은 공간에서 방향을 바꿔보세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000002
+    m_Localized: "ALT를 세 번 연속으로 두 번 사용하면 제자리에서 180도 돌아서는 효과가 납니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000003
+    m_Localized: "두 개의 목적지와 Help 타일이 있습니다. 힌트를 참고해 두 곳 모두 클리어하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000004
+    m_Localized: "Help 타일이 가장 안전한 경로를 가르쳐 줍니다. 힌트를 믿고 목적지까지 나아가세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000005
+    m_Localized: "주의 -- F4 후 ALT 후 F4 순서는 즉사 패턴입니다. 더 안전한 방법을 찾아보세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000006
+    m_Localized: "첫 번째 MoveToggle입니다. 정해진 횟수만큼 이동하면 길이 열립니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000007
+    m_Localized: "두 목적지와 MoveToggle. 이동 횟수를 신중하게 계산하세요. 초과하면 길이 닫힙니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000008
+    m_Localized: "MoveToggle과 RotateToggle이 함께 등장합니다. 각각 서로 다른 행동을 카운팅합니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000009
+    m_Localized: "RotateToggle만이 출구를 지킵니다. 회전할 때마다 카운트가 줄어드니 신중히 선택하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000010
+    m_Localized: "ActionToggle은 이동과 회전을 합산합니다. 카운트가 소진되기 전에 두 목적지를 모두 클리어하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000011
+    m_Localized: "두 Help 타일이 RotateToggle과 ActionToggle을 안전하게 통과하는 방법을 알려줍니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000012
+    m_Localized: "두 목적지, 두 토글, 두 힌트. 도전 순서가 생존 여부를 결정합니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000013
+    m_Localized: "세 개의 힌트와 세 종류의 토글. 진짜 위협이 무엇인지 파악한 뒤 경로를 계획하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000014
+    m_Localized: "세 개의 RotateToggle이 두 목적지를 가로막습니다. 힌트 타일이 정확한 키 시퀀스를 알려줍니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000100
+    m_Localized: "얼음 타일에서는 미끄러집니다. Stop 타일로 적절한 위치에서 멈추는 방법을 익히세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000101
+    m_Localized: "얼음과 ActionToggle이 함께 있습니다. 슬라이딩도 이동 카운트에 포함됩니다. 미끄러지기 전에 계획하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000102
+    m_Localized: "텔레포트 타일을 밟으면 순식간에 이동합니다. 어디에 나타나는지 파악하는 것이 핵심입니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000103
+    m_Localized: "두 MoveToggle과 텔레포트. 워프를 활용해 토글이 막는 구역을 우회하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000104
+    m_Localized: "텔레포트에서 나오면 얼음 위를 미끄러집니다. 올바른 방향으로 미끄러져 목적지에 도달하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000105
+    m_Localized: "여섯 개의 Breakable 타일이 밟을 때마다 부서집니다. 순서를 신중하게 선택하세요. 되돌릴 수 없습니다."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000106
+    m_Localized: "텔레포트, Breakable, MoveToggle이 뒤섞여 있습니다. 꼭 필요한 순간에만 Breakable을 밟으세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000107
+    m_Localized: "얼음, 텔레포트, Breakable, MoveToggle이 모두 등장합니다. 얼음의 관성을 텔레포트로 이어보세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000108
+    m_Localized: "네 Breakable, 두 MoveToggle, 하나의 Help. 힌트에는 이유가 있습니다. 먼저 읽으세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000109
+    m_Localized: "회전 타일을 밟으면 맵 전체가 90도 돌아갑니다. 목적지도 같이 움직이니 빠르게 재파악하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000110
+    m_Localized: "네 방향의 회전 타일과 RotateToggle. 두 목적지에 도달할 회전 방향을 파악하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000111
+    m_Localized: "CW180과 CCW180이 맵을 완전히 뒤집습니다. 세계가 180도 반전되는 순간을 준비하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000112
+    m_Localized: "네 개의 CW90 회전 타일이 연속 발동될 수 있습니다. 어느 타일을 밟고 피할지 계산하세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000113
+    m_Localized: "토글들과 맵 회전이 모든 입력에 반응합니다. 움직이기 전에 세 수 앞을 내다보세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000114
+    m_Localized: "네 텔레포트와 네 회전이 만든 대규모 미로. 텔레포트로 원치 않는 회전을 건너뛰세요."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000200
+    m_Localized: "[3-1 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000201
+    m_Localized: "[3-2 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000202
+    m_Localized: "[3-3 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000203
+    m_Localized: "[3-4 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000204
+    m_Localized: "[3-5 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000205
+    m_Localized: "[3-6 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000206
+    m_Localized: "[3-7 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000207
+    m_Localized: "[3-8 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000208
+    m_Localized: "[3-9 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000209
+    m_Localized: "[3-10 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000210
+    m_Localized: "[3-11 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000211
+    m_Localized: "[3-12 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000212
+    m_Localized: "[3-13 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000213
+    m_Localized: "[3-14 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000214
+    m_Localized: "[3-15 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000300
+    m_Localized: "[4-1 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000301
+    m_Localized: "[4-2 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000302
+    m_Localized: "[4-3 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000303
+    m_Localized: "[4-4 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000304
+    m_Localized: "[4-5 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000305
+    m_Localized: "[4-6 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000306
+    m_Localized: "[4-7 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000307
+    m_Localized: "[4-8 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000308
+    m_Localized: "[4-9 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000309
+    m_Localized: "[4-10 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000310
+    m_Localized: "[4-11 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000311
+    m_Localized: "[4-12 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000312
+    m_Localized: "[4-13 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000313
+    m_Localized: "[4-14 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000314
+    m_Localized: "[4-15 스테이지 설명]"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

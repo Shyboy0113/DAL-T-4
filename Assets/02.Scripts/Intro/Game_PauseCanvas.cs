@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Eflatun.SceneReference;
@@ -9,20 +10,29 @@ public class Game_PauseCanvas : MonoBehaviour
     [SerializeField] private SceneReference introScene; // Title button
     
     [SerializeField] private CanvasEventSystemFocusKeeper sequenceFocusKeeper;
-    
+    [SerializeField] private StageInfoPanel stageInfoPanel;
+
     public SO_UIEvent optionEvent;
     
     [SerializeField] private GameObject firstSelectedButton;
     
     private GameObject _lastSelectedGameObject;
-
+    
     private void OnEnable()
     {
         optionEvent.OnActiveToggle.AddListener(OnOptionToggle);
-        
+
         // Pause Panel이 열릴 때마다 항상 Resume 버튼으로 포커스
         if (firstSelectedButton != null && EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(firstSelectedButton);
+
+        // 현재 스테이지 정보를 왼쪽 패널에 표시
+        stageInfoPanel?.ShowFromData(GameManager.Instance?.currentStageData);
+    }
+
+    private void Start()
+    {
+        gameObject.SetActive(false);
     }
 
     private void OnDisable()

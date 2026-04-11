@@ -53,7 +53,6 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     private void Awake()
     {
         _originScale  = transform.localScale;
-        infoPanel.gameObject.SetActive(false);
         _selectPlayer = FindObjectOfType<StageSelectPlayer>();
         _button       = GetComponent<Button>();
 

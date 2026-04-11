@@ -39,6 +39,30 @@ MonoBehaviour:
     m_Key: Reset Panel No_Button
     m_Metadata:
       m_Items: []
+  - m_Id: 1000000000000
+    m_Key: Mission_StageClear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000001000
+    m_Key: Mission_TimeLimit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000002000
+    m_Key: Mission_MoveCountLimit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000003000
+    m_Key: Mission_KillAllEnemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000004000
+    m_Key: Mission_CollectStar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000005000
+    m_Key: Mission_NoSpecificFeature
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -1,0 +1,268 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: StageData Strings Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: StageData Strings
+  m_TableCollectionNameGuidString: aa000000000000000000000000000002
+  m_Entries:
+  - m_Id: 3000000000000
+    m_Key: Stage_1-1_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000001
+    m_Key: Stage_1-2_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000002
+    m_Key: Stage_1-3_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000003
+    m_Key: Stage_1-4_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000004
+    m_Key: Stage_1-5_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000005
+    m_Key: Stage_1-6_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000006
+    m_Key: Stage_1-7_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000007
+    m_Key: Stage_1-8_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000008
+    m_Key: Stage_1-9_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000009
+    m_Key: Stage_1-10_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000010
+    m_Key: Stage_1-11_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000011
+    m_Key: Stage_1-12_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000012
+    m_Key: Stage_1-13_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000013
+    m_Key: Stage_1-14_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000014
+    m_Key: Stage_1-15_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000100
+    m_Key: Stage_2-1_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000101
+    m_Key: Stage_2-2_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000102
+    m_Key: Stage_2-3_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000103
+    m_Key: Stage_2-4_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000104
+    m_Key: Stage_2-5_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000105
+    m_Key: Stage_2-6_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000106
+    m_Key: Stage_2-7_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000107
+    m_Key: Stage_2-8_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000108
+    m_Key: Stage_2-9_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000109
+    m_Key: Stage_2-10_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000110
+    m_Key: Stage_2-11_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000111
+    m_Key: Stage_2-12_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000112
+    m_Key: Stage_2-13_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000113
+    m_Key: Stage_2-14_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000114
+    m_Key: Stage_2-15_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000200
+    m_Key: Stage_3-1_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000201
+    m_Key: Stage_3-2_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000202
+    m_Key: Stage_3-3_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000203
+    m_Key: Stage_3-4_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000204
+    m_Key: Stage_3-5_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000205
+    m_Key: Stage_3-6_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000206
+    m_Key: Stage_3-7_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000207
+    m_Key: Stage_3-8_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000208
+    m_Key: Stage_3-9_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000209
+    m_Key: Stage_3-10_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000210
+    m_Key: Stage_3-11_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000211
+    m_Key: Stage_3-12_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000212
+    m_Key: Stage_3-13_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000213
+    m_Key: Stage_3-14_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000214
+    m_Key: Stage_3-15_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000300
+    m_Key: Stage_4-1_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000301
+    m_Key: Stage_4-2_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000302
+    m_Key: Stage_4-3_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000303
+    m_Key: Stage_4-4_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000304
+    m_Key: Stage_4-5_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000305
+    m_Key: Stage_4-6_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000306
+    m_Key: Stage_4-7_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000307
+    m_Key: Stage_4-8_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000308
+    m_Key: Stage_4-9_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000309
+    m_Key: Stage_4-10_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000310
+    m_Key: Stage_4-11_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000311
+    m_Key: Stage_4-12_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000312
+    m_Key: Stage_4-13_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000313
+    m_Key: Stage_4-14_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000314
+    m_Key: Stage_4-15_Desc
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3000000000000000001
+  references:
+    version: 2
+    RefIds:
+    - rid: 3000000000000000001
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1775894433139

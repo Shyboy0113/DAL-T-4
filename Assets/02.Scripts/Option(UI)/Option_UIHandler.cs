@@ -100,6 +100,10 @@ public class Option_UIHandler : MonoBehaviour
         {
             panel.SetActive(active);
             GameManager.Instance.isOption = active;
+
+            // 패널이 열릴 때 현재 언어를 저장 (Option_Language가 패널 바깥에 있는 씬 대응)
+            if (active && language != null)
+                language.CaptureOriginalLocale();
         }
     }
 }

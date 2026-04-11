@@ -19,7 +19,8 @@ public enum ForbiddenFeature { None, ALT, F4, TAB }
 public class SO_StageData : ScriptableObject
 {
     [Header("기본 정보")]
-    public string stageDescription;
+    // stageDescription은 로컬라이제이션으로 이전됨
+    // 키: "StageData Strings" 테이블의 "Stage_{chapterNum}-{stageNum}_Desc"
     public GameObject stagePrefab;
     public AudioClip bgmClip;
     

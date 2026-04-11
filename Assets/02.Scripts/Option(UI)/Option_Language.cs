@@ -16,6 +16,12 @@ public class Option_Language : MonoBehaviour
 
     private void OnEnable()
     {
+        CaptureOriginalLocale();
+    }
+
+    /// <summary>옵션 패널이 열릴 때 현재 언어를 저장합니다. 패널이 항상 활성 상태인 씬에서 명시적으로 호출하세요.</summary>
+    public void CaptureOriginalLocale()
+    {
         _originalLocale = LocalizationSettings.SelectedLocale;
     }
 

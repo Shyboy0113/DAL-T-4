@@ -1,0 +1,263 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: StageData Strings_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: aa000000000000000000000000000002, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 3000000000000
+    m_Localized: "Move with [F4] and reach the goal. A star awaits you along the way."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000001
+    m_Localized: "The path turns ahead. Try pressing ALT three times to spin around in a tight spot."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000002
+    m_Localized: "ALT x3 twice equals a 180 degree spin in place. Apply it twice to make a full about-face."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000003
+    m_Localized: "Two goals and a Help tile to guide you. Clear both destinations to finish the stage."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000004
+    m_Localized: "A Help tile shows you the safest approach. Trust the hint and follow it to the goal."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000005
+    m_Localized: "Beware -- F4 then ALT then F4 is an instant-kill sequence. Find the safe route instead."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000006
+    m_Localized: "Your first MoveToggle. Move the exact required number of times and the path will open."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000007
+    m_Localized: "Two goals and a MoveToggle. Count your steps carefully -- overshoot and the door slams shut."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000008
+    m_Localized: "A MoveToggle and a RotateToggle on the same stage. Each tile tracks a different action."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000009
+    m_Localized: "Only a RotateToggle guards the exit. Every rotation eats into the count -- rotate wisely."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000010
+    m_Localized: "ActionToggle tallies every move and every rotation. Reach both goals before the count runs dry."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000011
+    m_Localized: "Two Help tiles hint at the path through RotateToggle and ActionToggle. Going straight wastes your count."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000012
+    m_Localized: "Two goals, two Toggles, two hints. The order you tackle them determines whether you survive."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000013
+    m_Localized: "Three hints and three types of Toggle. Identify the real threat and plan your route before moving."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000014
+    m_Localized: "Three RotateToggles block the way to two goals. The hint tiles reveal the exact key sequence."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000100
+    m_Localized: "Ice tiles make you slide -- Stop tiles break your momentum. Learn to land on the right spot."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000101
+    m_Localized: "Ice and ActionToggle share the floor. Every slide counts as movement -- plan before you slip."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000102
+    m_Localized: "Step on the Teleport tile and vanish in an instant. Figure out where you will reappear."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000103
+    m_Localized: "Two MoveToggles and a Teleport. Use the warp to reach areas the toggles would otherwise block."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000104
+    m_Localized: "Teleport into Ice and slide to unexpected places. Aim your slide into the right teleport exit."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000105
+    m_Localized: "Six Breakable tiles crumble after being stepped on. Choose the order carefully -- there is no going back."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000106
+    m_Localized: "Teleport, Breakable tiles, and a MoveToggle. Step on Breakable tiles only when the timing is right."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000107
+    m_Localized: "Ice, Teleport, Breakable, and MoveToggle all at once. Ride the ice momentum straight into the teleport."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000108
+    m_Localized: "Four Breakable tiles, two MoveToggles, and a Help tile. The hint exists for a reason -- read it first."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000109
+    m_Localized: "Stepping on a rotation tile spins the entire map 90 degrees. The goal moved too -- reorient fast."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000110
+    m_Localized: "Four rotation directions and a RotateToggle. Know which spin leads to both goals."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000111
+    m_Localized: "CW180 and CCW180 flip the map completely. Prepare for the world to turn upside down."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000112
+    m_Localized: "Four CW90 tiles can chain into a full loop. Know exactly which one to step on and which to skip."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000113
+    m_Localized: "Toggles and map rotations react to every single input. Think three steps ahead before you move."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000114
+    m_Localized: "Four Teleports and four rotations: a full-scale labyrinth. Use teleportation to bypass unwanted spins."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000200
+    m_Localized: "[Stage 3-1 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000201
+    m_Localized: "[Stage 3-2 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000202
+    m_Localized: "[Stage 3-3 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000203
+    m_Localized: "[Stage 3-4 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000204
+    m_Localized: "[Stage 3-5 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000205
+    m_Localized: "[Stage 3-6 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000206
+    m_Localized: "[Stage 3-7 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000207
+    m_Localized: "[Stage 3-8 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000208
+    m_Localized: "[Stage 3-9 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000209
+    m_Localized: "[Stage 3-10 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000210
+    m_Localized: "[Stage 3-11 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000211
+    m_Localized: "[Stage 3-12 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000212
+    m_Localized: "[Stage 3-13 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000213
+    m_Localized: "[Stage 3-14 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000214
+    m_Localized: "[Stage 3-15 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000300
+    m_Localized: "[Stage 4-1 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000301
+    m_Localized: "[Stage 4-2 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000302
+    m_Localized: "[Stage 4-3 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000303
+    m_Localized: "[Stage 4-4 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000304
+    m_Localized: "[Stage 4-5 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000305
+    m_Localized: "[Stage 4-6 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000306
+    m_Localized: "[Stage 4-7 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000307
+    m_Localized: "[Stage 4-8 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000308
+    m_Localized: "[Stage 4-9 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000309
+    m_Localized: "[Stage 4-10 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000310
+    m_Localized: "[Stage 4-11 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000311
+    m_Localized: "[Stage 4-12 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000312
+    m_Localized: "[Stage 4-13 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000313
+    m_Localized: "[Stage 4-14 Description]"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3000000000314
+    m_Localized: "[Stage 4-15 Description]"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

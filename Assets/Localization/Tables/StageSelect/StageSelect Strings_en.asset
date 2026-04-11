@@ -42,6 +42,30 @@ MonoBehaviour:
     m_Localized: Reset all save data?
     m_Metadata:
       m_Items: []
+  - m_Id: 1000000000000
+    m_Localized: Stage Clear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000001000
+    m_Localized: Clear within Time Limit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000002000
+    m_Localized: Clear with Minimum Input
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000003000
+    m_Localized: Defeat All Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000004000
+    m_Localized: Collect Star
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000005000
+    m_Localized: Clear without Specific Feature
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

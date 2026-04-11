@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 [System.Serializable]
 public class ChapterStageList
@@ -23,6 +24,8 @@ public class StageLoader : MonoBehaviour
     [SerializeField] private SecondMapScreenPanel secondMapScreenPanel;
 
     private GameObject _currentStageObject;
+
+    [SerializeField] private TMP_Text stageText;
 
     public bool LoadStage(int chapterNum, int stageNum)
     {
@@ -59,6 +62,8 @@ public class StageLoader : MonoBehaviour
         // 분석 세션 시작 (StageRecorder가 수신)
         GameEvents.RaiseStageRecordStarted(chapterNum, stageNum);
 
+        stageText.text = $"{stageData.chapterNum}-{stageData.stageNum}";
+        
         return true;
     }
 
