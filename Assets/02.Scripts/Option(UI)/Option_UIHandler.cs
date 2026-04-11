@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 public class Option_UIHandler : MonoBehaviour 
@@ -7,7 +5,8 @@ public class Option_UIHandler : MonoBehaviour
     public SO_UIEvent optionEvent;
     public GameObject panel; // 옵션 UI 패널
 
-    public Option_ResolutionUI resolutionUI;
+    public Option_Resolution resolution;
+    public Option_Language language;
     
     private void Awake()
     {
@@ -45,11 +44,16 @@ public class Option_UIHandler : MonoBehaviour
         {
             if (GameManager.Instance.isOption)
             {
-                if (resolutionUI != null)
+                if (resolution != null)
                 {
-                    resolutionUI.CancelChange();
+                    resolution.CancelChange();
                 }
-                
+
+                if (language != null)
+                {
+                    language.CancelChange();
+                }
+
                 optionEvent.Raise(false);
             }
         }
@@ -59,18 +63,32 @@ public class Option_UIHandler : MonoBehaviour
     // OK 버튼의 OnClick에 연결
     public void OnOKButtonClicked()
     {
-        if (resolutionUI != null)
-            resolutionUI.ApplyAndClose();
-        
+        if (resolution != null)
+        {
+            resolution.ApplyAndClose();
+        }
+
+        if (language != null)
+        {
+            language.ApplyAndClose();
+        }
+
         optionEvent.Raise(false);
     }
 
     // Cancel 버튼의 OnClick에 연결
     public void OnCancelButtonClicked()
     {
-        if (resolutionUI != null)
-            resolutionUI.CancelChange();
-        
+        if (resolution != null)
+        {
+            resolution.CancelChange();
+        }
+
+        if (language != null)
+        {
+            language.CancelChange();
+        }
+
         optionEvent.Raise(false);
     }
 

@@ -9,7 +9,7 @@ public static class SceneLoader
     {
         // 언로드할 씬을 미리 저장
         Scene previousScene = SceneManager.GetActiveScene();
-
+        
         var op = SceneManager.LoadSceneAsync(sceneRef.Name, LoadSceneMode.Additive);
         yield return new WaitUntil(() => op.isDone);
 

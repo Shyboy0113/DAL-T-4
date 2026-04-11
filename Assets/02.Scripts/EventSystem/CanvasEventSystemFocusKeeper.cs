@@ -1,53 +1,63 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CanvasEventSystemFocusKeeper : MonoBehaviour
 {
-    [Tooltip("이 메뉴가 켜졌을 때 가장 먼저 선택될 UI 오브젝트")]
     public GameObject firstSelectedObject;
-
     [SerializeField] private GameObject _lastSelectedObject;
+    [SerializeField] private GameObject resolutionDropdown;
+    [SerializeField] private GameObject languageDropdown;
 
-    [SerializeField] private GameObject ResolutionDropdown;
     private bool _dropdownOpened = false;
-    
+
+    private static readonly List<CanvasEventSystemFocusKeeper> _stack = new();
+
+    private bool IsTop => _stack.Count > 0 && _stack[^1] == this;
+
     void OnEnable()
     {
-        // 나 외의 다른 FocusKeeper를 전부 끈다
-        var all = FindObjectsByType<CanvasEventSystemFocusKeeper>(FindObjectsSortMode.None);
-        foreach (var other in all)
-        {
-            if (other != this)
-                other.enabled = false;
-        }
+        _stack.Remove(this);
+        _stack.Add(this);
 
-        // 비활성 오브젝트를 선택하면 오작동할 수 있으므로 activeInHierarchy 검사 추가
+        StartCoroutine(SetInitialFocusDeferred());
+        
         if (firstSelectedObject != null && firstSelectedObject.activeInHierarchy && EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(firstSelectedObject);
     }
 
-    // --- 2. 자기가 꺼질 때 다른 FocusKeeper를 다시 켠다 ---
     void OnDisable()
     {
-        var all = FindObjectsByType<CanvasEventSystemFocusKeeper>(FindObjectsSortMode.None);
-        foreach (var other in all)
+        _stack.Remove(this);
+
+        if (_stack.Count > 0)
         {
-            if (other != this)
-                other.enabled = true;
+            var prev = _stack[^1];
+            if (prev._lastSelectedObject != null)
+                EventSystem.current.SetSelectedGameObject(prev._lastSelectedObject);
         }
     }
 
-    // --- 포커스 유지 및 복구 (매 프레임 감시) ---
     void Update()
     {
+        if (!IsTop) return;
+
         GameObject currentSelected = EventSystem.current.currentSelectedGameObject;
 
         if (currentSelected == null)
         {
-            // 포커스가 사라졌을 때 마지막 선택 오브젝트로 복구
-            if (_dropdownOpened && ResolutionDropdown != null)
+            if (_dropdownOpened)
             {
-                EventSystem.current.SetSelectedGameObject(ResolutionDropdown);
+                // 마지막 선택이 어떤 드롭다운이었는지 판별
+                if (resolutionDropdown!=null && _lastSelectedObject == resolutionDropdown)
+                {
+                    EventSystem.current.SetSelectedGameObject(resolutionDropdown);
+                }
+                else if (languageDropdown!=null && _lastSelectedObject == languageDropdown)
+                {
+                    EventSystem.current.SetSelectedGameObject(languageDropdown);
+                }
                 _dropdownOpened = false;
             }
             else if (_lastSelectedObject != null)
@@ -57,21 +67,27 @@ public class CanvasEventSystemFocusKeeper : MonoBehaviour
         }
         else
         {
-            // 자신의 자식 오브젝트일 때만 기록
             if (currentSelected.transform.IsChildOf(transform))
                 _lastSelectedObject = currentSelected;
         }
     }
-    
+
     public void RestoreLastSelected()
     {
         if (_lastSelectedObject != null)
             EventSystem.current.SetSelectedGameObject(_lastSelectedObject);
     }
-    
+
     public void OnDropdownOpened()
     {
         _dropdownOpened = true;
     }
-    
+    private IEnumerator SetInitialFocusDeferred()
+    {
+        yield return null; // 모든 Awake/Start 완료 후
+
+        if (!IsTop) yield break;
+        if (firstSelectedObject != null && firstSelectedObject.activeInHierarchy && EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(firstSelectedObject);
+    }
 }

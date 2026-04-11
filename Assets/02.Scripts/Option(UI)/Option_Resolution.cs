@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Unity.VisualScripting;
 
-public class Option_ResolutionUI : MonoBehaviour
+public class Option_Resolution : MonoBehaviour
 {
     [Header("Resolutions")]
     public TMP_Dropdown resolutionDropdown;

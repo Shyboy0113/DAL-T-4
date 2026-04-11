@@ -19,6 +19,8 @@ public class StageSelectPlayer : MonoBehaviour
     [SerializeField] private AudioClip   enterSound;
 
     private RectTransform _rectTransform;
+    
+    private RectTransform RectTr => _rectTransform ??= GetComponent<RectTransform>();
     private bool          _isLocked = false;
 
     public bool IsLocked => _isLocked;
@@ -40,8 +42,8 @@ public class StageSelectPlayer : MonoBehaviour
 
         if (playSound) PlaySound(moveSound);
 
-        _rectTransform.DOKill();
-        _rectTransform.DOAnchorPos(GetAnchoredPositionOf(target), moveTime).SetEase(moveEase);
+        RectTr.DOKill();
+        RectTr.DOAnchorPos(GetAnchoredPositionOf(target), moveTime).SetEase(moveEase);
     }
 
     /// <summary>
@@ -50,15 +52,15 @@ public class StageSelectPlayer : MonoBehaviour
     public void SnapTo(RectTransform target)
     {
         if (target == null) return;
-        _rectTransform.DOKill();
-        _rectTransform.anchoredPosition = GetAnchoredPositionOf(target);
+        RectTr.DOKill();
+        RectTr.anchoredPosition = GetAnchoredPositionOf(target);
     }
 
     // target의 월드 위치를 이 RectTransform의 부모 기준 로컬 좌표로 변환합니다.
     // 부모가 다른 경우에도 올바르게 동작합니다.
     private Vector2 GetAnchoredPositionOf(RectTransform target)
     {
-        var parentRect = _rectTransform.parent as RectTransform;
+        var parentRect = RectTr.parent as RectTransform;
         if (parentRect == null) return target.anchoredPosition;
 
         // Canvas RenderMode에 따른 카메라 (Overlay = null)

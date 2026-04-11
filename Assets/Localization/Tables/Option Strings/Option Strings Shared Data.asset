@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Option Strings Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Option Strings
+  m_TableCollectionNameGuidString: d59a1e4a424f4ba4f91fedd482e02535
+  m_Entries:
+  - m_Id: 152975572992
+    m_Key: Resolution_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 158105206784
+    m_Key: Full Screen_Toggle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 161976549376
+    m_Key: Language_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 932294033408
+    m_Key: Save_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1172564738048
+    m_Key: OK_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1174385065984
+    m_Key: Cancel_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1683695206400
+    m_Key: Sound_Text
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3442089575760789538
+  references:
+    version: 2
+    RefIds:
+    - rid: 3442089575760789538
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1775891317312
