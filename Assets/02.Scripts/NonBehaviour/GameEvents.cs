@@ -156,5 +156,9 @@ public static class GameEvents
     public static event Action<KeyType> KeyUsed;
     public static void RaiseKeyUsed(KeyType keyType) => KeyUsed?.Invoke(keyType);
 
+    // ALT+TAB으로 맵이 전환될 때 발생 (Undo 제외, 실제 입력만 카운트)
+    public static event Action MapSwitched;
+    public static void RaiseMapSwitched() => MapSwitched?.Invoke();
+
     #endregion
 }

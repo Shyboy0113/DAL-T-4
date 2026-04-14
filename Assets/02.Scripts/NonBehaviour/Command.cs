@@ -160,6 +160,7 @@ public class TileMapChangeCommand : ICommand
     public void Execute()
     {
         GameEvents.RaiseTileMapChanged();
+        GameEvents.RaiseMapSwitched();
     }
 
     public void Undo()

@@ -8,50 +8,79 @@ public class LifetimeAchievemenHandler : MonoBehaviour
     private JsonDataManager _jsonDataManager => GameManager.Instance.jsonDataManager;
 
     // ── 누적 업적 임계치 ──────────────────────────────────────────────
+
+    // ACH_SPIN_100  : 피겨스케이트 유망주
+    // ACH_SPIN_300  : 반고리관 괜찮아요?
+    // ACH_SPIN_500  : 저는 멀미라는 걸 느껴본 적이 없어요
     private static readonly (int threshold, string id)[] AltMilestones =
     {
-        (100,  "ACH_SPIN_100"),
-        (500,  "ACH_SPIN_500"),
-        (1000, "ACH_SPIN_1000")
+        (100, "ACH_SPIN_100"),
+        (300, "ACH_SPIN_300"),
+        (500, "ACH_SPIN_500")
     };
 
+    // ACH_F4_100    : 단세포 마라토너
+    // ACH_F4_500    : 앞만 보고 달린다
+    // ACH_F4_1000   : 전진, 전진! 그리고 또 전진!
     private static readonly (int threshold, string id)[] F4Milestones =
     {
-        (100, "ACH_F4_100"),
-        (500, "ACH_F4_500")
+        (100,  "ACH_F4_100"),
+        (500,  "ACH_F4_500"),
+        (1000, "ACH_F4_1000")
     };
 
+    // ACH_TAB_1     : TAB이 왜 회전이죠?
+    // ACH_TAB_10    : 나 혼자만 역회전
+    // ACH_TAB_50    : 엄마가 운전대 잡지 마래요
+    // ACH_TAB_100   : 코끼리코 역주행 마스터
     private static readonly (int threshold, string id)[] TabMilestones =
     {
-        (100, "ACH_TAB_100"),
-        (500, "ACH_TAB_500")
+        (1,   "ACH_TAB_1"),
+        (10,  "ACH_TAB_10"),
+        (50,  "ACH_TAB_50"),
+        (100, "ACH_TAB_100")
     };
 
+    // ACH_ALTTAB_1   : 이런 게 있었네
+    // ACH_ALTTAB_10  : 있었는데요 아뇨 없어요
+    // ACH_ALTTAB_50  : 블랙홀이 필요 없어
+    // ACH_ALTTAB_100 : 차원 여행자
+    private static readonly (int threshold, string id)[] AltTabMilestones =
+    {
+        (1,   "ACH_ALTTAB_1"),
+        (10,  "ACH_ALTTAB_10"),
+        (50,  "ACH_ALTTAB_50"),
+        (100, "ACH_ALTTAB_100")
+    };
+
+    // ACH_DEATH_1   : 끄아아악
+    // ACH_DEATH_10  : 죽다 살아났네
+    // ACH_DEATH_50  : 죽음이 두렵지 않은 자
+    // ACH_DEATH_100 : 죽었어? 딸깍
+    // ACH_DEATH_200 : 이세계 사망회귀 능력자
+    // ACH_DEATH_300 : 죽음을 초월한 자
     private static readonly (int threshold, string id)[] DeathMilestones =
     {
+        (1,   "ACH_DEATH_1"),
+        (10,  "ACH_DEATH_10"),
         (50,  "ACH_DEATH_50"),
         (100, "ACH_DEATH_100"),
-        (500, "ACH_DEATH_500")
-    };
-
-    private static readonly (int threshold, string id)[] ClearMilestones =
-    {
-        (10, "ACH_CLEAR_10"),
-        (50, "ACH_CLEAR_50")
+        (200, "ACH_DEATH_200"),
+        (300, "ACH_DEATH_300")
     };
 
     private void OnEnable()
     {
         GameEvents.KeyUsed      += OnKeyUsed;
         GameEvents.PlayerDied   += OnPlayerDied;
-        GameEvents.StageCleared += OnStageCleared;
+        GameEvents.MapSwitched  += OnMapSwitched;
     }
 
     private void OnDisable()
     {
         GameEvents.KeyUsed      -= OnKeyUsed;
         GameEvents.PlayerDied   -= OnPlayerDied;
-        GameEvents.StageCleared -= OnStageCleared;
+        GameEvents.MapSwitched  -= OnMapSwitched;
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -94,13 +123,13 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         StoreStats();
     }
 
-    private void OnStageCleared()
+    private void OnMapSwitched()
     {
         var stats = _jsonDataManager.GetGlobalStats();
-        stats.totalClears++;
+        stats.lifetimeAltTab++;
         _jsonDataManager.SaveGlobalStats();
 
-        CheckMilestones(ClearMilestones, stats.totalClears);
+        CheckMilestones(AltTabMilestones, stats.lifetimeAltTab);
         StoreStats();
     }
 
@@ -121,11 +150,11 @@ public class LifetimeAchievemenHandler : MonoBehaviour
     // 외부 조회용
     // ─────────────────────────────────────────────────────────────────
 
-    public int GetLifetimeALT()  => _jsonDataManager.GetGlobalStats().lifetimeALT;
-    public int GetLifetimeF4()   => _jsonDataManager.GetGlobalStats().lifetimeF4;
-    public int GetLifetimeTAB()  => _jsonDataManager.GetGlobalStats().lifetimeTAB;
-    public int GetTotalDeaths()  => _jsonDataManager.GetGlobalStats().totalDeaths;
-    public int GetTotalClears()  => _jsonDataManager.GetGlobalStats().totalClears;
+    public int GetLifetimeALT()    => _jsonDataManager.GetGlobalStats().lifetimeALT;
+    public int GetLifetimeF4()     => _jsonDataManager.GetGlobalStats().lifetimeF4;
+    public int GetLifetimeTAB()    => _jsonDataManager.GetGlobalStats().lifetimeTAB;
+    public int GetLifetimeAltTab() => _jsonDataManager.GetGlobalStats().lifetimeAltTab;
+    public int GetTotalDeaths()    => _jsonDataManager.GetGlobalStats().totalDeaths;
 
     #region Steamworks Utility
 

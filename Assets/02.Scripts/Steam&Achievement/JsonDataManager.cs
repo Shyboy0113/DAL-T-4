@@ -34,11 +34,12 @@ public class StageProgressData
 [System.Serializable]
 public class GlobalStatsData
 {
-    public int lifetimeALT = 0;
-    public int lifetimeF4  = 0;
-    public int lifetimeTAB = 0;
-    public int totalDeaths = 0;
-    public int totalClears = 0;
+    public int lifetimeALT    = 0;
+    public int lifetimeF4     = 0;
+    public int lifetimeTAB    = 0;
+    public int lifetimeAltTab = 0;
+    public int totalDeaths    = 0;
+    public int totalClears    = 0;
 }
 
 [System.Serializable]
