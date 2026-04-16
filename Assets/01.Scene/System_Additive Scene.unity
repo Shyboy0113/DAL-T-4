@@ -298,6 +298,26 @@ PrefabInstance:
       propertyPath: vfxList.Array.size
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[0].bgm
+      value: 
+      objectReference: {fileID: 8300000, guid: 113a66ee8c2c087408761916621b6432, type: 3}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[0].scene.guid
+      value: d68248f948374724e856736bad7dba5e
+      objectReference: {fileID: 0}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[1].scene.guid
+      value: 00000000000000000000000000000000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[0].scene.asset
+      value: 
+      objectReference: {fileID: 102900000, guid: d68248f948374724e856736bad7dba5e, type: 3}
     - target: {fileID: 7291214103830277130, guid: a454213281f358945b760983c9a0dad6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

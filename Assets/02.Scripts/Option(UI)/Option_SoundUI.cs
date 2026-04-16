@@ -19,8 +19,13 @@ public class Option_SoundUI : MonoBehaviour
     
     // UI 슬라이더와 연동될 볼륨 값 (0.0f ~ 1.0f)
     private float _masterVolume = 1f;
-    private float _bgmVolume = 1f;
-    private float _sfxVolume = 1f;
+    private float _bgmVolume    = 1f;
+    private float _sfxVolume    = 1f;
+
+    // 패널 열릴 때 캡처해두는 원본 값 (Cancel 시 복원용)
+    private float _originalMasterVolume;
+    private float _originalBgmVolume;
+    private float _originalSfxVolume;
     
     private void OnEnable()
     {
@@ -51,16 +56,20 @@ public class Option_SoundUI : MonoBehaviour
 
     private void Start()
     {
-        // UI 슬라이더의 값을 불러온 값으로 설정
-        masterScrollbar.value = _masterVolume;
-        bgmScrollbar.value = _bgmVolume;
-        sfxScrollbar.value = _sfxVolume;
-        
-        // 오디오 믹서의 값도 불러온 값으로 설정
-        // (슬라이더 값이 바뀌어야만 Set 함수가 호출되므로, 시작할 때도 한번 호출해줘야 합니다)
+        // PlayerPrefs에서 저장된 볼륨 값을 불러옴 (없으면 기본값 1f)
+        _masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        _bgmVolume    = PlayerPrefs.GetFloat("BGMVolume",    1f);
+        _sfxVolume    = PlayerPrefs.GetFloat("SFXVolume",    1f);
+
+        // 오디오 믹서에 적용
         SetMasterVolume(_masterVolume);
         SetBGMVolume(_bgmVolume);
         SetSFXVolume(_sfxVolume);
+
+        // UI 슬라이더에 반영
+        masterScrollbar.value = _masterVolume;
+        bgmScrollbar.value    = _bgmVolume;
+        sfxScrollbar.value    = _sfxVolume;
     }
 
     private void Update()
@@ -70,12 +79,33 @@ public class Option_SoundUI : MonoBehaviour
         sfxData.text = sfxScrollbar.value.ToString("F2") + "f";
     }
 
-    public void SaveTotalVolume()
+    // 패널이 열릴 때 호출 — 현재 값을 원본으로 캡처
+    public void CaptureOriginalVolume()
+    {
+        _originalMasterVolume = _masterVolume;
+        _originalBgmVolume    = _bgmVolume;
+        _originalSfxVolume    = _sfxVolume;
+    }
+
+    // OK 버튼 — 현재 값을 PlayerPrefs에 저장
+    public void ApplyAndClose()
     {
         PlayerPrefs.SetFloat("MasterVolume", _masterVolume);
-        PlayerPrefs.SetFloat("BGMVolume", _bgmVolume);
-        PlayerPrefs.SetFloat("SFXVolume", _sfxVolume);
+        PlayerPrefs.SetFloat("BGMVolume",    _bgmVolume);
+        PlayerPrefs.SetFloat("SFXVolume",    _sfxVolume);
         PlayerPrefs.Save();
+    }
+
+    // Cancel / ESC — 캡처해둔 원본 값으로 복원
+    public void CancelChange()
+    {
+        SetMasterVolume(_originalMasterVolume);
+        SetBGMVolume(_originalBgmVolume);
+        SetSFXVolume(_originalSfxVolume);
+
+        masterScrollbar.value = _originalMasterVolume;
+        bgmScrollbar.value    = _originalBgmVolume;
+        sfxScrollbar.value    = _originalSfxVolume;
     }
     
     public void SetMasterVolume(float volume)
@@ -98,6 +128,6 @@ public class Option_SoundUI : MonoBehaviour
     
     private void OnApplicationQuit()
     {
-        SaveTotalVolume();
+        ApplyAndClose();
     }
 }

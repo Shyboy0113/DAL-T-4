@@ -7,6 +7,7 @@ public class Option_UIHandler : MonoBehaviour
 
     public Option_Resolution resolution;
     public Option_Language language;
+    public Option_SoundUI sound;
     
     private void Awake()
     {
@@ -44,15 +45,9 @@ public class Option_UIHandler : MonoBehaviour
         {
             if (GameManager.Instance.isOption)
             {
-                if (resolution != null)
-                {
-                    resolution.CancelChange();
-                }
-
-                if (language != null)
-                {
-                    language.CancelChange();
-                }
+                if (resolution != null) resolution.CancelChange();
+                if (language != null)   language.CancelChange();
+                if (sound != null)      sound.CancelChange();
 
                 optionEvent.Raise(false);
             }
@@ -63,15 +58,9 @@ public class Option_UIHandler : MonoBehaviour
     // OK 버튼의 OnClick에 연결
     public void OnOKButtonClicked()
     {
-        if (resolution != null)
-        {
-            resolution.ApplyAndClose();
-        }
-
-        if (language != null)
-        {
-            language.ApplyAndClose();
-        }
+        if (resolution != null) resolution.ApplyAndClose();
+        if (language != null)   language.ApplyAndClose();
+        if (sound != null)      sound.ApplyAndClose();
 
         optionEvent.Raise(false);
     }
@@ -79,15 +68,9 @@ public class Option_UIHandler : MonoBehaviour
     // Cancel 버튼의 OnClick에 연결
     public void OnCancelButtonClicked()
     {
-        if (resolution != null)
-        {
-            resolution.CancelChange();
-        }
-
-        if (language != null)
-        {
-            language.CancelChange();
-        }
+        if (resolution != null) resolution.CancelChange();
+        if (language != null)   language.CancelChange();
+        if (sound != null)      sound.CancelChange();
 
         optionEvent.Raise(false);
     }
@@ -101,9 +84,12 @@ public class Option_UIHandler : MonoBehaviour
             panel.SetActive(active);
             GameManager.Instance.isOption = active;
 
-            // 패널이 열릴 때 현재 언어를 저장 (Option_Language가 패널 바깥에 있는 씬 대응)
-            if (active && language != null)
-                language.CaptureOriginalLocale();
+            if (active)
+            {
+                // 패널이 열릴 때 각 설정의 원본 값을 캡처 (Cancel 시 복원용)
+                if (language != null) language.CaptureOriginalLocale();
+                if (sound != null)    sound.CaptureOriginalVolume();
+            }
         }
     }
 }
