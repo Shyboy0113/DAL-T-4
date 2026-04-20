@@ -1508,7 +1508,7 @@ MonoBehaviour:
   star1: {fileID: 6280427760152483393}
   star2: {fileID: 354956231351948714}
   star3: {fileID: 763969952459138539}
-  panelOffset: {x: 600, y: 1200}
+  panelOffset: {x: 650, y: 1200}
   infoPanel: {fileID: 5595010227070077330}
 --- !u!1 &2796676089880940262
 GameObject:

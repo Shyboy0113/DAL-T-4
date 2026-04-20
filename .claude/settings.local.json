@@ -18,7 +18,9 @@
       "Bash(find Assets -name \"GameManager.cs\" -exec grep -n \"InitStageData\\\\|currentStage\\\\|SO_StageData\\\\|public.*stage\\\\|public.*chapter\" {} \\\\;)",
       "Bash(python3 -)",
       "Bash(python3 /tmp/update_desc.py)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(sort -k2 -n)",
+      "Bash(git *)"
     ]
   }
 }
