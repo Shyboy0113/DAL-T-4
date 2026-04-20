@@ -110,7 +110,7 @@ public class JsonDataManagerEditor : Editor
 
     private static void RefreshNodes()
     {
-        var nodes = Object.FindObjectsByType<StageNode>(FindObjectsSortMode.None);
+        var nodes = Object.FindObjectsByType<StageNode>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var node in nodes)
             node.RefreshVisuals();
     }

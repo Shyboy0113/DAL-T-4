@@ -27,8 +27,8 @@ public class ResetPanel : MonoBehaviour
 
         jdm.ResetAllData();
 
-        // 모든 StageNode 시각 갱신
-        var nodes = FindObjectsByType<StageNode>(FindObjectsSortMode.None);
+        // 모든 StageNode 시각 갱신 (비활성 챕터 노드 포함 — _state 갱신 필요)
+        var nodes = FindObjectsByType<StageNode>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var node in nodes)
             node.RefreshVisuals();
 
