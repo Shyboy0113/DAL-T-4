@@ -134,10 +134,11 @@ public class StageSelectManagement : MonoBehaviour
             StartCoroutine(SceneLoader.LoadScene(stageSelectScene)));
     }
 
-    private bool HasAnyAvailableNodeInChapter(int chapterIndex)
+    public static bool CanEnterChapter(int chapterIndex)
     {
         int chapterNum = chapterIndex + 1;
-        foreach (var node in _allNodes)
+        var nodes = FindObjectsByType<StageNode>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var node in nodes)
         {
             if (node?.stageData == null) continue;
             if (node.stageData.chapterNum == chapterNum && node.CanEnter()) return true;
@@ -151,7 +152,7 @@ public class StageSelectManagement : MonoBehaviour
         if (target < 0 || target >= chapters.Length) return;
 
         // 다음 챕터(앞으로 이동)에 진입 가능한 스테이지가 없으면 차단
-        if (delta > 0 && !HasAnyAvailableNodeInChapter(target)) return;
+        if (delta > 0 && !CanEnterChapter(target)) return;
 
         _isTransitioning = true;
         EventSystem.current.SetSelectedGameObject(returnButton);

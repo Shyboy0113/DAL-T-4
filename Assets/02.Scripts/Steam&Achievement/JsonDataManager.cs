@@ -175,6 +175,59 @@ public class JsonDataManager : MonoBehaviour
         return true;
     }
 
+    public void UnlockAllStages(int totalChapters, int stagesPerChapter)
+    {
+        UnlockStageRange(1, totalChapters, stagesPerChapter);
+    }
+
+    public void UnlockStageRange(int minChapter, int maxChapter, int stagesPerChapter)
+    {
+        for (int ch = minChapter; ch <= maxChapter; ch++)
+            for (int st = 1; st <= stagesPerChapter; st++)
+                GetStageData(ch, st).isAppeared = true;
+        SaveAllData();
+        Debug.Log($"스테이지 해금: {minChapter}-1 ~ {maxChapter}-{stagesPerChapter}");
+    }
+
+    public void UnlockSpecificRange(int startChapter, int startStage, int endChapter, int endStage, int stagesPerChapter)
+    {
+        ForEachInRange(startChapter, startStage, endChapter, endStage, stagesPerChapter,
+            (ch, st) => GetStageData(ch, st).isAppeared = true);
+        SaveAllData();
+        Debug.Log($"스테이지 해금: {startChapter}-{startStage} ~ {endChapter}-{endStage}");
+    }
+
+    public void LockSpecificRange(int startChapter, int startStage, int endChapter, int endStage, int stagesPerChapter)
+    {
+        ForEachInRange(startChapter, startStage, endChapter, endStage, stagesPerChapter, (ch, st) =>
+        {
+            var prev = GetPreviousStageData(ch, st, stagesPerChapter);
+            bool naturallyUnlocked = (ch == 1 && st == 1) || (prev != null && prev.isCleared);
+            stageDataDict[$"{ch}-{st}"] = new StageProgressData(ch, st) { isAppeared = naturallyUnlocked };
+        });
+        SaveAllData();
+        Debug.Log($"스테이지 잠금: {startChapter}-{startStage} ~ {endChapter}-{endStage}");
+    }
+
+    private void ForEachInRange(int startCh, int startSt, int endCh, int endSt, int stagesPerChapter, System.Action<int, int> action)
+    {
+        int ch = startCh, st = startSt;
+        while (ch < endCh || (ch == endCh && st <= endSt))
+        {
+            action(ch, st);
+            st++;
+            if (st > stagesPerChapter) { st = 1; ch++; }
+        }
+    }
+
+    private StageProgressData GetPreviousStageData(int chapter, int stage, int stagesPerChapter)
+    {
+        int prevCh = stage > 1 ? chapter : chapter - 1;
+        int prevSt = stage > 1 ? stage - 1 : stagesPerChapter;
+        if (prevCh < 1) return null;
+        return stageDataDict.TryGetValue($"{prevCh}-{prevSt}", out var data) ? data : null;
+    }
+
     public void ResetAllData()
     {
         if (File.Exists(filePath))
