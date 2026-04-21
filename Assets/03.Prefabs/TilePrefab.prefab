@@ -560,6 +560,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fd8c0b2698ccffd4381340c2a5001a30, type: 3}
   isToggled: 0
   toggleOnSprite: {fileID: 21300000, guid: b23a15ba896d9f44db21f8eaba152682, type: 3}
+  trapToggleOnSprite: {fileID: 21300000, guid: 53a0fa648e8a9424e89ea8e71f25f70b, type: 3}
   player: {fileID: 0}
   animator: {fileID: 541753132118741300}
   mapManager: {fileID: 0}

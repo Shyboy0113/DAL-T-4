@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections;
@@ -125,6 +126,7 @@ public class TileBehaviour : BaseTile
     
     // 그 외 Toggle의 On 상태의 까만 Sprite
     [SerializeField] private Sprite          toggleOnSprite;
+    [SerializeField] private Sprite          trapToggleOnSprite;
     [SerializeField] private PlayerBehaviour player;
 
     [Header("Animations")]
@@ -281,6 +283,7 @@ public class TileBehaviour : BaseTile
             case TileType.ActiveToggle:
             case TileType.MoveToggle:
             case TileType.RotationToggle:
+                Debug.Log("토글되었습니다.");
                 isToggled = !isToggled;
                 if (isToggled)
                 {
@@ -291,7 +294,7 @@ public class TileBehaviour : BaseTile
 
             case TileType.TrapToggle:
                 isToggled = !isToggled;
-                return;
+                break;
 
             case TileType.ColorToggle:
                 GameEvents.RaiseColorToggleTriggered(CurrentTileColor);
@@ -493,6 +496,11 @@ public class TileBehaviour : BaseTile
         CheckOccupantsAfterToggle();
     }
 
+    private void Update()
+    {
+        if(currentTileType == TileType.ColorToggle || currentTileType == TileType.ToggleTargeted) Debug.Log(CurrentTileColor.ToString()+ " "+ transform.position);
+    }
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -567,12 +575,12 @@ public class TileBehaviour : BaseTile
 
     private void HandleColorToggle(TileColor color)
     {
-        if (currentTileType == TileType.ColorToggle) return;
+        if (currentTileType != TileType.ToggleTargeted) return;
 
         if ((CurrentTileColor & color) != 0)
         {
             behaviourManager.ExecuteCommand(new TileCommand(this));
-            UpdateVisuals(false);
+            //UpdateVisuals(false);
 
             if (isToggled && IsAnimationTile())
             {
@@ -642,7 +650,9 @@ public class TileBehaviour : BaseTile
         if (backgroundRenderer == null || iconRenderer == null) return;
 
         backgroundRenderer.sprite = tileSprites[0];
-        backgroundRenderer.color  = Color.white;
+        backgroundRenderer.color  = (currentTileType == TileType.ToggleTargeted)
+            ? GetUnityColor(CurrentTileColor)
+            : Color.white;
 
         iconRenderer.color = (currentTileType == TileType.ColorToggle || IsPlayerActionTile())
             ? GetUnityColor(CurrentTileColor)
@@ -659,6 +669,10 @@ public class TileBehaviour : BaseTile
         else if (currentTileType == TileType.ToggleTargeted || IsPlayerActionTile())
         {
             nextIcon = isToggled ? toggleOnSprite : tileSprites[(int)currentTileType];
+        }
+        else if (currentTileType == TileType.TrapToggle)
+        {
+            nextIcon = isToggled ? trapToggleOnSprite : tileSprites[(int)currentTileType];
         }
         else
         {
@@ -745,6 +759,7 @@ public class TileBehaviour : BaseTile
         if (other.CompareTag("Player"))
         {
             _isPlayerOnMe = false;
+            _pendingPlayer = null;
 
             if (currentTileType == TileType.Breakable &&
                 _currentHit >= CurrentMaxBreakCount   &&
@@ -757,6 +772,7 @@ public class TileBehaviour : BaseTile
         {
             _isEnemyOnMe      = false;
             _currentEnemyOnMe = null;
+            _pendingEnemy = null;
 
             if (!mapManager.IsRotating)
                 _isWaitEnemyExit = false;
