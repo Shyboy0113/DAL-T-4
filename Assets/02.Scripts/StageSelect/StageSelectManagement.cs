@@ -174,7 +174,16 @@ public class StageSelectManagement : MonoBehaviour
             
             if (returnButton != null)
                 EventSystem.current.SetSelectedGameObject(returnButton);
-
+            
+            StageNode firstFocus = (defaultNode != null && defaultNode.gameObject.activeInHierarchy)
+                ? defaultNode
+                : FindFirstAvailableNode();
+            if (firstFocus != null)
+            {
+                EventSystem.current.SetSelectedGameObject(firstFocus.gameObject);
+                selectPlayer.SnapTo(firstFocus.GetComponent<RectTransform>());
+            }
+            
             cutoutFade.FadeIn(() =>
             {
                 // 챕터 전환 후 기본 포커스는 Return Button — 새 챕터의 stage 1이 잠겨있을 수 있으므로

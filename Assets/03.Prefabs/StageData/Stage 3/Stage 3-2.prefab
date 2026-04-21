@@ -592,6 +592,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TilePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 7821118168015453621, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -25.00002
+      objectReference: {fileID: 0}
     - target: {fileID: 8584471514876223204, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: tileData
       value: 
@@ -661,6 +665,18 @@ PrefabInstance:
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596620451026543370, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596620451026543370, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596620451026543370, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
@@ -834,6 +850,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TilePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 7821118168015453621, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -25.00002
+      objectReference: {fileID: 0}
     - target: {fileID: 8584471514876223204, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: tileData
       value: 
@@ -920,6 +940,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TilePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 7821118168015453621, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -25.00002
+      objectReference: {fileID: 0}
     - target: {fileID: 8584471514876223204, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: tileData
       value: 
@@ -1001,6 +1025,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7821118168015453621, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -25.00002
       objectReference: {fileID: 0}
     - target: {fileID: 8584471514876223204, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: tileData
@@ -1375,6 +1403,18 @@ PrefabInstance:
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596620451026543370, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596620451026543370, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596620451026543370, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
