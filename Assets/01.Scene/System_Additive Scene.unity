@@ -421,11 +421,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6190125492101835476, guid: 42047d5f2e96b6b48a83fd29f5975fee, type: 3}
       propertyPath: stage
-      value: 1
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6190125492101835476, guid: 42047d5f2e96b6b48a83fd29f5975fee, type: 3}
+      propertyPath: chapter
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6190125492101835476, guid: 42047d5f2e96b6b48a83fd29f5975fee, type: 3}
       propertyPath: hasSecondMap
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6190125492101835476, guid: 42047d5f2e96b6b48a83fd29f5975fee, type: 3}
+      propertyPath: currentStageData
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1292367323586166665, guid: 42047d5f2e96b6b48a83fd29f5975fee, type: 3}
