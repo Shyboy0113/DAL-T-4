@@ -275,7 +275,7 @@ public class TileBehaviour : BaseTile
                 break;
 
             case TileType.StepOn:
-                GameEvents.RaiseToggleTriggered(-1);
+                GameEvents.RaiseToggleTriggered(-1, gameObject.layer);
                 if (toggleSound) _effectSound.PlayOneShot(toggleSound);
                 break;
 
@@ -297,7 +297,7 @@ public class TileBehaviour : BaseTile
                 break;
 
             case TileType.ColorToggle:
-                GameEvents.RaiseColorToggleTriggered(CurrentTileColor);
+                GameEvents.RaiseColorToggleTriggered(CurrentTileColor, gameObject.layer);
                 break;
 
             case TileType.ConditionalToggle:
@@ -405,6 +405,17 @@ public class TileBehaviour : BaseTile
         };
     }
 
+    #region Layer Sync
+
+    private void SyncLayerWithParent()
+    {
+        Tilemap parentTilemap = GetComponentInParent<Tilemap>();
+        if (parentTilemap != null)
+            gameObject.layer = parentTilemap.gameObject.layer;
+    }
+
+    #endregion
+
     #region Teleport Logic
 
     [Header("Teleport")]
@@ -462,6 +473,8 @@ public class TileBehaviour : BaseTile
 
     private void Awake()
     {
+        SyncLayerWithParent();
+
         if (behaviourManager == null) behaviourManager = FindObjectOfType<BehaviourManager>();
         if (undoState == null)        undoState        = FindObjectOfType<PlayerUndoStateBridge>();
 
@@ -504,6 +517,8 @@ public class TileBehaviour : BaseTile
 #if UNITY_EDITOR
     private void OnValidate()
     {
+        SyncLayerWithParent();
+
         if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
             AutoLinkTeleport();
 
@@ -573,9 +588,10 @@ public class TileBehaviour : BaseTile
         GameEvents.AfterMapRotated       -= OnAfterMapRotated;
     }
 
-    private void HandleColorToggle(TileColor color)
+    private void HandleColorToggle(TileColor color, int layer)
     {
         if (currentTileType != TileType.ToggleTargeted) return;
+        if (gameObject.layer != layer) return;
 
         if ((CurrentTileColor & color) != 0)
         {
@@ -590,8 +606,10 @@ public class TileBehaviour : BaseTile
         }
     }
 
-    private void HandleToggle(int currentCount)
+    private void HandleToggle(int currentCount, int layer)
     {
+        if (gameObject.layer != layer) return;
+
         UpdateCountText(currentCount);
 
         // Undo 중에는 새 TileCommand를 생성하지 않습니다.

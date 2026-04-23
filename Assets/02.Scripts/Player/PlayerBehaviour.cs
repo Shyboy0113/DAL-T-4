@@ -283,7 +283,7 @@ public class PlayerBehaviour : MonoBehaviour
         // PlayerActionFinished는 슬라이딩이 완전히 끝날 때 StopIceAndFinish()에서 발화합니다.
         if (!undoRedoState.IsUndo && !startedOnIce)
         {
-            GameEvents.RaisePlayerMoved(moveCount);
+            GameEvents.RaisePlayerMoved(moveCount, gameObject.layer);
             // _isOnIce: Ice 타일을 방금 밟아 슬라이딩이 시작됐으면 발화 보류
             if (!_isOnIce)
                 GameEvents.RaisePlayerActionFinished();
@@ -303,7 +303,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void RotateArrow(bool immediate = false)
     {
-        playerAnimator.RotateArrow(_playerDirection, immediate, rotationCount);
+        playerAnimator.RotateArrow(_playerDirection, immediate, rotationCount, gameObject.layer);
         StartCoroutine(RotateGroundCheck());
     }
 

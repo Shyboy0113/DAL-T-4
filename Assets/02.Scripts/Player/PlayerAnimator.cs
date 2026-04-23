@@ -57,7 +57,8 @@ public class PlayerAnimator : MonoBehaviour
 
     /// <param name="immediate">true면 DOTween 없이 즉시 회전</param>
     /// <param name="rotationCount">RaisePlayerRotated에 전달할 카운터 (PlayerBehaviour에서 넘겨줌)</param>
-    public void RotateArrow(PlayerDirection direction, bool immediate = false, int rotationCount = 0)
+    /// <param name="playerLayer">플레이어가 속한 맵 레이어 — 같은 레이어의 토글 타일만 반응</param>
+    public void RotateArrow(PlayerDirection direction, bool immediate = false, int rotationCount = 0, int playerLayer = 0)
     {
         float targetAngle = direction switch
         {
@@ -77,10 +78,11 @@ public class PlayerAnimator : MonoBehaviour
         IsRotating = true;
         bool wasUndo = undoState.IsUndo;
         int capturedCount = rotationCount;
+        int capturedLayer = playerLayer;
 
         if (!wasUndo)
         {
-            GameEvents.RaisePlayerRotated(capturedCount);
+            GameEvents.RaisePlayerRotated(capturedCount, capturedLayer);
             GameEvents.RaisePlayerActionFinished();
         }
         

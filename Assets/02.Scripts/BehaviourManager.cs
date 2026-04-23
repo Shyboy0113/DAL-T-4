@@ -52,7 +52,7 @@ public class BehaviourManager : MonoBehaviour
     {
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
         
-        GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount);
+        GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount, playerBehaviour.gameObject.layer);
 
         if (playerBehaviour.TotalActionCount % 3 == 0)
             StartCoroutine(TurnSequence());
@@ -94,12 +94,12 @@ public class BehaviourManager : MonoBehaviour
             playerCommand.Undo();
             playerBehaviour.UndoState();
             
-            GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount);
-            
+            GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount, playerBehaviour.gameObject.layer);
+
             if (playerCommand is MoveCommand)
-                GameEvents.RaisePlayerMoved(playerBehaviour.moveCount);
+                GameEvents.RaisePlayerMoved(playerBehaviour.moveCount, playerBehaviour.gameObject.layer);
             else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
-                GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount);
+                GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount, playerBehaviour.gameObject.layer);
         }
 
         UpdateUndoUI();
