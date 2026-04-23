@@ -17,7 +17,7 @@ public class ElectricGlitchController : MonoBehaviour
     
     private void Start()
     {
-        glitchOverlay.enabled = false;
+        glitchOverlay.gameObject.SetActive(false);
     }
 
     private void OnDisable()
@@ -33,10 +33,10 @@ public class ElectricGlitchController : MonoBehaviour
 
     private IEnumerator IToggleGlitch()
     {
-        glitchOverlay.enabled = true;
+        glitchOverlay.gameObject.SetActive(true);
         
         yield return new WaitForSeconds(duration);
         
-        glitchOverlay.enabled = false;
+        glitchOverlay.gameObject.SetActive(false);
     }
 }

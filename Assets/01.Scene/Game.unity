@@ -12153,7 +12153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ElectricGlitchController
   glitchOverlay: {fileID: 296846508}
-  duration: 0.3
+  duration: 0.5
   peakIntensity: 0.2
 --- !u!1 &1450198665
 GameObject:
