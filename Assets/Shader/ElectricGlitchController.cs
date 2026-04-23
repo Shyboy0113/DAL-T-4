@@ -8,7 +8,6 @@ public class ElectricGlitchController : MonoBehaviour
 
     [Header("감전 연출 설정")]
     [SerializeField] private float duration = 0.3f;
-    [SerializeField] private float peakIntensity = 0.2f;
     
     private void OnEnable()
     {
