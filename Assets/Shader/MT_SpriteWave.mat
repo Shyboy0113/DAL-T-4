@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SpriteWave
+  m_Name: MT_SpriteWave
   m_Shader: {fileID: 4800000, guid: bedf8e6a0747447428250f2364d97cb8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

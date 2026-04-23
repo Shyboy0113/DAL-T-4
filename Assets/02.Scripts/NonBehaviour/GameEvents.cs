@@ -53,14 +53,15 @@ public static class GameEvents
 
     #region Player Action Counter
     // 각 타일의 토글 카운터 판정에 사용
+    // layer: 플레이어가 현재 속한 맵 레이어 — 같은 레이어의 토글 타일만 반응
 
-    public static event Action<int> PlayerActed;    // ActiveToggle용  (이동 + 회전 합산)
-    public static event Action<int> PlayerMoved;    // MoveToggle용
-    public static event Action<int> PlayerRotated;  // RotationToggle용
+    public static event Action<int, int> PlayerActed;    // ActiveToggle용  (이동 + 회전 합산)
+    public static event Action<int, int> PlayerMoved;    // MoveToggle용
+    public static event Action<int, int> PlayerRotated;  // RotationToggle용
 
-    public static void RaisePlayerActed(int count)   => PlayerActed?.Invoke(count);
-    public static void RaisePlayerMoved(int count)   => PlayerMoved?.Invoke(count);
-    public static void RaisePlayerRotated(int count) => PlayerRotated?.Invoke(count);
+    public static void RaisePlayerActed(int count, int layer)   => PlayerActed?.Invoke(count, layer);
+    public static void RaisePlayerMoved(int count, int layer)   => PlayerMoved?.Invoke(count, layer);
+    public static void RaisePlayerRotated(int count, int layer) => PlayerRotated?.Invoke(count, layer);
 
     #endregion
 
@@ -94,11 +95,12 @@ public static class GameEvents
 
     #region Tile Toggle
 
-    public static event Action<int>       ToggleTriggered;       // StepOn → ToggleTargeted/TrapToggle용
-    public static event Action<TileColor> ColorToggleTriggered;  // ColorToggle용
+    // layer: 이벤트를 발생시킨 타일(= 플레이어가 서 있는 타일)의 레이어 — 같은 레이어의 토글 타일만 반응
+    public static event Action<int, int>          ToggleTriggered;       // StepOn → ToggleTargeted/TrapToggle용
+    public static event Action<TileColor, int>    ColorToggleTriggered;  // ColorToggle용
 
-    public static void RaiseToggleTriggered(int count = -1)        => ToggleTriggered?.Invoke(count);
-    public static void RaiseColorToggleTriggered(TileColor color)  => ColorToggleTriggered?.Invoke(color);
+    public static void RaiseToggleTriggered(int count = -1, int layer = 0)        => ToggleTriggered?.Invoke(count, layer);
+    public static void RaiseColorToggleTriggered(TileColor color, int layer = 0)  => ColorToggleTriggered?.Invoke(color, layer);
 
     #endregion
 
@@ -161,4 +163,10 @@ public static class GameEvents
     public static void RaiseMapSwitched() => MapSwitched?.Invoke();
 
     #endregion
+
+
+    public static event Action GlitchTriggered;
+    public static void RaiseGlitchTriggered() => GlitchTriggered?.Invoke();
+
+
 }

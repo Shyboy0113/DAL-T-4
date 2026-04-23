@@ -4,6 +4,7 @@ using DG.Tweening;
 /// <summary>
 /// 메인 카메라 위치를 Map 1 타일들의 중심으로 초기화하고,
 /// 플레이어가 화면 좌/우 경계에 도달하면 카메라를 해당 방향으로 이동합니다.
+/// 글리치 이벤트 발생 시 카메라 셰이크 효과를 줍니다.
 /// </summary>
 public class CameraController : MonoBehaviour
 {
@@ -20,6 +21,16 @@ public class CameraController : MonoBehaviour
     [Tooltip("카메라 이동 트윈 지속 시간")]
     [SerializeField] private float tweenDuration = 0.25f;
 
+    [Header("Glitch Shake")]
+    [Tooltip("셰이크 지속 시간")]
+    [SerializeField] private float shakeDuration = 0.2f;
+    
+    [Tooltip("셰이크 강도 (X, Y 축)")]
+    [SerializeField] private float shakeStrength = 0.5f;
+    
+    [Tooltip("셰이크 진동수 (값이 클수록 덜덜거리는 기계적인 느낌이 강해짐)")]
+    [SerializeField] private int shakeVibrato = 20;
+
     private Camera _camera;
     private bool   _isTweening;
 
@@ -34,12 +45,14 @@ public class CameraController : MonoBehaviour
     {
         GameEvents.MapInitialized      += OnMapInitialized;
         GameEvents.PlayerActionFinished += OnPlayerActionFinished;
+        GameEvents.GlitchTriggered += TriggerGlitchShake; 
     }
 
     private void OnDisable()
     {
         GameEvents.MapInitialized      -= OnMapInitialized;
         GameEvents.PlayerActionFinished -= OnPlayerActionFinished;
+        GameEvents.GlitchTriggered -= TriggerGlitchShake;
     }
 
     private void Start()
@@ -77,9 +90,22 @@ public class CameraController : MonoBehaviour
 
         Vector3 target = transform.position + new Vector3(deltaX, deltaY, 0f);
         _isTweening = true;
+        
+        // 이동 중 셰이크가 발생해도 목표 지점으로 자연스럽게 갈 수 있도록 SetRelative(false) 상태로 작동
         transform.DOMove(target, tweenDuration)
                  .SetEase(Ease.OutCubic)
                  .OnComplete(() => _isTweening = false);
+    }
+
+    // 외부에서 직접 호출하거나 이벤트로 연결할 셰이크 함수
+    public void TriggerGlitchShake()
+    {
+        // 카메라의 Z축이 흔들려 화면 크기가 줌인/줌아웃 되는 것을 막기 위해 Vector3로 XY축만 지정
+        Vector3 strengthVector = new Vector3(shakeStrength, shakeStrength, 0f);
+        
+        // Transform에 직접 DOShakePosition 적용 (기존 이동 트윈을 덮어쓰지 않고 더해집니다)
+        transform.DOComplete(withCallbacks: true); // 흔들림 중복 누적 방지
+        transform.DOShakePosition(shakeDuration, strengthVector, shakeVibrato, randomness: 90f, snapping: false, fadeOut: true);
     }
 
     // ─────────────────────────────────────────────────────────────────
