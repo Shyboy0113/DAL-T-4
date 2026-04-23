@@ -596,8 +596,7 @@ public class TileBehaviour : BaseTile
         if ((CurrentTileColor & color) != 0)
         {
             behaviourManager.ExecuteCommand(new TileCommand(this));
-            //UpdateVisuals(false);
-
+            
             if (isToggled && IsAnimationTile())
             {
                 if (_isPlayerOnMe && player != null)            player.PlayExplosion();
