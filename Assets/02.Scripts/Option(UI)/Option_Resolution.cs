@@ -27,7 +27,7 @@ public class Option_Resolution : MonoBehaviour
     private void Awake()
     {
         // CutoutFade 컴포넌트를 씬에서 찾아옴
-        _cutoutFade = FindObjectOfType<CutoutFade>(); 
+        _cutoutFade = FindFirstObjectByType<CutoutFade>(); 
         
         InitializeResolutions();
     }

@@ -49,7 +49,7 @@ public class SequenceUI : MonoBehaviour
 
     private void OnEnable()
     {
-        _playerBehaviour = FindObjectOfType<PlayerBehaviour>();
+        _playerBehaviour = FindFirstObjectByType<PlayerBehaviour>();
         if (_playerBehaviour != null)
         {
             _playerBehaviour.OnInputQueueChanged += UpdateUI;

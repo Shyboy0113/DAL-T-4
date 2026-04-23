@@ -53,7 +53,7 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     private void Awake()
     {
         _originScale  = transform.localScale;
-        _selectPlayer = FindObjectOfType<StageSelectPlayer>();
+        _selectPlayer = FindFirstObjectByType<StageSelectPlayer>();
         _button       = GetComponent<Button>();
 
         // Button onClick → Confirm() (Enter/Space 자동 연결)

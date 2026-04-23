@@ -58,8 +58,8 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         _mainCamera   = Camera.main;
-        player        = FindObjectOfType<PlayerBehaviour>();
-        _undoState = FindObjectOfType<PlayerUndoStateBridge>(); // Bridge 자동 탐색
+        player        = FindFirstObjectByType<PlayerBehaviour>();
+        _undoState = FindFirstObjectByType<PlayerUndoStateBridge>(); // Bridge 자동 탐색
     }
 
     public void InitializeNewStage(GameObject stageRoot)

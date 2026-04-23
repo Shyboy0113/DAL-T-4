@@ -475,8 +475,8 @@ public class TileBehaviour : BaseTile
     {
         SyncLayerWithParent();
 
-        if (behaviourManager == null) behaviourManager = FindObjectOfType<BehaviourManager>();
-        if (undoState == null)        undoState        = FindObjectOfType<PlayerUndoStateBridge>();
+        if (behaviourManager == null) behaviourManager = FindFirstObjectByType<BehaviourManager>();
+        if (undoState == null)        undoState        = FindFirstObjectByType<PlayerUndoStateBridge>();
 
         _tilemap     = GetComponentInParent<Tilemap>();
         _effectSound = GetComponentInParent<AudioSource>();
@@ -487,8 +487,8 @@ public class TileBehaviour : BaseTile
         if (animator == null) animator = GetComponent<Animator>();
         animator.enabled = IsAnimationTile();
 
-        if (player == null)     player     = FindObjectOfType<PlayerBehaviour>();
-        if (mapManager == null) mapManager = FindObjectOfType<MapManager>();
+        if (player == null)     player     = FindFirstObjectByType<PlayerBehaviour>();
+        if (mapManager == null) mapManager = FindFirstObjectByType<MapManager>();
 
         if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
             AutoLinkTeleport();

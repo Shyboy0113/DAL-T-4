@@ -46,7 +46,7 @@ public class StageLoader : MonoBehaviour
 
         _currentStageObject = Instantiate(stageData.stagePrefab, mapParent);
 
-        var mapManager = FindObjectOfType<MapManager>();
+        var mapManager = FindFirstObjectByType<MapManager>();
         if (mapManager != null)
             mapManager.InitializeNewStage(_currentStageObject);
 
