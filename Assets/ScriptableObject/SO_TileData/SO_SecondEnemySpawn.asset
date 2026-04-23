@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfeb00ff410b3554fb61707067780a80, type: 3}
   m_Name: SO_SecondEnemySpawn
   m_EditorClassIdentifier: 
-  tileType: 23
+  tileType: 24
   baseMaxBreakCount: 4
   baseBreakHitCount: 0
   baseBreakDelay: 0.5
