@@ -46,7 +46,7 @@ public class PlayerBehaviour : MonoBehaviour
     private Collider2D  _collider2D;
     [SerializeField] private float forceAmount = 1f;
 
-    public void StopVelocity() => _rigidbody2D.velocity = Vector2.zero;
+    public void StopVelocity() => _rigidbody2D.linearVelocity = Vector2.zero;
     #endregion
 
     #region Input Lock
@@ -112,7 +112,7 @@ public class PlayerBehaviour : MonoBehaviour
                 StopCoroutine(_slideCoroutine);
                 _slideCoroutine = null;
             }
-            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.linearVelocity = Vector2.zero;
             // Ice 종료 시 입력 잠금 해제 (슬라이딩 중 잠근 것을 복원)
             SetInputLock(false);
         }
@@ -139,7 +139,7 @@ public class PlayerBehaviour : MonoBehaviour
 
             if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared)
             {
-                _rigidbody2D.velocity = Vector2.zero;
+                _rigidbody2D.linearVelocity = Vector2.zero;
                 yield break;
             }
 
@@ -443,7 +443,7 @@ public class PlayerBehaviour : MonoBehaviour
         EnableIceMode(false);
         undoRedoState.Reset();
         SetInputLock(false);
-        _rigidbody2D.velocity = Vector2.zero;
+        _rigidbody2D.linearVelocity = Vector2.zero;
         playerAnimator.PlayExplosion();
         GameEvents.RaisePlayerDied();
         GameEvents.RaiseInputLockChanged(false);
@@ -515,7 +515,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (freeze)
         {
-            _rigidbody2D.velocity        = Vector2.zero;
+            _rigidbody2D.linearVelocity        = Vector2.zero;
             _rigidbody2D.angularVelocity = 0f;
         }
 
@@ -547,7 +547,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         transform.SetParent(null);
 
-        _rigidbody2D.velocity        = Vector2.zero;
+        _rigidbody2D.linearVelocity        = Vector2.zero;
         _rigidbody2D.angularVelocity = 0f;
         _rigidbody2D.simulated       = false;
 
@@ -574,7 +574,7 @@ public class PlayerBehaviour : MonoBehaviour
         _isMapBusy = false;
         _isEnemyActing = false;
 
-        _rigidbody2D.velocity = Vector2.zero;
+        _rigidbody2D.linearVelocity = Vector2.zero;
         _collider2D.enabled   = true;
         _rigidbody2D.simulated = true;
 

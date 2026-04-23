@@ -85,7 +85,7 @@ public class EnemyBehaviour : MonoBehaviour
 
         if (freeze)
         {
-            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.linearVelocity = Vector2.zero;
             _rigidbody2D.angularVelocity = 0f;
             _collider2D.enabled = false;
             _rigidbody2D.simulated = false;
@@ -130,7 +130,7 @@ public class EnemyBehaviour : MonoBehaviour
                 StopCoroutine(_slideCoroutine);
                 _slideCoroutine = null;
             }
-            _rigidbody2D.velocity = Vector2.zero; // 타일 위에서 딱 멈추게 함
+            _rigidbody2D.linearVelocity = Vector2.zero; // 타일 위에서 딱 멈추게 함
         }
     }
     
@@ -150,7 +150,7 @@ public class EnemyBehaviour : MonoBehaviour
 
             if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared || IsDead)
             {
-                _rigidbody2D.velocity = Vector2.zero; // 물리적 움직임 완전 정지
+                _rigidbody2D.linearVelocity = Vector2.zero; // 물리적 움직임 완전 정지
                 yield break; // 코루틴 종료
             }
         }
@@ -236,7 +236,7 @@ public class EnemyBehaviour : MonoBehaviour
         if (_slideCoroutine != null) StopCoroutine(_slideCoroutine);
         _slideCoroutine = null;
         
-        _rigidbody2D.velocity = Vector2.zero;
+        _rigidbody2D.linearVelocity = Vector2.zero;
         _rigidbody2D.simulated = true;
 
         _collider2D.enabled = true;
@@ -266,7 +266,7 @@ public class EnemyBehaviour : MonoBehaviour
                 _slideCoroutine = null;
             }
             
-            _rigidbody2D.velocity = Vector2.zero;
+            _rigidbody2D.linearVelocity = Vector2.zero;
             _rigidbody2D.simulated = false;
             _collider2D.enabled = false;
             
