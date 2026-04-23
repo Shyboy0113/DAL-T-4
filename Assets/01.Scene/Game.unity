@@ -12140,6 +12140,8 @@ MonoBehaviour:
   defaultDuration: 0.2
   defaultStrength: 20
   defaultVibrato: 30
+  rotationStrength: 10
+  rotationVibrato: 50
 --- !u!114 &1410599683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12154,7 +12156,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElectricGlitchController
   glitchOverlay: {fileID: 296846508}
   duration: 0.5
-  peakIntensity: 0.2
 --- !u!1 &1450198665
 GameObject:
   m_ObjectHideFlags: 0
