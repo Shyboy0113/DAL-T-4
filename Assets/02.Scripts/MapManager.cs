@@ -7,14 +7,23 @@ public class MapManager : MonoBehaviour
 {
     private struct MapState
     {
-        public Vector3 pivotPosition;
-        public float   zRotation;
-        public Vector3 firstRootPosition;
-        public Vector3 secondRootPosition;
-        public float   tileIconZRotation;
-        public float   accumulatedRotation;
+        // [공통 상태]
         public bool isFirst;
         public RenderTexture renderTexture;
+
+        // [Map 1 전용 상태]
+        public Vector3 firstRootPosition;           // Map1 오브젝트 위치
+        public Vector3 firstPivotPosition;          // Map1이 마지막으로 회전한 축의 위치
+        public float   firstZRotation;              // Map1(또는 Map1 Pivot)의 Z 회전값
+        public float   firstAccumulatedRotation;    // Map1의 누적 회전각
+        public float   firstTileIconZRotation;      // Map1 타일 아이콘들의 역회전 보정값
+
+        // [Map 2 전용 상태]
+        public Vector3 secondRootPosition;          // Map2 오브젝트 위치
+        public Vector3 secondPivotPosition;         // Map2가 마지막으로 회전한 축의 위치
+        public float   secondZRotation;             // Map2(또는 Map2 Pivot)의 Z 회전값
+        public float   secondAccumulatedRotation;   // Map2의 누적 회전각
+        public float   secondTileIconZRotation;     // Map2 타일 아이콘들의 역회전 보정값
     }
 
     private Stack<MapState> _undoMapHistory = new Stack<MapState>();
@@ -25,8 +34,14 @@ public class MapManager : MonoBehaviour
     private bool _isRotating = false;
     public  bool IsRotating => _isRotating;
 
-    private float _accumulatedRotation = 0f;
-    private float _tileIconZRotation   = 0f;
+    
+    // 맵 회전 시, 타일의 누적된 회전 각도를 저장함
+    private float _firstAccumulatedRotation = 0f;
+    private float _secondAccumulatedRotation = 0f;
+    
+    // 맵 회전 시, 타일들의 아이콘을 원래 시점으로 보정
+    private float _firstTileIconZRotation   = 0f;
+    private float _secondTileIconZRotation   = 0f;
 
     private bool _preChangeIsFirst;
     private bool _mapChangedSinceLastSave;
@@ -35,7 +50,9 @@ public class MapManager : MonoBehaviour
     private PlayerUndoStateBridge _undoState;
 
     [Header("Rotation Logic")]
-    [SerializeField] private Transform mapPivot;
+    [SerializeField] private Transform mapFirstPivot;
+    [SerializeField] private Transform mapSecondPivot;
+    
     [SerializeField] private float     rotateDuration;
     [SerializeField] private GameObject mapFirstRoot;
     [SerializeField] private GameObject mapSecondRoot;
@@ -67,7 +84,8 @@ public class MapManager : MonoBehaviour
         StageLinker linker = stageRoot.GetComponent<StageLinker>();
         if (linker != null)
         {
-            mapPivot       = linker.mapPivot;
+            mapFirstPivot       = linker.mapFirstPivot;
+            mapSecondPivot       = linker.mapSecondPivot;
             mapFirstRoot   = linker.mapFirstRoot;
             mapSecondRoot  = linker.mapSecondRoot;
             mapStaticRoot  = linker.mapStaticRoot;
@@ -88,8 +106,12 @@ public class MapManager : MonoBehaviour
         _deactivatedRoot = mapSecondRoot.transform;
         _staticRoot = mapStaticRoot.transform;
 
-        _accumulatedRotation = 0f;
-        _tileIconZRotation   = 0f;
+        _firstAccumulatedRotation = 0f;
+        _secondAccumulatedRotation = 0f;
+    
+        _firstTileIconZRotation   = 0f;
+        _secondTileIconZRotation   = 0f;
+        
         _isRotating          = false;
         _undoMapHistory.Clear();
 
@@ -204,31 +226,62 @@ public class MapManager : MonoBehaviour
         );
         pb.transform.position = snappedPivot;
 
-        Vector3 offset = snappedPivot - mapPivot.position;
-        mapPivot.position = snappedPivot;
-        foreach (Transform child in mapPivot)
-            child.position -= offset;
+        if (_isFirst)
+        {
+            Vector3 offset = snappedPivot - mapFirstPivot.position;
+            mapFirstPivot.position = snappedPivot;
+            foreach (Transform child in mapFirstPivot)
+                child.position -= offset;
 
-        _accumulatedRotation += angle;
-        Vector3 targetRotation = new Vector3(0, 0, _accumulatedRotation);
+            _firstAccumulatedRotation += angle;
+            Vector3 targetRotation = new Vector3(0, 0, _firstAccumulatedRotation);
         
-        Debug.Log("현재 회전 발생");
+            Debug.Log("현재 회전 발생");
 
-        mapPivot
-            .DORotate(targetRotation, rotateDuration, RotateMode.Fast)
-            .SetEase(Ease.InOutQuad)
-            .OnComplete(() =>
-            {
-                _tileIconZRotation += -angle;
-                GameEvents.RaiseTileIconRotated(-angle);
-
-                DOVirtual.DelayedCall(0.55f, () =>
+            mapFirstPivot
+                .DORotate(targetRotation, rotateDuration, RotateMode.Fast)
+                .SetEase(Ease.InOutQuad)
+                .OnComplete(() =>
                 {
-                    _isRotating = false;
-                    GameEvents.RaiseInputLockChanged(false);
-                    GameEvents.RaiseAfterMapRotated(false);
-                });
-            });
+                    _firstTileIconZRotation += -angle;
+                    GameEvents.RaiseTileIconRotated(-angle);
+
+                    DOVirtual.DelayedCall(0.55f, () =>
+                    {
+                        _isRotating = false;
+                        GameEvents.RaiseInputLockChanged(false);
+                        GameEvents.RaiseAfterMapRotated(false);
+                    });
+                }); 
+        }
+        else
+        {
+            Vector3 offset = snappedPivot - mapSecondPivot.position;
+            mapSecondPivot.position = snappedPivot;
+            foreach (Transform child in mapSecondPivot)
+                child.position -= offset;
+
+            _secondAccumulatedRotation += angle;
+            Vector3 targetRotation = new Vector3(0, 0, _secondAccumulatedRotation);
+        
+            Debug.Log("현재 회전 발생");
+
+            mapSecondPivot
+                .DORotate(targetRotation, rotateDuration, RotateMode.Fast)
+                .SetEase(Ease.InOutQuad)
+                .OnComplete(() =>
+                {
+                    _secondTileIconZRotation += -angle;
+                    GameEvents.RaiseTileIconRotated(-angle);
+
+                    DOVirtual.DelayedCall(0.55f, () =>
+                    {
+                        _isRotating = false;
+                        GameEvents.RaiseInputLockChanged(false);
+                        GameEvents.RaiseAfterMapRotated(false);
+                    });
+                }); 
+        }
     }
 
     // ── 변경: pb.isUndo/isRedo → _undoState.IsUndo/IsRedo ──
@@ -246,12 +299,19 @@ public class MapManager : MonoBehaviour
 
         var state = new MapState
         {
-            pivotPosition       = mapPivot.position,
-            zRotation           = mapPivot.eulerAngles.z,
+            firstPivotPosition  = mapFirstPivot.position,
+            firstZRotation      = mapFirstPivot.eulerAngles.z,
+            secondPivotPosition  = mapSecondPivot.position,
+            secondZRotation      = mapSecondPivot.eulerAngles.z,
+            
             firstRootPosition   = mapFirstRoot.transform.position,
             secondRootPosition  = mapSecondRoot.transform.position,
-            tileIconZRotation   = _tileIconZRotation,
-            accumulatedRotation = _accumulatedRotation,
+            
+            firstTileIconZRotation = _firstTileIconZRotation,
+            firstAccumulatedRotation = _firstAccumulatedRotation,
+            secondTileIconZRotation = _secondTileIconZRotation,
+            secondAccumulatedRotation =  _secondAccumulatedRotation,
+            
             isFirst             = isFirstSnapshot,
             renderTexture       = renderTextureSnapshot
         };
@@ -268,14 +328,20 @@ public class MapManager : MonoBehaviour
 
         MapState lastState = _undoMapHistory.Pop();
         
-        mapPivot.position = lastState.pivotPosition;
-        mapPivot.rotation = Quaternion.Euler(0, 0, lastState.zRotation);
+        mapFirstPivot.position = lastState.firstPivotPosition;
+        mapFirstPivot.rotation = Quaternion.Euler(0, 0, lastState.firstZRotation);
+        
+        mapSecondPivot.position = lastState.secondPivotPosition;
+        mapSecondPivot.rotation = Quaternion.Euler(0, 0, lastState.secondZRotation);
+
         mapFirstRoot.transform.position  = lastState.firstRootPosition;
         mapSecondRoot.transform.position = lastState.secondRootPosition;
 
-        SnapTileIcons(lastState.tileIconZRotation);
-        _tileIconZRotation   = lastState.tileIconZRotation;
-        _accumulatedRotation = lastState.accumulatedRotation;
+        SnapTileIcons(mapFirstRoot.transform, lastState.firstTileIconZRotation, ref _firstTileIconZRotation);
+        SnapTileIcons(mapSecondRoot.transform, lastState.secondTileIconZRotation, ref _secondTileIconZRotation);
+        
+        _firstAccumulatedRotation = lastState.firstAccumulatedRotation;
+        _secondAccumulatedRotation = lastState.secondAccumulatedRotation;
 
         // 맵 전환 상태 복원
         _isFirst = lastState.isFirst;
@@ -289,16 +355,20 @@ public class MapManager : MonoBehaviour
         Physics2D.SyncTransforms();
     }
 
-    private void SnapTileIcons(float targetZRotation)
+    private void SnapTileIcons(Transform targetRoot, float targetZRotation, ref float currentIconRotation)
     {
-        float delta = targetZRotation - _tileIconZRotation;
+        float delta = targetZRotation - currentIconRotation;
         if (Mathf.Approximately(delta, 0f)) return;
 
-        var tiles = mapPivot.GetComponentsInChildren<TileBehaviour>(includeInactive: true);
+        // [변경] mapPivot 대신 전달받은 targetRoot의 자식들만 뒤져서 회전시킵니다.
+        var tiles = targetRoot.GetComponentsInChildren<TileBehaviour>(includeInactive: true);
         foreach (var tile in tiles)
         {
             tile.transform.DOKill();
             tile.transform.Rotate(0f, 0f, delta, Space.Self);
         }
+        
+        // [변경] 현재 회전값을 ref를 통해 원본 변수에 업데이트합니다.
+        currentIconRotation = targetZRotation;
     }
 }
