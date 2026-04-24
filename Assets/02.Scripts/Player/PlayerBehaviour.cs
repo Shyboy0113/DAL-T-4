@@ -440,19 +440,53 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void PlayExplosion()
     {
-        EnableIceMode(false);
-        undoRedoState.Reset();
-        SetInputLock(false);
-        _rigidbody2D.linearVelocity = Vector2.zero;
-        playerAnimator.PlayExplosion();
-        GameEvents.RaisePlayerDied();
-        GameEvents.RaiseInputLockChanged(false);
-        _isEnemyActing = false;
+        SetDeadState(true);
     }
 
     private void OnPlayerDied()
     {
         StopParticle();
+    }
+    public void SetDeadState(bool isDead)
+    {
+        if (isDead)
+        {
+            // --- 기존 PlayExplosion 내용 (사망 처리) ---
+            EnableIceMode(false);
+            undoRedoState.Reset();
+            SetInputLock(false);
+            
+            _rigidbody2D.linearVelocity = Vector2.zero;
+            
+            // 확실한 사망 처리를 위해 콜라이더와 물리 시뮬레이션을 끕니다.
+            _collider2D.enabled = false;
+            _rigidbody2D.simulated = false; 
+
+            playerAnimator.PlayExplosion();
+            
+            GameEvents.RaisePlayerDied();
+            GameEvents.RaiseInputLockChanged(false);
+            _isEnemyActing = false;
+        }
+        else
+        {
+            // --- 부활 처리 (Undo 시) ---
+            // 1. 게임 오버 상태 해제
+            if (GameManager.Instance != null)
+                GameManager.Instance.isGameOver = false;
+            
+            // 2. 물리 엔진 및 충돌체 원상복구
+            _collider2D.enabled = true;
+            _rigidbody2D.simulated = true;
+            
+            // 3. 애니메이션 및 UI 원상복구 (폭발 상태 해제)
+            playerAnimator.PlayIdle();
+            playerAnimator.RotateArrow(_playerDirection, immediate: true);
+            playerShadow?.Show();
+            
+            // 4. 위치/상태 변경을 물리 엔진에 즉시 동기화
+            Physics2D.SyncTransforms();
+        }
     }
 
     #endregion

@@ -76,10 +76,24 @@ public class MoveCommand : ICommand
     }
 }
 
-public class DeathCommand : ICommand
+public class SuicideCommand : ICommand
 {
-    public void Execute() { }
-    public void Undo()    { }
+    private readonly PlayerBehaviour _playerBehaviour;
+
+    public SuicideCommand(PlayerBehaviour playerBehaviour)
+    {
+        _playerBehaviour = playerBehaviour;
+    }
+
+    public void Execute()
+    {
+        _playerBehaviour.SetDeadState(true);
+    }
+
+    public void Undo()
+    {
+        _playerBehaviour.SetDeadState(false);
+    }
 }
 
 #endregion

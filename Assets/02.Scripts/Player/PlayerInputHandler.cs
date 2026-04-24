@@ -18,6 +18,7 @@ public class PlayerInputHandler : MonoBehaviour
         GameEvents.ChatCommandRotateCW  += OnChatRotateCW;
         GameEvents.ChatCommandRotateCCW += OnChatRotateCCW;
         GameEvents.ChatCommandMove      += OnChatMove;
+        GameEvents.ChatCommandSuicide   += OnChatSuicide;
     }
 
     private void OnDisable()
@@ -25,6 +26,7 @@ public class PlayerInputHandler : MonoBehaviour
         GameEvents.ChatCommandRotateCW  -= OnChatRotateCW;
         GameEvents.ChatCommandRotateCCW -= OnChatRotateCCW;
         GameEvents.ChatCommandMove      -= OnChatMove;
+        GameEvents.ChatCommandSuicide   -= OnChatSuicide;
     }
 
     private void Update()
@@ -75,6 +77,15 @@ public class PlayerInputHandler : MonoBehaviour
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
         if (!(GameManager.Instance.currentStageData?.canUseF4 ?? true)) return;
         EnqueueCommand(new MoveCommand(playerBehaviour), KeyType.F4, moveSound);
+    }
+    
+    private void OnChatSuicide()
+    {
+        if (playerBehaviour.CheckSkip()) return;
+        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+
+        // 자살 커맨드 생성 후 스택에 추가 (자살은 특정 키 입력 횟수(KeyType)를 올리지 않으려면 KeyType.None 전달)
+        EnqueueCommand(new SuicideCommand(playerBehaviour), KeyType.None, null);
     }
 
     private void EnqueueCommand(ICommand command, KeyType keyType, AudioClip sound)
