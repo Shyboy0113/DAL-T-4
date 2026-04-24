@@ -2098,7 +2098,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &296846507
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12155,7 +12155,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ElectricGlitchController
   glitchOverlay: {fileID: 296846508}
-  duration: 0.5
+  fadeInDuration: 0.05
+  fadeOutDuration: 0.5
+  maxAlpha: 1
 --- !u!1 &1450198665
 GameObject:
   m_ObjectHideFlags: 0
@@ -16436,7 +16438,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94216bda35a9e0348a3449e3816aedad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapPivot: {fileID: 0}
+  mapFirstPivot: {fileID: 0}
+  mapSecondPivot: {fileID: 0}
   rotateDuration: 0.5
   mapFirstRoot: {fileID: 0}
   mapSecondRoot: {fileID: 0}
