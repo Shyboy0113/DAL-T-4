@@ -229,7 +229,22 @@ public class TileBehaviour : BaseTile
                 if (teleportTarget && pb != null)
                 {
                     bool wasOnIce = pb.IsOnIce();
+                    
+                    // Map 1 -> Map 2 혹은 Map 2 -> Map 1 이동처럼, 다른 타일맵으로 이동하는 텔레포트 로직인지
+                    bool isCrossMap = (this.gameObject.layer != teleportTarget.gameObject.layer);
+                   
+                    // 플레이어 위치 이동
                     pb.TeleportTo(teleportTarget.transform.position);
+
+                    if (isCrossMap) // 다른 레이어의 맵으로 넘어갔다면
+                    {
+                        // 플레이어의 레이어를 도착지 맵 레이어로 변경 
+                        pb.gameObject.layer = teleportTarget.gameObject.layer;
+                        
+                        // 맵 전환 이벤트
+                        GameEvents.RaiseTileMapChanged();
+                    }
+                    
                     // Ice 슬라이딩 중 텔레포트: continueIceAfterTeleport 토글로 동작 분기
                     // false(기본): EndTeleport 도착 즉시 멈춤 (Stop 타일과 동일 효과)
                     // true       : EndTeleport 도착 후 같은 방향으로 Ice 슬라이딩 유지
