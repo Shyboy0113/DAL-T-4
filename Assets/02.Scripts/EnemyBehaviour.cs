@@ -22,30 +22,28 @@ public class EnemyBehaviour : MonoBehaviour
     [SerializeField] private float slideSpeed = 5f;
 
     [SerializeField] private MapManager mapManager;
-
+    
     private Coroutine _slideCoroutine = null;
     private Vector2 _lastMoveDirection;
     
     [SerializeField] private Animator animator;
     private Collider2D _collider2D;
     private Rigidbody2D _rigidbody2D;
-    private SpriteRenderer _spriteRenderer;
-    
+    [SerializeField] private SpriteRenderer backGroundSpriteRenderer;
     [SerializeField] private SpriteRenderer iconSpriteRenderer;
 
+    [SerializeField] private EnemyShadow enemyShadow;
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
         _collider2D = GetComponent<Collider2D>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
     {
-        GameEvents.BeforeMapRotated  += FreezeEnemyPhysicalLogic;
-        GameEvents.AfterMapRotated   += FreezeEnemyPhysicalLogic;
+        GameEvents.MapRotationStarted    += FreezeEnemyPhysicalLogic;
+        GameEvents.MapRotationCompleted  += FreezeEnemyPhysicalLogic;
         GameEvents.ChatCommandDance  += OnChatDance;
         GameEvents.ChatCommandLove   += OnChatLove;
         GameEvents.PhysicsTurnStarted += OnPhysicsTurn;
@@ -53,8 +51,8 @@ public class EnemyBehaviour : MonoBehaviour
 
     private void OnDisable()
     {
-        GameEvents.BeforeMapRotated   -= FreezeEnemyPhysicalLogic;
-        GameEvents.AfterMapRotated    -= FreezeEnemyPhysicalLogic;
+        GameEvents.MapRotationStarted    -= FreezeEnemyPhysicalLogic;
+        GameEvents.MapRotationCompleted  -= FreezeEnemyPhysicalLogic;
         GameEvents.ChatCommandDance   -= OnChatDance;
         GameEvents.ChatCommandLove    -= OnChatLove;
         GameEvents.PhysicsTurnStarted -= OnPhysicsTurn;
@@ -220,7 +218,7 @@ public class EnemyBehaviour : MonoBehaviour
     {
         yield return new WaitForSeconds(0.75f);
 
-        if(_spriteRenderer != null) _spriteRenderer.enabled = false;
+        if(backGroundSpriteRenderer != null) backGroundSpriteRenderer.enabled = false;
     }
 
     public void SetStartPosition(Vector3 pos)
@@ -240,7 +238,7 @@ public class EnemyBehaviour : MonoBehaviour
         _rigidbody2D.simulated = true;
 
         _collider2D.enabled = true;
-        _spriteRenderer.enabled = true;
+        backGroundSpriteRenderer.enabled = true;
         
         transform.position = startPosition;
 
@@ -249,6 +247,9 @@ public class EnemyBehaviour : MonoBehaviour
         Physics2D.SyncTransforms();
 
         SetDeadState(false);
+        
+        // 자식 레이어들도 전부 Map 1 혹은 Map 2 레이어로 재설정
+        GetComponent<Enemy_ChangeLayerByParent>().ApplyParentLayer();
     }
 
     public void SetDeadState(bool isDead)
@@ -276,19 +277,22 @@ public class EnemyBehaviour : MonoBehaviour
             animator.Play("Explosion");
             
             StartCoroutine(IDisableSprite());
-            
+
+            enemyShadow?.Hide();
+
         }
         else
         {
             _rigidbody2D.simulated = true;
             _collider2D.enabled = true;
-            _spriteRenderer.enabled = true;
+            backGroundSpriteRenderer.enabled = true;
             
             if (iconSpriteRenderer != null)
                 iconSpriteRenderer.enabled = true; // 살아나면 Icon 활성화
             
             animator.Play("Idle");
             
+            enemyShadow?.Show();
             
         }
 
@@ -311,7 +315,7 @@ public class EnemyBehaviour : MonoBehaviour
     }
 
     // 적이 플레이어와 같은 맵(레이어)에 있는지 확인
-    private bool IsOnSameMapAsPlayer()
+    public bool IsOnSameMapAsPlayer()
     {
         int map1Layer = LayerMask.NameToLayer("Map 1");
         bool enemyOnMap1  = gameObject.layer == map1Layer;

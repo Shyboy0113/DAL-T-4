@@ -82,13 +82,14 @@ public class EnemyManager : MonoBehaviour
             {
                 var (pos, layer) = spawnList[i];
                 _enemies[i].gameObject.layer = layer;
-                _enemies[i].SetStartPosition(pos);
 
+                _enemies[i].SetStartPosition(pos);
+                
                 if (layer == map1Layer)
                     _enemies[i].transform.SetParent(map1Container, false);
                 else if (layer == map2Layer)
                     _enemies[i].transform.SetParent(map2Container, false);
-
+                
                 _enemies[i].gameObject.SetActive(true);
                 _enemies[i].Init();
             }
