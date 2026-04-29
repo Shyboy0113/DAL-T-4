@@ -105,7 +105,7 @@ public class AutoFieldAssigner : EditorWindow
                     continue;
                 }
 
-                Transform child = prefab.transform.Find(m.childName);
+                Transform child = FindDeep(prefab.transform, m.childName);
                 if (child == null)
                 {
                     Debug.LogWarning($"{prefab.name}: 자식 '{m.childName}' 없음");
@@ -132,6 +132,17 @@ public class AutoFieldAssigner : EditorWindow
 
         AssetDatabase.SaveAssets();
         Debug.Log($"완료! {count}개 프리팹 할당됨");
+    }
+
+    private static Transform FindDeep(Transform root, string name)
+    {
+        foreach (Transform child in root)
+        {
+            if (child.name == name) return child;
+            Transform found = FindDeep(child, name);
+            if (found != null) return found;
+        }
+        return null;
     }
 }
 #endif
