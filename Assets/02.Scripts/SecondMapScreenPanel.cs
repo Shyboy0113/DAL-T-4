@@ -1,51 +1,48 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-/// <summary>
-/// Second Map Screen Panel의 현재 맵 표시 텍스트와 맵 없음 오버레이를 관리합니다.
-///
-/// [씬 설정]
-/// - mapLabel     : 패널 중앙 상단 TMP 텍스트 ("Map 1" / "Map 2")
-/// - noMapOverlay : Map 2가 없을 때 표시할 X자 이미지 GameObject
-/// - StageLoader에서 스테이지 로드 후 Refresh() 호출
-/// </summary>
 public class SecondMapScreenPanel : MonoBehaviour
 {
-    [SerializeField] private TMP_Text  mapLabel;
-    [SerializeField] private GameObject noMapOverlay; // X자 이미지
+    [SerializeField] private TMP_Text   mapLabel;
+    [SerializeField] private GameObject noMapOverlay;
     [SerializeField] private MapManager mapManager;
 
-    private void Start()
-    {
-        UpdatePanel();
-    }
+    [Header("Raw Images")]
+    [SerializeField] private RawImage screen;     // 메인 게임 뷰 (전체화면)
+    [SerializeField] private RawImage firstMap;   // 패널 첫 번째 슬롯
+    [SerializeField] private RawImage secondMap;  // 패널 두 번째 슬롯
 
+    [Header("Render Textures")]
+    [SerializeField] private RenderTexture firstTexture;
+    [SerializeField] private RenderTexture secondTexture;
+    
     private void OnEnable()
     {
-        GameEvents.TileMapChanged += OnMapChanged;
+        GameEvents.MapActivated += OnMapActivated;
     }
 
     private void OnDisable()
     {
-        GameEvents.TileMapChanged -= OnMapChanged;
+        GameEvents.MapActivated -= OnMapActivated;
     }
 
-    // 스테이지 로드 후 StageLoader에서 호출
-    public void Refresh()
+    // MapManager.ActivateFirst/Second 및 Init에서 발행 — Undo 복원 포함
+    private void OnMapActivated(bool isFirst)
     {
+        screen.texture    = isFirst ? firstTexture  : secondTexture;
+        firstMap.texture  = isFirst ? secondTexture : firstTexture;
+        secondMap.texture = isFirst ? firstTexture  : secondTexture;
         UpdatePanel();
     }
 
-    private void OnMapChanged()
-    {
-        UpdatePanel();
-    }
-
-    private void UpdatePanel()
+    public void UpdatePanel()
     {
         bool hasSecondMap = GameManager.Instance.currentStageData?.hasSecondMap ?? false;
+        Debug.Log($"UpdatePanel called — hasSecondMap: {hasSecondMap}");
 
         noMapOverlay.SetActive(!hasSecondMap);
+        secondMap.enabled = hasSecondMap;
 
         if (!hasSecondMap)
         {

@@ -15,18 +15,21 @@ public enum PlayerDirection { Right, Down, Left, Up }
 public class PlayerBehaviour : MonoBehaviour
 {
     #region References
-    [SerializeField] private BehaviourManager          behaviourManager;
+
+    [SerializeField] private BehaviourManager behaviourManager;
     [SerializeField] private PlayerUndoStateBridge undoRedoState;
-    [SerializeField] private PlayerAnimator            playerAnimator;
-    [SerializeField] private MapManager                mapManager;
-    [SerializeField] private SoundEffectPlayer         soundEffectPlayer;
-    [SerializeField] private AudioClip                 triggerSound;
-    [SerializeField] private AudioClip                 cancelSound;
-    [SerializeField] private AudioClip                 whistleSound;
-    [SerializeField] private PlayerShadow              playerShadow;
+    [SerializeField] private PlayerAnimator playerAnimator;
+    [SerializeField] private MapManager mapManager;
+    [SerializeField] private SoundEffectPlayer soundEffectPlayer;
+    [SerializeField] private AudioClip triggerSound;
+    [SerializeField] private AudioClip cancelSound;
+    [SerializeField] private AudioClip whistleSound;
+    [SerializeField] private PlayerShadow playerShadow;
+
     #endregion
 
     #region Sequence UI
+
     public event Action OnInputQueueChanged;
     private int _stack = 0;
     private const int MaxQueueSize = 3;
@@ -39,20 +42,24 @@ public class PlayerBehaviour : MonoBehaviour
         if (amount < 0 && _stack < _inputQueue.Count) _inputQueue[_stack] = 0;
         OnInputQueueChanged?.Invoke();
     }
+
     #endregion
 
     #region Physics
+
     private Rigidbody2D _rigidbody2D;
-    private Collider2D  _collider2D;
+    private Collider2D _collider2D;
     [SerializeField] private float forceAmount = 1f;
 
     public void StopVelocity() => _rigidbody2D.linearVelocity = Vector2.zero;
+
     #endregion
 
     #region Input Lock
+
     [SerializeField] private bool _isInputLocked = false;
     [SerializeField] private bool _isEnemyActing = false;
-    [SerializeField] private bool _isMapBusy     = false;
+    [SerializeField] private bool _isMapBusy = false;
 
     private void SetInputLock(bool locked) => _isInputLocked = locked;
 
@@ -64,15 +71,52 @@ public class PlayerBehaviour : MonoBehaviour
 
     public bool CheckSkip() =>
         playerAnimator.IsRotating || _isInputLocked || _isMapBusy || _isEnemyActing;
+
     #endregion
 
     #region Puzzle Stats
-    public int moveCount     = 0;
-    public int rotationCount = 0;
-    public int TotalActionCount => moveCount + rotationCount;
 
-    public void CalculateMoveCount(int delta)     => moveCount     = Mathf.Max(0, moveCount     + delta);
-    public void CalculateRotationCount(int delta) => rotationCount = Mathf.Max(0, rotationCount + delta);
+    // Map 1 Count
+    public int map1MoveCount = 0;
+    public int map1RotationCount = 0;
+    public int map1ActionCount => map1MoveCount + map1RotationCount;
+
+    // Map 2 Count
+    public int map2MoveCount = 0;
+    public int map2RotationCount = 0;
+
+    public int map2ActionCount => map2MoveCount + map2RotationCount;
+
+    // Total Count
+    public int TotalMoveCount => map1MoveCount + map2MoveCount;
+    public int TotalRotationCount => map1RotationCount + map2RotationCount;
+
+    public int TotalActionCount => TotalMoveCount + TotalRotationCount;
+
+
+    public void CalculateMoveCount(int delta, bool isFirst)
+    {
+        if (isFirst)
+        {
+            map1MoveCount = Mathf.Max(0, map1MoveCount + delta);
+            return;
+        }
+        
+        map2MoveCount = Mathf.Max(0, map2MoveCount + delta);
+        
+    }
+
+public void CalculateRotationCount(int delta, bool isFirst)
+    {
+        if (isFirst)
+        {
+            map1RotationCount = Mathf.Max(0, map1RotationCount + delta);
+            return;
+        }
+        
+        map2RotationCount = Mathf.Max(0, map2RotationCount + delta);
+    }
+
     #endregion
 
     #region Direction
@@ -124,7 +168,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         EnableIceMode(false);
         if (!undoRedoState.IsUndo)
-            GameEvents.RaisePlayerActionFinished();
+            GameEvents.RaisePlayerActionFinished(gameObject.layer);
     }
 
     private IEnumerator Slide(Vector2 direction)
@@ -189,10 +233,10 @@ public class PlayerBehaviour : MonoBehaviour
         GameEvents.PlayerDied          += OnPlayerDied;
         GameEvents.StageCleared        += StopParticle;
         GameEvents.InputLockChanged    += SetInputLock;
-        GameEvents.OnEnemyTurnStarted  += (_) => _isEnemyActing = true;
-        GameEvents.OnPlayerTurnStarted += ()  => _isEnemyActing = false;
-        GameEvents.BeforeMapRotated    += FreezePlayerPhysicalLogic;
-        GameEvents.AfterMapRotated     += FreezePlayerPhysicalLogic;
+        GameEvents.EnemyTurnStarted      += (_) => _isEnemyActing = true;
+        GameEvents.PlayerTurnStarted     += ()  => _isEnemyActing = false;
+        GameEvents.MapRotationStarted    += FreezePlayerPhysicalLogic;
+        GameEvents.MapRotationCompleted  += FreezePlayerPhysicalLogic;
         GameEvents.ChatCommandSuicide  += PlayExplosion;
         GameEvents.PhysicsTurnStarted  += OnPhysicsTurn;
         
@@ -206,8 +250,8 @@ public class PlayerBehaviour : MonoBehaviour
         GameEvents.PlayerDied -= OnPlayerDied;
         GameEvents.StageCleared -= StopParticle;
         GameEvents.InputLockChanged -= SetInputLock;
-        GameEvents.BeforeMapRotated -= FreezePlayerPhysicalLogic;
-        GameEvents.AfterMapRotated -= FreezePlayerPhysicalLogic;
+        GameEvents.MapRotationStarted   -= FreezePlayerPhysicalLogic;
+        GameEvents.MapRotationCompleted -= FreezePlayerPhysicalLogic;
         GameEvents.ChatCommandSuicide -= PlayExplosion;
         GameEvents.PhysicsTurnStarted -= OnPhysicsTurn;
 
@@ -260,9 +304,12 @@ public class PlayerBehaviour : MonoBehaviour
 
     private IEnumerator MoveSequence()
     {
-        // 시퀀스 시작 시점의 Ice 상태를 캡처합니다.
-        // TileLogicTurn 중 StopIceAndFinish()/_isOnIce가 바뀌어도 이중 발화를 방지합니다.
-        bool startedOnIce = _isOnIce;
+        // 시퀀스 시작 시점의 Ice 상태와 맵 정보를 캡처합니다.
+        // TileLogicTurn 중 크로스 텔레포트로 gameObject.layer가 바뀌어도
+        // 이동이 발생한 원래 맵의 카운터와 레이어로 이벤트를 발화해야 합니다.
+        bool startedOnIce  = _isOnIce;
+        bool startedOnMap1 = IsMap1Layer();
+        int  startedLayer  = gameObject.layer;
         SetInputLock(true);
 
         yield return new WaitForSeconds(0.075f); // 물리 엔진이 이동을 처리할 때까지 대기
@@ -283,10 +330,18 @@ public class PlayerBehaviour : MonoBehaviour
         // PlayerActionFinished는 슬라이딩이 완전히 끝날 때 StopIceAndFinish()에서 발화합니다.
         if (!undoRedoState.IsUndo && !startedOnIce)
         {
-            GameEvents.RaisePlayerMoved(moveCount, gameObject.layer);
+            // 이동이 발생한 맵의 카운터와 레이어를 사용합니다 (크로스 텔레포트로 레이어가 바뀐 경우 대비).
+            if (startedOnMap1)
+            {
+                GameEvents.RaisePlayerMoved(map1MoveCount, LayerMask.NameToLayer("Map 1"));
+            }
+            else
+            {
+                GameEvents.RaisePlayerMoved(map2MoveCount, LayerMask.NameToLayer("Map 2"));
+            }
             // _isOnIce: Ice 타일을 방금 밟아 슬라이딩이 시작됐으면 발화 보류
             if (!_isOnIce)
-                GameEvents.RaisePlayerActionFinished();
+                GameEvents.RaisePlayerActionFinished(startedLayer);
         }
 
         yield return new WaitForSeconds(0.075f);
@@ -301,9 +356,12 @@ public class PlayerBehaviour : MonoBehaviour
         CheckForGround();
     }
 
-    public void RotateArrow(bool immediate = false)
+    public void RotateArrow(bool immediate = false, bool? isMap1Override = null)
     {
-        playerAnimator.RotateArrow(_playerDirection, immediate, rotationCount, gameObject.layer);
+        bool isMap1 = isMap1Override ?? IsMap1Layer();
+        int  rotationCount = isMap1 ? map1RotationCount : map2RotationCount;
+        int  layer         = isMap1 ? LayerMask.NameToLayer("Map 1") : LayerMask.NameToLayer("Map 2");
+        playerAnimator.RotateArrow(_playerDirection, immediate, rotationCount, layer);
         StartCoroutine(RotateGroundCheck());
     }
 
@@ -333,12 +391,14 @@ public class PlayerBehaviour : MonoBehaviour
         {
             _collider2D.enabled = false;
             PlayExplosion();
-            return false;
         }
         else if (CheckMapChange())
         {
+            Debug.Log("PlayerBehaviour : True입니다.");
             return true; // 맵 전환 발생 알림, 실제 전환은 PlayerInputHandler에서 커맨드로 처리
         }
+
+        Debug.Log("PlayerBehaviour : False 입니다.");
 
         return false;
     }
@@ -356,15 +416,39 @@ public class PlayerBehaviour : MonoBehaviour
         CheckForGround();
     }
 
-    public bool CheckGameOver() =>
-        (_inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.F4) ||
-        (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.F4);
+    public bool CheckGameOver()
+    {
+        // 방금 들어온 입력이 두 번째 슬롯일 때만 [0]과 [1] 검사
+        if (_stack == 2)
+        {
+            return _inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.F4;
+        }
+        // 방금 들어온 입력이 세 번째 슬롯일 때만 [1]과 [2] 검사
+        else if (_stack == 3)
+        {
+            return _inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.F4;
+        }
 
-    public bool CheckMapChange() =>
-        (GameManager.Instance.currentStageData?.hasSecondMap ?? false) &&
-        ((_inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.Tab) ||
-         (_inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.Tab));
+        return false;
+    }
 
+    public bool CheckMapChange()
+    {
+        if (!(GameManager.Instance.currentStageData?.hasSecondMap ?? false)) return false;
+
+        // 방금 들어온 입력이 두 번째 슬롯일 때만 [0]과 [1] 검사
+        if (_stack == 2)
+        {
+            return _inputQueue[0] == (int)KeyType.Alt && _inputQueue[1] == (int)KeyType.Tab;
+        }
+        // 방금 들어온 입력이 세 번째 슬롯일 때만 [1]과 [2] 검사
+        else if (_stack == 3)
+        {
+            return _inputQueue[1] == (int)KeyType.Alt && _inputQueue[2] == (int)KeyType.Tab;
+        }
+
+        return false;
+    }
     public int CheckInputQueue(int slot) => _inputQueue[slot];
 
     private void ResetQueue()
@@ -621,9 +705,12 @@ public class PlayerBehaviour : MonoBehaviour
             _slideCoroutine = null;
         }
 
-        moveCount     = 0;
-        rotationCount = 0;
-
+        // 스냅샷 용 초기화
+        map1MoveCount     = 0;
+        map1RotationCount = 0;
+        map2MoveCount     = 0;
+        map2RotationCount = 0;
+        
         _inputHistory.Clear();
         ResetQueue();
 
@@ -663,11 +750,17 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
+    // Map 1 / Map 2 관련 플레이어 행동을 카운트하는 타일을 따로 계산하기 위해, 분기점을 형성
+    public bool IsMap1Layer()
+    {
+        return LayerMask.LayerToName(gameObject.layer) == "Map 1";
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
-            PlayExplosion();
+            if (collision.GetComponent<EnemyBehaviour>().IsOnSameMapAsPlayer()) PlayExplosion();
         }
     }
 }

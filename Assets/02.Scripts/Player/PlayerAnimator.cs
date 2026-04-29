@@ -83,7 +83,7 @@ public class PlayerAnimator : MonoBehaviour
         if (!wasUndo)
         {
             GameEvents.RaisePlayerRotated(capturedCount, capturedLayer);
-            GameEvents.RaisePlayerActionFinished();
+            GameEvents.RaisePlayerActionFinished(capturedLayer);
         }
         
         arrow.transform

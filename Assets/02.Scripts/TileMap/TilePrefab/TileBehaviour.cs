@@ -147,8 +147,14 @@ public class TileBehaviour : BaseTile
         return new TileStateSnapshot(
             _currentHit,
             isToggled,
-            player ? player.moveCount        : 0,
-            player ? player.rotationCount    : 0,
+            player.IsMap1Layer(),
+            player ? player.gameObject.layer : 0,
+            player ? player.map1MoveCount : 0,
+            player ? player.map1RotationCount : 0,
+            player ? player.map1ActionCount : 0,
+            player ? player.map2MoveCount : 0,
+            player ? player.map2RotationCount : 0,
+            player ? player.map2ActionCount : 0,
             player ? player.TotalActionCount : 0,
             transform.rotation,
             iconRenderer.enabled,
@@ -160,6 +166,8 @@ public class TileBehaviour : BaseTile
     {
         _currentHit = snapshot.hitCount;
         isToggled   = snapshot.isToggled;
+
+        if (player != null) player.gameObject.layer = snapshot.playerLayer;
 
         if (IsRotationTile())
             transform.rotation = snapshot.rotation;
@@ -179,16 +187,33 @@ public class TileBehaviour : BaseTile
             _shakeCoroutine = StartCoroutine(ShakeUntilBreak());
 
         UpdateVisuals(true);
-
-        int snapshotCount = currentTileType switch
+        
+        if (snapshot.playerIsMap1)
         {
-            TileType.MoveToggle     => snapshot.playerMoveCount,
-            TileType.RotationToggle => snapshot.playerRotationCount,
-            TileType.ActiveToggle   => snapshot.playerTotalActionCount,
-            _                       => 0
-        };
+            int snapshotCount = currentTileType switch
+            {
+                TileType.MoveToggle => snapshot.playerMap1MoveCount,
+                TileType.RotationToggle => snapshot.playerMap1RotationCount,
+                TileType.ActiveToggle => snapshot.playerMap1ActionCount,
+                _ => 0
+            };
+            
+            UpdateCountText(snapshotCount);
+        }
+        else
+        {
+            int snapshotCount = currentTileType switch
+            {
+                TileType.MoveToggle => snapshot.playerMap2MoveCount,
+                TileType.RotationToggle => snapshot.playerMap2RotationCount,
+                TileType.ActiveToggle => snapshot.playerMap2ActionCount,
+                _ => 0
+            };
+            
+            UpdateCountText(snapshotCount);
+        }
 
-        UpdateCountText(snapshotCount);
+        
     }
 
     public void ApplyTileCommand(PlayerBehaviour pb = null, EnemyBehaviour eb = null)
@@ -229,26 +254,23 @@ public class TileBehaviour : BaseTile
                 if (teleportTarget && pb != null)
                 {
                     bool wasOnIce = pb.IsOnIce();
-                    
+
                     // Map 1 -> Map 2 혹은 Map 2 -> Map 1 이동처럼, 다른 타일맵으로 이동하는 텔레포트 로직인지
                     bool isCrossMap = (this.gameObject.layer != teleportTarget.gameObject.layer);
-                   
-                    // 플레이어 위치 이동
-                    pb.TeleportTo(teleportTarget.transform.position);
 
-                    if (isCrossMap) // 다른 레이어의 맵으로 넘어갔다면
+                    if (isCrossMap)
                     {
-                        // 플레이어의 레이어를 도착지 맵 레이어로 변경 
                         pb.gameObject.layer = teleportTarget.gameObject.layer;
-                        
-                        // 맵 전환 이벤트
                         GameEvents.RaiseTileMapChanged();
                     }
-                    
-                    // Ice 슬라이딩 중 텔레포트: continueIceAfterTeleport 토글로 동작 분기
+
+                    // 플레이어 위치 이동 (이 시점에 active root는 이미 도착 맵)
+                    pb.TeleportTo(teleportTarget.transform.position);
+
+                    // Ice 슬라이딩 중 텔레포트: continueIceModeAfterTeleport 토글로 동작 분기
                     // false(기본): EndTeleport 도착 즉시 멈춤 (Stop 타일과 동일 효과)
                     // true       : EndTeleport 도착 후 같은 방향으로 Ice 슬라이딩 유지
-                    if (wasOnIce && !continueIceAfterTeleport)
+                    if (wasOnIce && !continueIceModeAfterTeleport)
                         pb.StopIceAndFinish();
                 }
                 break;
@@ -352,23 +374,23 @@ public class TileBehaviour : BaseTile
             int remaining = CurrentToggleActivationCount - (safeCount % CurrentToggleActivationCount);
             if (remaining == 0) remaining = CurrentToggleActivationCount;
             targetText = remaining.ToString();
+            
+            if (countText.text != targetText)
+            {
+                countText.text = targetText;
+            
+                countText.transform.DOKill();
+                countText.transform.localScale = Vector3.one;
+
+                countText.transform.DOPunchPosition(new Vector3(0, 10f, 0), 0.3f, 10, 1);
+                countText.transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f), 0.3f, 10, 1);
+            }
+            
         }
         else if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
         {
             countText.text = CurrentTeleportID > 0 ? CurrentTeleportID.ToString() : "";
         }
-
-        if (countText.text != targetText)
-        {
-            countText.text = targetText;
-            
-            countText.transform.DOKill();
-            countText.transform.localScale = Vector3.one;
-
-            countText.transform.DOPunchPosition(new Vector3(0, 10f, 0), 0.3f, 10, 1);
-            countText.transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f), 0.3f, 10, 1);
-        }
-        
     }
 
     #endregion
@@ -439,8 +461,21 @@ public class TileBehaviour : BaseTile
     /// true  : Ice 슬라이딩 중 텔레포트 → EndTeleport 도착 후 Ice 유지 (계속 미끄러짐)
     /// false : Ice 슬라이딩 중 텔레포트 → EndTeleport 도착 후 Ice 종료 (Stop 타일과 동일)
     /// </summary>
-    [SerializeField] private bool continueIceAfterTeleport = false;
+    [SerializeField] private bool continueIceModeAfterTeleport = false;
 
+    [SerializeField] private bool overrideContinueIceModeAfterTeleport = false;
+    
+    // StageLoader에서 스테이지를 호출할 때, SO_StageData에 있는 continueIceModeAfterTeleport 변수 값을 반영시킴
+    public void SetcontinueIceModeAfterTeleport(bool setting)
+    {
+        if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
+        {
+            if (overrideContinueIceModeAfterTeleport) return;
+            
+            continueIceModeAfterTeleport = setting;
+        }
+    }
+    
     private void AutoLinkTeleport()
     {
         int myID = CurrentTeleportID;
@@ -524,11 +559,6 @@ public class TileBehaviour : BaseTile
         CheckOccupantsAfterToggle();
     }
 
-    private void Update()
-    {
-        if(currentTileType == TileType.ColorToggle || currentTileType == TileType.ToggleTargeted) Debug.Log(CurrentTileColor.ToString()+ " "+ transform.position);
-    }
-
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -561,6 +591,7 @@ public class TileBehaviour : BaseTile
     {
         GameEvents.ColorToggleTriggered  += HandleColorToggle;
         GameEvents.TileLogicTurnStarted  += OnTileLogicTurn;
+        GameEvents.StageLoaded += SetcontinueIceModeAfterTeleport;
 
         switch (currentTileType)
         {
@@ -580,7 +611,7 @@ public class TileBehaviour : BaseTile
         }
 
         GameEvents.TileIconRotated += RotateTileIcon;
-        GameEvents.AfterMapRotated += OnAfterMapRotated;
+        GameEvents.MapRotationCompleted += OnAfterMapRotated;
 
         // Ice 슬라이딩 중 자동 반응해야 하는 타일만 IceTileLogicTurnStarted를 구독
         if (currentTileType == TileType.Stop             ||
@@ -600,7 +631,8 @@ public class TileBehaviour : BaseTile
         GameEvents.PlayerMoved             -= HandleToggle;
         GameEvents.PlayerRotated           -= HandleToggle;
         GameEvents.TileIconRotated       -= RotateTileIcon;
-        GameEvents.AfterMapRotated       -= OnAfterMapRotated;
+        GameEvents.MapRotationCompleted  -= OnAfterMapRotated;
+        GameEvents.StageLoaded -= SetcontinueIceModeAfterTeleport;
     }
 
     private void HandleColorToggle(TileColor color, int layer)
@@ -717,6 +749,8 @@ public class TileBehaviour : BaseTile
     // OnTriggerEnter2D: 점유 등록만 담당. 실제 로직은 타일 로직 턴에서 처리
     protected override void OnPlayerEnter(PlayerBehaviour pb)
     {
+        // 플레이어가 속한 맵 레이어와 타일의 레이어가 다르면 무시 (크로스맵 오감지 방지)
+        if (pb.gameObject.layer != gameObject.layer) return;
         _isPlayerOnMe  = true;
         if (!IsUndoOr)
             _pendingPlayer = pb;
@@ -724,6 +758,7 @@ public class TileBehaviour : BaseTile
 
     protected override void OnEnemyEnter(EnemyBehaviour enemy)
     {
+        if (enemy.gameObject.layer != gameObject.layer) return;
         _isEnemyOnMe      = true;
         _currentEnemyOnMe = enemy;
         _pendingEnemy     = enemy;

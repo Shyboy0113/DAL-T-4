@@ -22,16 +22,16 @@ public class BehaviourManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameEvents.OnPlayerTurnStarted  += StartPlayerTurn;
-        GameEvents.OnEnemyTurnStarted   += StartEnemyTurn;
+        GameEvents.PlayerTurnStarted    += StartPlayerTurn;
+        GameEvents.EnemyTurnStarted     += StartEnemyTurn;
         GameEvents.PlayerDied           += StopAllEnemiesTurn;
         GameEvents.PlayerActionFinished += OnPlayerActionFinished;
     }
 
     private void OnDisable()
     {
-        GameEvents.OnPlayerTurnStarted  -= StartPlayerTurn;
-        GameEvents.OnEnemyTurnStarted   -= StartEnemyTurn;
+        GameEvents.PlayerTurnStarted    -= StartPlayerTurn;
+        GameEvents.EnemyTurnStarted     -= StartEnemyTurn;
         GameEvents.PlayerDied           -= StopAllEnemiesTurn;
         GameEvents.PlayerActionFinished -= OnPlayerActionFinished;
     }
@@ -39,20 +39,27 @@ public class BehaviourManager : MonoBehaviour
     public void ExecuteCommand(ICommand command)
     {
         if (CommandHistory.IsPlayerCommand(command))
-            GameEvents.RaiseSaveStateBeforeAction(playerBehaviour);
+            GameEvents.RaisePreActionStateSaveRequested(playerBehaviour);
 
         _history.Push(command);
         command.Execute();
+
+        // 크로스-텔레포트 사이드이펙트로 설정된 _mapChangedSinceLastSave 플래그가
+        // 이후 플레이어 커맨드의 MapState 스냅샷을 오염시키지 않도록 초기화합니다.
+        if (command is TileCommand && mapManager != null)
+            mapManager.ClearMapChangedFlag();
 
         if (CommandHistory.IsPlayerCommand(command) || CommandHistory.IsEnemyCommand(command))
             UpdateUndoUI();
     }
 
-    private void OnPlayerActionFinished()
+    private void OnPlayerActionFinished(int playerLayer)
     {
         if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
-        
-        GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount, playerBehaviour.gameObject.layer);
+
+        bool isMap1        = LayerMask.LayerToName(playerLayer) == "Map 1";
+        int mapActionCount = isMap1 ? playerBehaviour.map1ActionCount : playerBehaviour.map2ActionCount;
+        GameEvents.RaisePlayerActed(mapActionCount, playerLayer);
 
         if (playerBehaviour.TotalActionCount % 3 == 0)
             StartCoroutine(TurnSequence());
@@ -93,13 +100,27 @@ public class BehaviourManager : MonoBehaviour
             
             playerCommand.Undo();
             playerBehaviour.UndoState();
-            
-            GameEvents.RaisePlayerActed(playerBehaviour.TotalActionCount, playerBehaviour.gameObject.layer);
 
-            if (playerCommand is MoveCommand)
-                GameEvents.RaisePlayerMoved(playerBehaviour.moveCount, playerBehaviour.gameObject.layer);
-            else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
-                GameEvents.RaisePlayerRotated(playerBehaviour.rotationCount, playerBehaviour.gameObject.layer);
+            if (playerBehaviour.IsMap1Layer()) // 이 부분 수정
+            {
+                GameEvents.RaisePlayerActed(playerBehaviour.map1ActionCount, playerBehaviour.gameObject.layer);
+                
+                if (playerCommand is MoveCommand)
+                    GameEvents.RaisePlayerMoved(playerBehaviour.map1MoveCount, playerBehaviour.gameObject.layer);
+                else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
+                    GameEvents.RaisePlayerRotated(playerBehaviour.map1RotationCount, playerBehaviour.gameObject.layer);
+            }
+            else
+            {
+                GameEvents.RaisePlayerActed(playerBehaviour.map2ActionCount, playerBehaviour.gameObject.layer);
+                
+                if (playerCommand is MoveCommand)
+                    GameEvents.RaisePlayerMoved(playerBehaviour.map2MoveCount, playerBehaviour.gameObject.layer);
+                else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
+                    GameEvents.RaisePlayerRotated(playerBehaviour.map2RotationCount, playerBehaviour.gameObject.layer);
+            }
+
+            
         }
 
         UpdateUndoUI();

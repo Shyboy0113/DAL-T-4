@@ -104,7 +104,8 @@ public class PlayerInputHandler : MonoBehaviour
         if (isMapChange)
         {
             behaviourManager.ExecuteCommand(new TileMapChangeCommand(mapManager, playerBehaviour));
-            //return;
+            
+            Debug.Log("PlayerInputHandler : 맵 변환 커맨드를 실행시킵니다.");
         }
         
         // 게임오버(Alt+F4 등)가 발생해도 커맨드는 실행합니다.

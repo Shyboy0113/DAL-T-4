@@ -12,20 +12,26 @@ public interface ICommand
 public class ClockwiseRotateCommand : ICommand
 {
     private readonly PlayerBehaviour _playerBehaviour;
-    public ClockwiseRotateCommand(PlayerBehaviour playerBehaviour) => _playerBehaviour = playerBehaviour;
+    private readonly bool            _isMap1; // 키를 누른 시점의 맵 캡처
+
+    public ClockwiseRotateCommand(PlayerBehaviour playerBehaviour)
+    {
+        _playerBehaviour = playerBehaviour;
+        _isMap1          = playerBehaviour.IsMap1Layer();
+    }
 
     public void Execute()
     {
-        _playerBehaviour.CalculateRotationCount(1);
+        _playerBehaviour.CalculateRotationCount(1, _isMap1);
         _playerBehaviour.UpdateDirection(1);
-        _playerBehaviour.RotateArrow();
+        _playerBehaviour.RotateArrow(isMap1Override: _isMap1);
     }
 
     public void Undo()
     {
         _playerBehaviour.UpdateDirection(-1);
-        _playerBehaviour.RotateArrow(immediate: true);
-        _playerBehaviour.CalculateRotationCount(-1);
+        _playerBehaviour.RotateArrow(immediate: true, isMap1Override: _isMap1);
+        _playerBehaviour.CalculateRotationCount(-1, _isMap1);
         _playerBehaviour.UpdateSequenceCanvas(-1);
     }
 }
@@ -33,20 +39,26 @@ public class ClockwiseRotateCommand : ICommand
 public class CounterClockwiseRotateCommand : ICommand
 {
     private readonly PlayerBehaviour _playerBehaviour;
-    public CounterClockwiseRotateCommand(PlayerBehaviour playerBehaviour) => _playerBehaviour = playerBehaviour;
+    private readonly bool            _isMap1; // 키를 누른 시점의 맵 캡처
+
+    public CounterClockwiseRotateCommand(PlayerBehaviour playerBehaviour)
+    {
+        _playerBehaviour = playerBehaviour;
+        _isMap1          = playerBehaviour.IsMap1Layer();
+    }
 
     public void Execute()
     {
-        _playerBehaviour.CalculateRotationCount(1);
+        _playerBehaviour.CalculateRotationCount(1, _isMap1);
         _playerBehaviour.UpdateDirection(-1);
-        _playerBehaviour.RotateArrow();
+        _playerBehaviour.RotateArrow(isMap1Override: _isMap1);
     }
 
     public void Undo()
     {
         _playerBehaviour.UpdateDirection(1);
-        _playerBehaviour.RotateArrow(immediate: true);
-        _playerBehaviour.CalculateRotationCount(-1);
+        _playerBehaviour.RotateArrow(immediate: true, isMap1Override: _isMap1);
+        _playerBehaviour.CalculateRotationCount(-1, _isMap1);
         _playerBehaviour.UpdateSequenceCanvas(-1);
     }
 }
@@ -54,23 +66,27 @@ public class CounterClockwiseRotateCommand : ICommand
 public class MoveCommand : ICommand
 {
     private readonly PlayerBehaviour _playerBehaviour;
-    private Vector3 _previousPosition;
+    private Vector3                  _previousPosition;
+    private readonly bool            _isMap1; // 키를 누른 시점의 맵 캡처
 
-    public MoveCommand(PlayerBehaviour playerBehaviour) => _playerBehaviour = playerBehaviour;
+    public MoveCommand(PlayerBehaviour playerBehaviour)
+    {
+        _playerBehaviour = playerBehaviour;
+        _isMap1          = playerBehaviour.IsMap1Layer();
+    }
 
     public void Execute()
     {
         _previousPosition = _playerBehaviour.transform.position;
-        _playerBehaviour.CalculateMoveCount(1);
+        _playerBehaviour.CalculateMoveCount(1, _isMap1);
         _playerBehaviour.MovePlayer();
     }
 
     public void Undo()
     {
-        // Ice 모드 해제 후 위치 복원
         _playerBehaviour.EnableIceMode(false);
         _playerBehaviour.transform.position = _previousPosition;
-        _playerBehaviour.CalculateMoveCount(-1);
+        _playerBehaviour.CalculateMoveCount(-1, _isMap1);
         _playerBehaviour.UpdateSequenceCanvas(-1);
         _playerBehaviour.StopVelocity();
     }
