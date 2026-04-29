@@ -9,7 +9,6 @@ public class MapManager : MonoBehaviour
     {
         // [공통 상태]
         public bool isFirst;
-        public RenderTexture renderTexture;
 
         // [Map 1 전용 상태]
         public Vector3 firstRootPosition;           // Map1 오브젝트 위치
@@ -57,12 +56,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject mapFirstRoot;
     [SerializeField] private GameObject mapSecondRoot;
     [SerializeField] private GameObject mapStaticRoot;
-    
-    [SerializeField] private RawImage screen;
-    [SerializeField] private RenderTexture mapFirstRenderTexture;
-    [SerializeField] private RenderTexture mapSecondRenderTexture;
-    private RenderTexture _currentRenderTexture;
-    
+
     private GameObject _currentRoot;
     private Transform  _activatedRoot;
     private Transform  _deactivatedRoot;
@@ -106,24 +100,25 @@ public class MapManager : MonoBehaviour
         _deactivatedRoot = mapSecondRoot.transform;
         _staticRoot = mapStaticRoot.transform;
 
-        _firstAccumulatedRotation = 0f;
+        _firstAccumulatedRotation  = 0f;
         _secondAccumulatedRotation = 0f;
-    
-        _firstTileIconZRotation   = 0f;
-        _secondTileIconZRotation   = 0f;
-        
-        _isRotating          = false;
+
+        _firstTileIconZRotation  = 0f;
+        _secondTileIconZRotation = 0f;
+
+        if (mapFirstPivot  != null) mapFirstPivot.localRotation  = Quaternion.identity;
+        if (mapSecondPivot != null) mapSecondPivot.localRotation = Quaternion.identity;
+
+        _isRotating = false;
         _undoMapHistory.Clear();
 
-        //Raw Image의 RenderTexture 변화
-        screen.texture = mapFirstRenderTexture;
-        _currentRenderTexture = mapFirstRenderTexture;
-        
         player.ChangePlayerTransform(new Vector3(player.transform.position.x,player.transform.position.y,mapFirstRoot.transform.position.z));
-        
+        player.gameObject.layer = LayerMask.NameToLayer("Map 1");
+
         SetCameraLayer();
+        //GameEvents.RaiseMapActivated(true);
     }
-    
+
     private void ChangeTileMap()
     {
         _preChangeIsFirst        = _isFirst;
@@ -139,14 +134,12 @@ public class MapManager : MonoBehaviour
         _activatedRoot   = mapFirstRoot.transform;
         _deactivatedRoot = mapSecondRoot.transform;
         _currentRoot     = mapFirstRoot;
-        
-        //Raw Image의 RenderTexture 변화
-        screen.texture = mapFirstRenderTexture;
-        _currentRenderTexture = mapFirstRenderTexture;
-        
-        player.ChangePlayerTransform(new Vector3(player.transform.position.x,player.transform.position.y,mapFirstRoot.transform.position.z));
-        
+
+        player.ChangePlayerTransform(new Vector3(player.transform.position.x, player.transform.position.y, mapFirstRoot.transform.position.z));
+        player.gameObject.layer = LayerMask.NameToLayer("Map 1");
+
         SetCameraLayer();
+        GameEvents.RaiseMapActivated(true);
     }
 
     private void ActivateSecond()
@@ -154,14 +147,12 @@ public class MapManager : MonoBehaviour
         _activatedRoot   = mapSecondRoot.transform;
         _deactivatedRoot = mapFirstRoot.transform;
         _currentRoot     = mapSecondRoot;
-        
-        //Raw Image의 RenderTexture 변화
-        screen.texture = mapSecondRenderTexture;
-        _currentRenderTexture = mapSecondRenderTexture;
-        
-        player.ChangePlayerTransform(new Vector3(player.transform.position.x,player.transform.position.y,mapSecondRoot.transform.position.z));
-        
+
+        player.ChangePlayerTransform(new Vector3(player.transform.position.x, player.transform.position.y, mapSecondRoot.transform.position.z));
+        player.gameObject.layer = LayerMask.NameToLayer("Map 2");
+
         SetCameraLayer();
+        GameEvents.RaiseMapActivated(false);
     }
 
     private void SetCameraLayer()
@@ -191,13 +182,21 @@ public class MapManager : MonoBehaviour
 
     public Transform GetActiveMapRoot()   => _activatedRoot;
     public Transform GetInactiveMapRoot() => _deactivatedRoot;
-    public Transform GetStaticRoot() => _staticRoot;
+    public Transform GetStaticRoot()      => _staticRoot;
+    
+    // 레이어 무관하게 특정 맵 루트를 직접 반환 (EnemyShadow 등에서 사용)
+    public Transform GetFirstMapRoot()  => mapFirstRoot.transform;
+    public Transform GetSecondMapRoot() => mapSecondRoot.transform;
+
+    // BehaviourManager가 TileCommand 실행 후 호출 — 크로스-텔레포트 사이드이펙트로
+    // 설정된 플래그가 다음 플레이어 커맨드의 SaveMapState를 오염시키지 않도록 초기화합니다.
+    public void ClearMapChangedFlag() => _mapChangedSinceLastSave = false;
 
     private void OnEnable()
     {
         GameEvents.TileMapChanged        += ChangeTileMap;
         GameEvents.TileMapRotated        += RotateAroundCell;
-        GameEvents.SaveStateBeforeAction += SaveMapState;
+        GameEvents.PreActionStateSaveRequested += SaveMapState;
         GameEvents.UndoTriggered         += RestoreMapState;
     }
 
@@ -205,7 +204,7 @@ public class MapManager : MonoBehaviour
     {
         GameEvents.TileMapChanged        -= ChangeTileMap;
         GameEvents.TileMapRotated        -= RotateAroundCell;
-        GameEvents.SaveStateBeforeAction -= SaveMapState;
+        GameEvents.PreActionStateSaveRequested -= SaveMapState;
         GameEvents.UndoTriggered         -= RestoreMapState;
     }
 
@@ -217,7 +216,7 @@ public class MapManager : MonoBehaviour
 
         _isRotating = true;
         GameEvents.RaiseInputLockChanged(true);
-        GameEvents.RaiseBeforeMapRotated(true);
+        GameEvents.RaiseMapRotationStarted(true);
 
         Vector3 snappedPivot = new Vector3(
             Mathf.Floor(pb.transform.position.x) + 0.5f,
@@ -250,7 +249,7 @@ public class MapManager : MonoBehaviour
                     {
                         _isRotating = false;
                         GameEvents.RaiseInputLockChanged(false);
-                        GameEvents.RaiseAfterMapRotated(false);
+                        GameEvents.RaiseMapRotationCompleted(false);
                     });
                 }); 
         }
@@ -278,7 +277,7 @@ public class MapManager : MonoBehaviour
                     {
                         _isRotating = false;
                         GameEvents.RaiseInputLockChanged(false);
-                        GameEvents.RaiseAfterMapRotated(false);
+                        GameEvents.RaiseMapRotationCompleted(false);
                     });
                 }); 
         }
@@ -293,9 +292,6 @@ public class MapManager : MonoBehaviour
         // 직전에 맵 전환이 있었다면 전환 전 isFirst 값을 사용
         bool isFirstSnapshot     = _mapChangedSinceLastSave ? _preChangeIsFirst : _isFirst;
         _mapChangedSinceLastSave = false;
-
-        // isFirst와 renderTexture가 항상 일치하도록 isFirstSnapshot에서 파생
-        RenderTexture renderTextureSnapshot = isFirstSnapshot ? mapFirstRenderTexture : mapSecondRenderTexture;
 
         var state = new MapState
         {
@@ -313,7 +309,6 @@ public class MapManager : MonoBehaviour
             secondAccumulatedRotation =  _secondAccumulatedRotation,
             
             isFirst             = isFirstSnapshot,
-            renderTexture       = renderTextureSnapshot
         };
 
         _undoMapHistory.Push(state);
@@ -343,15 +338,14 @@ public class MapManager : MonoBehaviour
         _firstAccumulatedRotation = lastState.firstAccumulatedRotation;
         _secondAccumulatedRotation = lastState.secondAccumulatedRotation;
 
-        // 맵 전환 상태 복원
+        // 맵 전환 상태 복원 — ActivateFirst/Second 내부에서 MapActivated 이벤트 발행됨
         _isFirst = lastState.isFirst;
         if (_isFirst) ActivateFirst();
         else          ActivateSecond();
-        
-        // RenderTexture 복원
-        screen.texture = lastState.renderTexture;
-        _currentRenderTexture = lastState.renderTexture;
-        
+
+        // Undo 후 다음 SaveMapState가 오염되지 않도록 플래그 초기화
+        _mapChangedSinceLastSave = false;
+
         Physics2D.SyncTransforms();
     }
 
