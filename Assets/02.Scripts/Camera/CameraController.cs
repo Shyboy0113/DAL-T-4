@@ -72,7 +72,7 @@ public class CameraController : MonoBehaviour
         CenterOnMap1Tiles(instant: true);
     }
 
-    private void OnPlayerActionFinished()
+    private void OnPlayerActionFinished(int layer)
     {
         if (playerTransform == null || _isTweening) return;
 
