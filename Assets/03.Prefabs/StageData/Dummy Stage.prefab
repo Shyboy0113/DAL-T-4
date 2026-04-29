@@ -46,9 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 979951956f6260f419850acbfc9285c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapPivot: {fileID: 8472849335830768402}
+  mapFirstPivot: {fileID: 3076497431010509599}
+  mapSecondPivot: {fileID: 1901380670497444125}
   mapFirstRoot: {fileID: 7913548835788325989}
   mapSecondRoot: {fileID: 3637021470267711539}
+  mapStaticRoot: {fileID: 6919678000770388518}
 --- !u!1 &3637021470267711539
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,7 +61,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1901380670497444125}
   - component: {fileID: 3392406128733312399}
-  - component: {fileID: 7772170697005977982}
   m_Layer: 7
   m_Name: Tilemap_Second
   m_TagString: Untagged
@@ -148,20 +149,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &7772170697005977982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3637021470267711539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf42a3dbd8d5101438b491bb705949f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileColor: {r: 1, g: 1, b: 1, a: 1}
-  backGroundSprites: []
 --- !u!1 &6919678000770388518
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,7 +159,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3884029601505420844}
   - component: {fileID: 989797646800677360}
-  - component: {fileID: 7680904063914866403}
   m_Layer: 0
   m_Name: Static TileMap
   m_TagString: Untagged
@@ -233,20 +219,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &7680904063914866403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6919678000770388518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf42a3dbd8d5101438b491bb705949f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileColor: {r: 1, g: 1, b: 1, a: 0}
-  backGroundSprites: []
 --- !u!1 &7913548835788325989
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,7 +229,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3076497431010509599}
   - component: {fileID: 8536220292307677222}
-  - component: {fileID: 6230957508038673564}
   m_Layer: 6
   m_Name: Tilemap_First
   m_TagString: Untagged
@@ -347,21 +318,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!114 &6230957508038673564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7913548835788325989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf42a3dbd8d5101438b491bb705949f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileColor: {r: 1, g: 1, b: 1, a: 1}
-  backGroundSprites:
-  - {fileID: 7884709282497920678}
 --- !u!1 &8757729334423741161
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,6 +415,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TilePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 8584471514876223204, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: tileData
       value: 
@@ -472,11 +432,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
---- !u!212 &7884709282497920678 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 4596620451026543370, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
-  m_PrefabInstance: {fileID: 5955558210537053612}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8051957413461809441 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}

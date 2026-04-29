@@ -584,7 +584,8 @@ MonoBehaviour:
   mapManager: {fileID: 0}
   countText: {fileID: 8407074332212949285}
   teleportTarget: {fileID: 0}
-  continueIceAfterTeleport: 0
+  continueIceModeAfterTeleport: 0
+  overrideContinueIceModeAfterTeleport: 0
 --- !u!82 &5937775037576796057
 AudioSource:
   m_ObjectHideFlags: 0

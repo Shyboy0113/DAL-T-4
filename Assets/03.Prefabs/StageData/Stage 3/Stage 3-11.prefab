@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 979951956f6260f419850acbfc9285c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapFirstPivot: {fileID: 0}
-  mapSecondPivot: {fileID: 0}
+  mapFirstPivot: {fileID: 3076497431010509599}
+  mapSecondPivot: {fileID: 1901380670497444125}
   mapFirstRoot: {fileID: 7913548835788325989}
   mapSecondRoot: {fileID: 3637021470267711539}
   mapStaticRoot: {fileID: 6919678000770388518}
