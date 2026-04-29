@@ -35,6 +35,8 @@ public class SO_StageData : ScriptableObject
     public bool canUseTAB = false;
     
     public bool hasSecondMap = false;
+
+    public bool continueIceModeAfterTeleport = false;
     
     public int limitNumberALT;
     public int limitNumberF4;

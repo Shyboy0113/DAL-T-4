@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9ce091a50fdc34bbe98cb1fa21e5b7, type: 3}
   m_Name: Stage 1-5
   m_EditorClassIdentifier: 
-  stageDescription: 
-  stagePrefab: {fileID: 2685018636728712195, guid: d759349084d696f4c9cea7441d3d4835, type: 3}
+  stagePrefab: {fileID: 2685018636728712195, guid: 469383cb4e028264a9790f3c9ca2bfa7, type: 3}
   bgmClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   chapterNum: 1
   stageNum: 5
@@ -21,6 +20,7 @@ MonoBehaviour:
   canUseLeftALT: 1
   canUseTAB: 0
   hasSecondMap: 0
+  continueIceModeAfterTeleport: 0
   limitNumberALT: 0
   limitNumberF4: 0
   limitNumberTAB: 0
