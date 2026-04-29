@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class ChangeLayerByParent : MonoBehaviour
+public class TileMap_ChangeLayerByParent : MonoBehaviour
 {
     private void Awake()
     {

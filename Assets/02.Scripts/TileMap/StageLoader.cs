@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 
 [System.Serializable]
@@ -52,12 +53,12 @@ public class StageLoader : MonoBehaviour
 
         CenterCamerasOnTiles();
 
-        secondMapScreenPanel?.Refresh();
+        GameManager.Instance.InitStageData(chapterNum, stageNum, stageData);
+
+        secondMapScreenPanel?.UpdatePanel();
 
         if (SoundManager.Instance != null)
             SoundManager.Instance.RenewalBGM(stageData.bgmClip, stageData.stageName);
-
-        GameManager.Instance.InitStageData(chapterNum, stageNum, stageData);
 
         // 분석 세션 시작 (StageRecorder가 수신)
         GameEvents.RaiseStageRecordStarted(chapterNum, stageNum);
