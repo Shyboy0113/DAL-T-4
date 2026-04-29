@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,73 +9,81 @@ public class Option_Resolution : MonoBehaviour
     [Header("Resolutions")]
     public TMP_Dropdown resolutionDropdown;
     public Resolution[] resolutions;
-    
-    private const string ResolutionWidthKey = "ResolutionWidth"; //해상도 너비
-    private const string ResolutionHeightKey = "ResolutionHeight"; //해상도 높이
-    
+
+    private const string ResolutionWidthKey  = "ResolutionWidth";
+    private const string ResolutionHeightKey = "ResolutionHeight";
+
     [Header("Fullscreen")]
     public Toggle fullscreenToggle;
-    private const string FullScreenPrefKey = "FullScreen"; // 전체화면 저장
+    private const string FullScreenPrefKey = "FullScreen";
+    private bool _selectedFullScreen;
+    private bool _originalFullScreen;
 
     [Header("Rollback&Apply")]
     private Resolution _selectedResolution;
     private Resolution _originalResolution;
-    private bool _isChangeApplied = false;
-    
+
     [Header("CutOutFade")]
-    private CutoutFade _cutoutFade; // 해상도 조정 후, Fade용 Panel 해상도도 조정해줘야 함
-    
+    private CutoutFade _cutoutFade;
+
     private void Awake()
     {
-        // CutoutFade 컴포넌트를 씬에서 찾아옴
-        _cutoutFade = FindFirstObjectByType<CutoutFade>(); 
-        
+        _cutoutFade = FindFirstObjectByType<CutoutFade>();
         InitializeResolutions();
     }
-    
+
     private void OnEnable()
     {
-        int savedWidth = PlayerPrefs.GetInt(ResolutionWidthKey, 1920);
+        int savedWidth  = PlayerPrefs.GetInt(ResolutionWidthKey, 1920);
         int savedHeight = PlayerPrefs.GetInt(ResolutionHeightKey, 1080);
-    
+
         int index = FindResolutionIndex(savedWidth, savedHeight);
-        if (index != -1)
-            _originalResolution = resolutions[index];
+        if (index == -1) index = FindResolutionIndex(1920, 1080);
+        if (index == -1) index = resolutions.Length - 1;
+        _originalResolution = resolutions[index];
+
+        _originalFullScreen = Screen.fullScreen;
+        _selectedFullScreen = Screen.fullScreen;
 
         SyncFullscreenToggle();
         SyncDropdownToCurrentResolution();
     }
-    
 
-    void Start()
+    private void Start()
     {
         InitializeFullscreen();
         ApplySavedResolution();
     }
 
-    private void Update()
+    private void OnApplicationFocus(bool hasFocus)
     {
-        // Alt+Tab 등으로 전체화면 상태가 바뀌면 토글 자동 반영
-        if (fullscreenToggle != null && fullscreenToggle.isOn != Screen.fullScreen)
+        if (hasFocus)
         {
+            _selectedFullScreen = Screen.fullScreen;
             fullscreenToggle.SetIsOnWithoutNotify(Screen.fullScreen);
+            SyncDropdownToCurrentResolution();
         }
     }
-    
+
     // --- 초기화 ---
     private void InitializeFullscreen()
     {
-        bool isFullScreen = (PlayerPrefs.GetInt(FullScreenPrefKey, 0) == 1); // 기본값: 전체화면 아님
+        bool isFullScreen = (PlayerPrefs.GetInt(FullScreenPrefKey, 0) == 1);
         fullscreenToggle.isOn = isFullScreen;
         Screen.fullScreen = isFullScreen;
     }
 
+    private const float TargetAspect    = 16f / 9f;
+    private const float AspectTolerance = 0.01f;
+
     private void InitializeResolutions()
     {
-        // 1. 중복 제거 및 최고 주사율 필터링
         Dictionary<string, Resolution> uniqueResolutions = new Dictionary<string, Resolution>();
         foreach (Resolution res in Screen.resolutions)
         {
+            float aspect = (float)res.width / res.height;
+            if (Mathf.Abs(aspect - TargetAspect) > AspectTolerance) continue;
+
             string key = res.width + "x" + res.height;
             if (!uniqueResolutions.ContainsKey(key) || res.refreshRateRatio.value > uniqueResolutions[key].refreshRateRatio.value)
             {
@@ -82,7 +91,12 @@ public class Option_Resolution : MonoBehaviour
             }
         }
 
-        // 2. 리스트로 변환 후 정렬
+        if (uniqueResolutions.Count == 0)
+        {
+            Resolution fallback = new Resolution { width = 1920, height = 1080 };
+            uniqueResolutions["1920x1080"] = fallback;
+        }
+
         List<Resolution> filteredResolutions = new List<Resolution>(uniqueResolutions.Values);
         filteredResolutions.Sort((a, b) =>
         {
@@ -91,7 +105,6 @@ public class Option_Resolution : MonoBehaviour
         });
         resolutions = filteredResolutions.ToArray();
 
-        // 3. 드롭다운 채우기
         resolutionDropdown.ClearOptions();
         List<string> options = new List<string>();
 
@@ -105,15 +118,13 @@ public class Option_Resolution : MonoBehaviour
         resolutionDropdown.AddOptions(options);
     }
 
-    // 저장된 해상도 불러와서 적용 (첫 실행 시)
     private void ApplySavedResolution()
     {
-        int savedWidth = PlayerPrefs.GetInt(ResolutionWidthKey, 1920);
+        int savedWidth  = PlayerPrefs.GetInt(ResolutionWidthKey, 1920);
         int savedHeight = PlayerPrefs.GetInt(ResolutionHeightKey, 1080);
 
         int index = FindResolutionIndex(savedWidth, savedHeight);
 
-        // 저장된 해상도가 목록에 없으면 기본값 1920x1080 시도, 그것도 없으면 마지막 항목
         if (index == -1)
         {
             index = FindResolutionIndex(1920, 1080);
@@ -125,9 +136,20 @@ public class Option_Resolution : MonoBehaviour
         resolutionDropdown.RefreshShownValue();
 
         _selectedResolution = resolutions[index];
-        Screen.SetResolution(_selectedResolution.width, _selectedResolution.height, Screen.fullScreen);
-
-        if (_cutoutFade != null) _cutoutFade.ResizeResolution();
+        
+        bool isFullScreen = (PlayerPrefs.GetInt(FullScreenPrefKey, 0) == 1);
+        
+            if (isFullScreen)
+            {
+                Resolution native = Screen.currentResolution;
+                Screen.SetResolution(native.width, native.height, true);
+            }
+            else
+            {
+                Screen.SetResolution(_selectedResolution.width, _selectedResolution.height, false);
+            }
+        
+            if (_cutoutFade != null) _cutoutFade.ResizeResolution();
     }
 
     // --- 패널 열릴 때 동기화 ---
@@ -142,7 +164,7 @@ public class Option_Resolution : MonoBehaviour
         if (resolutionDropdown == null || resolutions == null || resolutions.Length == 0)
             return;
 
-        int savedWidth = PlayerPrefs.GetInt(ResolutionWidthKey, 1920);
+        int savedWidth  = PlayerPrefs.GetInt(ResolutionWidthKey, 1920);
         int savedHeight = PlayerPrefs.GetInt(ResolutionHeightKey, 1080);
 
         int index = FindResolutionIndex(savedWidth, savedHeight);
@@ -171,34 +193,51 @@ public class Option_Resolution : MonoBehaviour
         _selectedResolution = resolutions[resolutionIndex];
     }
 
-    // OK 버튼 — 확정 + 저장
+    public void SetFullScreen(bool isFullScreen)
+    {
+        _selectedFullScreen = isFullScreen;
+    }
+
+    // OK 버튼
     public void ApplyAndClose()
     {
-        Screen.SetResolution(_selectedResolution.width, _selectedResolution.height, Screen.fullScreen);
+        Screen.fullScreen = _selectedFullScreen;
+        PlayerPrefs.SetInt(FullScreenPrefKey, _selectedFullScreen ? 1 : 0);
+
+        if (_selectedFullScreen)
+        {
+            Resolution native = Screen.currentResolution;
+            Screen.SetResolution(native.width, native.height, true);
+        }
+        else
+        {
+            Screen.SetResolution(_selectedResolution.width, _selectedResolution.height, false);
+        }
 
         PlayerPrefs.SetInt(ResolutionWidthKey, _selectedResolution.width);
         PlayerPrefs.SetInt(ResolutionHeightKey, _selectedResolution.height);
         PlayerPrefs.Save();
 
         if (_cutoutFade != null) _cutoutFade.ResizeResolution();
+
+        // 패널이 닫히기 전에 동기 적용 (코루틴은 panel.SetActive(false) 시 소멸)
+        var letterbox = Camera.main?.GetComponent<LetterboxCamera>();
+        if (letterbox != null)
+            letterbox.Apply(_selectedResolution.width, _selectedResolution.height, _selectedFullScreen);
     }
 
-    // Cancel / ESC — 변경 취소
+    // Cancel / ESC
     public void CancelChange()
     {
         _selectedResolution = _originalResolution;
-
         int index = FindResolutionIndex(_originalResolution.width, _originalResolution.height);
         if (index != -1)
         {
             resolutionDropdown.value = index;
             resolutionDropdown.RefreshShownValue();
         }
-    }
 
-    public void SetFullScreen(bool isFullScreen)
-    {
-        Screen.fullScreen = isFullScreen;
-        PlayerPrefs.SetInt(FullScreenPrefKey, isFullScreen ? 1 : 0);
+        _selectedFullScreen = _originalFullScreen;
+        fullscreenToggle.SetIsOnWithoutNotify(_originalFullScreen);
     }
 }

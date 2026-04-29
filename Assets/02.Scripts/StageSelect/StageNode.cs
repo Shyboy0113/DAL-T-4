@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 using System;
-using TMPro;
 
 /// <summary>
 /// 스테이지 셀렉트 월드맵의 각 스테이지 노드.
@@ -180,5 +179,10 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
         if (progress == null || !progress.isAppeared) return NodeState.Locked;
         if (progress.isCleared)                       return NodeState.Cleared;
         return NodeState.Available;
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill(this);
     }
 }
