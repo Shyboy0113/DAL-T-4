@@ -1,211 +1,285 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// 게임 전역 이벤트 버스 (정적 클래스)
+///
+/// 네이밍 컨벤션
+///   이벤트    : PascalCase, 과거형(~ed) · 진행형(~ing) · 상태변화형(~Changed/~Started/~Completed)
+///   발행 함수 : Raise + 이벤트명
+///
+/// 주석 구조
+///   [발행] 호출 스크립트 — 발행 조건/시점
+///   [수신] 구독 스크립트 — 처리 내용
+/// </summary>
 public static class GameEvents
 {
     #region Game State
+    // 스테이지 단위 생명주기 (클리어 · 재시작 · 사망)
 
+    // [발행] TileBehaviour.cs — First/SecondDestination 타일 도달 시
+    // [수신] GameManager.cs — 클리어 처리 / UIManager.cs — 결과 UI 표시
     public static event Action StageCleared;
-    public static event Action StageRestarted;
-    public static event Action PlayerDied;
-    public static event Action EnemyDied;
+    public static void RaiseStageCleared() => StageCleared?.Invoke();
 
-    // 호출 위치: TileBehaviour.cs (First/SecondDestination 타일 도달 시)
-    public static void RaiseStageCleared()    => StageCleared?.Invoke();
-    
-    // 호출 위치: GameManager.cs 또는 UIManager.cs (재시작 버튼 클릭 시)
-    public static void RaiseStageRestarted()  => StageRestarted?.Invoke();
-    
-    // 호출 위치: PlayerBehaviour.cs (PlayExplosion() 발동 시)
-    public static void RaisePlayerDied()      => PlayerDied?.Invoke();
-    
-    // 호출 위치: EnemyBehaviour.cs (PlayExplosion() 발동 시)
-    public static void RaiseEnemyDied()       => EnemyDied?.Invoke();
+    // [발행] GameManager.cs / UIManager.cs — 재시작 버튼 클릭 시
+    // [수신] StageLoader.cs / GameManager.cs — 스테이지 재로드
+    public static event Action StageRestarted;
+    public static void RaiseStageRestarted() => StageRestarted?.Invoke();
+
+    // [발행] PlayerBehaviour.cs — PlayExplosion() 발동 시 (낙사 · 충돌 · 함정)
+    // [수신] GameManager.cs — 사망 처리 / UIManager.cs — 게임오버 UI
+    public static event Action PlayerDied;
+    public static void RaisePlayerDied() => PlayerDied?.Invoke();
+
+    // [발행] EnemyBehaviour.cs — PlayExplosion() 발동 시
+    // [수신] EnemyManager.cs / BehaviourManager.cs — 적 제거 처리
+    public static event Action EnemyDied;
+    public static void RaiseEnemyDied() => EnemyDied?.Invoke();
 
     #endregion
 
     #region Input Control
+    // 플레이어 입력 잠금 상태 변경
 
-    public static event Action<bool> InputLockChanged;
-
-    // 호출 위치: BehaviourManager.cs (턴 전환 시), MapManager.cs (맵 회전 애니메이션 진행 중)
+    // [발행] BehaviourManager.cs — 턴 전환 처리 시
+    //        MapManager.cs — 맵 회전 애니메이션 진행 중
+    // [수신] PlayerInputHandler.cs — 입력 수락/차단 전환
+    public static event Action<bool> InputLockChanged; // bool: isLocked
     public static void RaiseInputLockChanged(bool isLocked) => InputLockChanged?.Invoke(isLocked);
 
     #endregion
 
     #region Turn Flow
-    // 플레이어/적 이동 후, 타일이 OnTriggerEnter에서 등록한 pending 효과를 실행하는 턴
+    // 플레이어 · 적 · 물리 판정의 턴 순서 제어
+
+    // [발행] PlayerBehaviour.cs — 이동/회전 완료 직후
+    // [수신] TileBehaviour.cs — OnTriggerEnter에 등록한 타일 효과(pending) 실행
     public static event Action TileLogicTurnStarted;
-    // 호출 위치: PlayerBehaviour.cs (이동/회전이 끝난 직후 턴 흐름 제어 중)
     public static void RaiseTileLogicTurnStarted() => TileLogicTurnStarted?.Invoke();
 
-    // Ice 슬라이딩 중 매 물리 스텝 후 발화 — Stop/StartTeleport 타일만 수신
+    // [발행] PlayerBehaviour.cs — 얼음 미끄러짐 코루틴의 매 FixedUpdate
+    // [수신] TileBehaviour.cs — Stop/StartTeleport 타일만 수신, 슬라이딩 도중 타일 반응 처리
     public static event Action IceTileLogicTurnStarted;
-    // 호출 위치: PlayerBehaviour.cs (얼음 미끄러짐 코루틴의 FixedUpdate 내부)
     public static void RaiseIceTileLogicTurnStarted() => IceTileLogicTurnStarted?.Invoke();
 
-    // 타일 로직 턴 후, Player/Enemy가 낙사 등 물리 사망 여부를 판정하는 턴
+    // [발행] PlayerBehaviour.cs — TileLogicTurn 처리 완료 후
+    // [수신] PlayerBehaviour.cs / EnemyBehaviour.cs — 낙사 등 물리 사망 판정
     public static event Action PhysicsTurnStarted;
-    // 호출 위치: PlayerBehaviour.cs (TileLogicTurn 처리 후 바닥 확인을 위해 호출)
     public static void RaisePhysicsTurnStarted() => PhysicsTurnStarted?.Invoke();
 
-    // 플레이어 행동 하나(이동/회전)가 완전히 끝났을 때 발생
-    // BehaviourManager가 수신해서 액션 카운트 증가 및 적 턴 전환 처리
-    public static event Action PlayerActionFinished;
-    // 호출 위치: PlayerBehaviour.cs (물리 턴까지 모두 종료된 시점)
-    public static void RaisePlayerActionFinished() => PlayerActionFinished?.Invoke();
+    // [발행] PlayerBehaviour.cs — 물리 턴까지 완전히 종료된 시점
+    //        PlayerAnimator.cs — 회전 애니메이션 완료 시
+    // [수신] BehaviourManager.cs — 액션 카운트 증가 및 적 턴 전환 처리
+    public static event Action<int> PlayerActionFinished; // int: 플레이어 레이어
+    public static void RaisePlayerActionFinished(int playerLayer) => PlayerActionFinished?.Invoke(playerLayer);
 
-    public static event Action<Vector3> OnEnemyTurnStarted;
-    public static event Action          OnPlayerTurnStarted;
+    // [발행] BehaviourManager.cs — 플레이어 턴 종료 후 적 턴으로 전환 시
+    // [수신] EnemyBehaviour.cs / EnemyManager.cs — 적 이동/행동 실행
+    public static event Action<Vector3> EnemyTurnStarted; // Vector3: 플레이어 현재 위치
+    public static void RaiseEnemyTurnStarted(Vector3 playerPosition) => EnemyTurnStarted?.Invoke(playerPosition);
 
-    // 호출 위치: BehaviourManager.cs (Player 턴 종료 후 적 턴으로 넘길 때)
-    public static void RaiseEnemyTurnStarted(Vector3 playerPosition)  => OnEnemyTurnStarted?.Invoke(playerPosition);
-    
-    // 호출 위치: BehaviourManager.cs (적 턴 종료 후 다시 플레이어 턴으로 돌아올 때)
-    public static void RaisePlayerTurnStarted()                       => OnPlayerTurnStarted?.Invoke();
+    // [발행] BehaviourManager.cs — 적 턴 종료 후 플레이어 턴으로 복귀 시
+    // [수신] PlayerBehaviour.cs — _isEnemyActing 플래그 해제
+    public static event Action PlayerTurnStarted;
+    public static void RaisePlayerTurnStarted() => PlayerTurnStarted?.Invoke();
 
     #endregion
 
     #region Player Action Counter
-    // 각 타일의 토글 카운터 판정에 사용
-    // layer: 플레이어가 현재 속한 맵 레이어 — 같은 레이어의 토글 타일만 반응
+    // 타일 토글 카운터 판정 (layer 파라미터로 같은 레이어 토글 타일만 반응)
 
-    public static event Action<int, int> PlayerActed;    // ActiveToggle용  (이동 + 회전 합산)
-    public static event Action<int, int> PlayerMoved;    // MoveToggle용
-    public static event Action<int, int> PlayerRotated;  // RotationToggle용
+    // [발행] PlayerBehaviour.cs — 이동+회전 합산 액션 카운트 갱신 시
+    // [수신] TileBehaviour.cs — ActiveToggle 카운터 판정
+    public static event Action<int, int> PlayerActed; // (count, layer)
+    public static void RaisePlayerActed(int count, int layer) => PlayerActed?.Invoke(count, layer);
 
-    // 호출 위치: PlayerBehaviour.cs (CalculateActionCount / UpdateSequenceCanvas 등 액션 카운트 갱신 시)
-    public static void RaisePlayerActed(int count, int layer)   => PlayerActed?.Invoke(count, layer);
-    public static void RaisePlayerMoved(int count, int layer)   => PlayerMoved?.Invoke(count, layer);
+    // [발행] PlayerBehaviour.cs — 이동 액션 카운트 갱신 시
+    // [수신] TileBehaviour.cs — MoveToggle 카운터 판정
+    public static event Action<int, int> PlayerMoved; // (count, layer)
+    public static void RaisePlayerMoved(int count, int layer) => PlayerMoved?.Invoke(count, layer);
+
+    // [발행] PlayerBehaviour.cs — 회전 액션 카운트 갱신 시
+    // [수신] TileBehaviour.cs — RotationToggle 카운터 판정
+    public static event Action<int, int> PlayerRotated; // (count, layer)
     public static void RaisePlayerRotated(int count, int layer) => PlayerRotated?.Invoke(count, layer);
 
     #endregion
 
     #region Undo / Command Pattern
+    // 되돌리기 실행 · 실행 전 상태 스냅샷 요청 · UI 카운터 갱신
 
+    // [발행] BehaviourManager.cs — UndoTurn() 실행 시
+    //        PlayerInputHandler.cs — Ctrl+Z 입력 시
+    // [수신] MapManager.cs — 맵/회전 상태 복원
+    //        TileBehaviour.cs(BehaviourManager 경유) — 타일 상태 복원
     public static event Action UndoTriggered;
-    // 호출 위치: BehaviourManager.cs (UndoTurn() 실행 시) 또는 PlayerInputHandler.cs (Ctrl+Z)
     public static void RaiseUndoTriggered() => UndoTriggered?.Invoke();
-    
-    public static event Action<PlayerBehaviour> SaveStateBeforeAction;
-    // 호출 위치: BehaviourManager.cs (ExecuteCommand() 내에서 IsPlayerCommand 판정 시)
-    public static void RaiseSaveStateBeforeAction(PlayerBehaviour pb) => SaveStateBeforeAction?.Invoke(pb);
-    
-    public static event Action<int, int> UndoCountChanged;
-    // 호출 위치: BehaviourManager.cs (UpdateUndoUI() 갱신 시)
+
+    // [발행] BehaviourManager.cs — ExecuteCommand() 내부, 플레이어 커맨드 실행 직전
+    // [수신] MapManager.cs — 맵/회전 상태 스냅샷 저장 (Undo용)
+    public static event Action<PlayerBehaviour> PreActionStateSaveRequested;
+    public static void RaisePreActionStateSaveRequested(PlayerBehaviour pb) => PreActionStateSaveRequested?.Invoke(pb);
+
+    // [발행] BehaviourManager.cs — UpdateUndoUI() 갱신 시
+    // [수신] UIManager.cs 또는 UndoUI 컴포넌트 — 남은 Undo 횟수 표시
+    public static event Action<int, int> UndoCountChanged; // (undoCount, maxCount)
     public static void RaiseUndoCountChanged(int undoCount, int count) => UndoCountChanged?.Invoke(undoCount, count);
 
     #endregion
 
     #region TileMap
+    // 맵 전환 · 회전 · 활성화 · 초기화 이벤트
 
-    public static event Action                        TileMapChanged;
-    public static event Action<PlayerBehaviour, float> TileMapRotated;
-    public static event Action<bool>                  BeforeMapRotated;  // 회전 직전
-    public static event Action<bool>                  AfterMapRotated;   // 회전 직후
-    public static event Action<float>                 TileIconRotated;
+    // [발행] TileMapChangeCommand.cs — Execute() 내부 (ALT+TAB 맵 전환 시)
+    //        TileBehaviour.cs — 크로스맵 텔레포트 도착 시
+    // [수신] MapManager.cs — _isFirst 토글 및 활성 맵 전환
+    public static event Action TileMapChanged;
+    public static void RaiseTileMapChanged() => TileMapChanged?.Invoke();
 
-    // 호출 위치: TileMapChangeCommand.cs (Execute 내부), TileBehaviour.cs (크로스맵 텔레포트 적용 시)
-    public static void RaiseTileMapChanged()                                  => TileMapChanged?.Invoke();
-    
-    // 호출 위치: TileBehaviour.cs (시계/반시계 회전 타일(Quarter/Half Rotation)을 밟았을 때)
-    public static void RaiseTileMapRotated(PlayerBehaviour pb, float angle)   => TileMapRotated?.Invoke(pb, angle);
-    
-    // 호출 위치: MapManager.cs (RotateAroundCell() 애니메이션 시작 직전)
-    public static void RaiseBeforeMapRotated(bool freeze)                     => BeforeMapRotated?.Invoke(freeze);
-    
-    // 호출 위치: MapManager.cs (RotateAroundCell() 애니메이션 완료 직후)
-    public static void RaiseAfterMapRotated(bool freeze)                      => AfterMapRotated?.Invoke(freeze);
-    
-    // 호출 위치: MapManager.cs (맵 회전 후 타일 아이콘들의 역회전 보정 완료 시점)
-    public static void RaiseTileIconRotated(float angle)                      => TileIconRotated?.Invoke(angle);
+    // [발행] TileBehaviour.cs — Quarter/Half Rotation 타일을 밟았을 때
+    // [수신] MapManager.cs — RotateAroundCell() 애니메이션 실행
+    public static event Action<PlayerBehaviour, float> TileMapRotated; // float: 회전 각도(도)
+    public static void RaiseTileMapRotated(PlayerBehaviour pb, float angle) => TileMapRotated?.Invoke(pb, angle);
+
+    // [발행] MapManager.cs — RotateAroundCell() 애니메이션 시작 직전
+    // [수신] PlayerBehaviour.cs — 회전 중 플레이어 물리 로직 동결
+    //        EnemyBehaviour.cs — 회전 중 적 물리 로직 동결
+    public static event Action<bool> MapRotationStarted; // bool: freeze 여부
+    public static void RaiseMapRotationStarted(bool freeze) => MapRotationStarted?.Invoke(freeze);
+
+    // [발행] MapManager.cs — RotateAroundCell() 애니메이션 완료 후 0.55s 딜레이 후
+    // [수신] PlayerBehaviour.cs — 플레이어 물리 로직 재개
+    //        EnemyBehaviour.cs — 적 물리 로직 재개
+    //        TileBehaviour.cs — 회전 후 타일 레이어 재설정 (stop/fall 판정 등)
+    public static event Action<bool> MapRotationCompleted; // bool: freeze 해제 여부
+    public static void RaiseMapRotationCompleted(bool freeze) => MapRotationCompleted?.Invoke(freeze);
+
+    // [발행] MapManager.cs — 맵 회전 완료 후 타일 아이콘 역회전 보정 시
+    // [수신] TileBehaviour.cs — 각 타일 아이콘을 역방향으로 회전하여 원래 시점 유지
+    public static event Action<float> TileIconRotated; // float: 역회전 보정 각도
+    public static void RaiseTileIconRotated(float angle) => TileIconRotated?.Invoke(angle);
+
+    // [발행] MapManager.cs — Init() · ActivateFirst() · ActivateSecond() (Undo 복원 포함)
+    // [수신] SecondMapScreenPanel.cs — screen/firstMap/secondMap RenderTexture 및 레이블 일괄 갱신
+    public static event Action<bool> MapActivated; // bool: isFirst (Map 1 활성 여부)
+    public static void RaiseMapActivated(bool isFirst) => MapActivated?.Invoke(isFirst);
+
+    // [발행] MapManager.cs — InitializeNewStage() 완료 직후
+    // [수신] EnemyManager.cs — MapManager의 타일맵을 참조하여 적 스폰
+    public static event Action MapInitialized;
+    public static void RaiseMapInitialized() => MapInitialized?.Invoke();
 
     #endregion
 
     #region Tile Toggle
+    // 타일 토글 트리거 및 색상 토글 처리
 
-    // layer: 이벤트를 발생시킨 타일(= 플레이어가 서 있는 타일)의 레이어 — 같은 레이어의 토글 타일만 반응
-    public static event Action<int, int>          ToggleTriggered;       // StepOn → ToggleTargeted/TrapToggle용
-    public static event Action<TileColor, int>    ColorToggleTriggered;  // ColorToggle용
+    // [발행] TileBehaviour.cs — StepOn 타일 위에서 ApplyTileCommand 실행 시
+    // [수신] TileBehaviour.cs — ToggleTargeted/TrapToggle 타일이 count · layer 일치 여부로 반응
+    public static event Action<int, int> ToggleTriggered; // (count, layer)
+    public static void RaiseToggleTriggered(int count = -1, int layer = 0) => ToggleTriggered?.Invoke(count, layer);
 
-    // 호출 위치: TileBehaviour.cs (StepOn 타일을 밟아 ApplyTileCommand가 실행될 때)
-    public static void RaiseToggleTriggered(int count = -1, int layer = 0)        => ToggleTriggered?.Invoke(count, layer);
-    
-    // 호출 위치: TileBehaviour.cs (ColorToggle 타일을 밟아 ApplyTileCommand가 실행될 때)
-    public static void RaiseColorToggleTriggered(TileColor color, int layer = 0)  => ColorToggleTriggered?.Invoke(color, layer);
-
-    #endregion
-
-    #region Chat Commands
-
-    // 채팅 입력으로 발동되는 커맨드 이벤트 (키보드 입력과 동일한 효과)
-    public static event Action ChatCommandSuicide;    // "suicide"       → 플레이어 PlayExplosion
-    public static event Action ChatCommandRotateCW;   // "rotate"        → LeftALT와 동일
-    public static event Action ChatCommandRotateCCW;  // "counterrotate" → TAB과 동일
-    public static event Action ChatCommandMove;       // "move"          → F4와 동일
-
-    // 채팅 입력으로 발동되는 이스터에그 이벤트
-    public static event Action ChatCommandDance;    // "dance"      → 적 Dance 애니메이션
-    public static event Action ChatCommandLove;     // "i love you" → 적 Love 애니메이션
-    public static event Action ChatCommandWhistle;  // "whistle"    → 휘파람 효과음
-
-    // 호출 위치: 트위치/유튜브 채팅 연동 매니저 스크립트 (ChatManager.cs 등)에서 특정 채팅 감지 시
-    public static void RaiseChatCommandSuicide()   => ChatCommandSuicide?.Invoke();
-    public static void RaiseChatCommandRotateCW()  => ChatCommandRotateCW?.Invoke();
-    public static void RaiseChatCommandRotateCCW() => ChatCommandRotateCCW?.Invoke();
-    public static void RaiseChatCommandMove()      => ChatCommandMove?.Invoke();
-    public static void RaiseChatCommandDance()     => ChatCommandDance?.Invoke();
-    public static void RaiseChatCommandLove()      => ChatCommandLove?.Invoke();
-    public static void RaiseChatCommandWhistle()   => ChatCommandWhistle?.Invoke();
+    // [발행] TileBehaviour.cs — ColorToggle 타일 위에서 ApplyTileCommand 실행 시
+    // [수신] TileBehaviour.cs — 같은 TileColor를 가진 타일들이 토글 반응
+    public static event Action<TileColor, int> ColorToggleTriggered; // (color, layer)
+    public static void RaiseColorToggleTriggered(TileColor color, int layer = 0) => ColorToggleTriggered?.Invoke(color, layer);
 
     #endregion
-    
-    // MapManager에서 맵 스폰이 끝난 뒤, EnemyManager에서 MapManager의 타일맵을 참조하여 적을 스폰시키기 위한 이벤트
-    public static event Action MapInitialized;
-    
-    // 호출 위치: MapManager.cs (InitializeNewStage() 실행 완료 직후)
-    public static void RaiseMapInitialized() => MapInitialized?.Invoke();
-    
-    
-    // Steam의 도전과제 및 유저 플레이 타임 및 이탈율을 로그로 기록하기 위한 이벤트
-    #region StageRecorder
-    
-    public static event Action<int, int> StageRecordStarted;   // chapter, stage
-    public static event Action StageRecordEnded; // 세션 종료 (챕터/스테이지/시간은 StageRecorder 내부에서 추적)
-    public static event Action<int, int> StageAbandoned;        // StageSelect이동/종료 시
 
-    // 호출 위치: StageManager.cs 또는 GameManager.cs (스테이지 진입 시)
+    #region Stage Lifecycle
+    // 스테이지 로드 완료 및 플레이 기록 추적 (Steam 도전과제 · 이탈율 로그)
+
+    // [발행] StageLoader.cs — 스테이지 타일맵 로드 완료 시
+    // [수신] TileBehaviour.cs — continueIceModeAfterTeleport 초기값 수신
+    public static event Action<bool> StageLoaded;
+    public static void RaiseStageLoaded() => StageLoaded?.Invoke(true);
+
+    // [발행] GameManager.cs / StageManager.cs — 스테이지 진입 시
+    // [수신] StageRecorder.cs — 플레이 시간 · 이탈율 기록 시작
+    public static event Action<int, int> StageRecordStarted; // (chapter, stage)
     public static void RaiseStageRecordStarted(int ch, int st) => StageRecordStarted?.Invoke(ch, st);
-    
-    // 호출 위치: StageManager.cs 또는 GameManager.cs (스테이지 클리어 후 결과창 출력 시)
+
+    // [발행] GameManager.cs / StageManager.cs — 스테이지 클리어 후 결과창 출력 시
+    // [수신] StageRecorder.cs — 플레이 세션 종료 처리
+    public static event Action StageRecordEnded;
     public static void RaiseStageRecordEnded() => StageRecordEnded?.Invoke();
-    
-    // 호출 위치: UIManager.cs (일시정지 후 로비/스테이지 선택창으로 나갈 때)
+
+    // [발행] UIManager.cs — 일시정지 후 스테이지 선택 · 로비로 나갈 때
+    // [수신] StageRecorder.cs — 비정상 종료(이탈) 로그 기록
+    public static event Action<int, int> StageAbandoned; // (chapter, stage)
     public static void RaiseStageAbandoned(int ch, int st) => StageAbandoned?.Invoke(ch, st);
 
     #endregion
 
     #region Mission Tracking
+    // Star 수집 · 키 입력 누적 · 맵 전환 횟수 추적 (Steam 도전과제)
 
-    // Star 타일을 플레이어가 밟아 수집했을 때
+    // [발행] TileBehaviour.cs — Star 타일 위에서 ApplyTileCommand 실행 시
+    // [수신] StageRecorder.cs / UIManager.cs — 별 수집 카운트 갱신 및 도전과제 처리
     public static event Action StarCollected;
-    // 호출 위치: TileBehaviour.cs (Star 타일을 밟아 ApplyTileCommand가 실행될 때)
     public static void RaiseStarCollected() => StarCollected?.Invoke();
 
-    // ALT / F4 / TAB 키를 사용할 때마다 발생 (누적 도전과제 추적용)
+    // [발행] PlayerInputHandler.cs — EnqueueCommand() 실행 시마다
+    // [수신] StageRecorder.cs — ALT/F4/TAB 키 누적 사용 횟수 기록 (도전과제)
     public static event Action<KeyType> KeyUsed;
-    // 호출 위치: PlayerInputHandler.cs (EnqueueCommand() 실행될 때마다)
     public static void RaiseKeyUsed(KeyType keyType) => KeyUsed?.Invoke(keyType);
 
-    // ALT+TAB으로 맵이 전환될 때 발생 (Undo 제외, 실제 입력만 카운트)
+    // [발행] PlayerInputHandler.cs / TileMapChangeCommand.cs — ALT+TAB 맵 전환 입력 시 (Undo 제외)
+    // [수신] StageRecorder.cs — 실제 맵 전환 횟수 카운트 (도전과제)
     public static event Action MapSwitched;
-    // 호출 위치: PlayerInputHandler.cs (Map Switch 조작 시) 또는 TileMapChangeCommand.cs
     public static void RaiseMapSwitched() => MapSwitched?.Invoke();
 
     #endregion
 
+    #region Chat Commands
+    // 트위치/유튜브 채팅 연동 — 채팅 키워드를 게임 내 커맨드로 변환
+
+    // [발행] ChatManager.cs — "suicide" 채팅 감지 시
+    // [수신] PlayerBehaviour.cs — PlayExplosion() 호출 (F4와 동일 효과)
+    public static event Action ChatCommandSuicide;
+    public static void RaiseChatCommandSuicide() => ChatCommandSuicide?.Invoke();
+
+    // [발행] ChatManager.cs — "rotate" 채팅 감지 시
+    // [수신] PlayerInputHandler.cs — 시계 방향 회전 커맨드 (LeftALT와 동일)
+    public static event Action ChatCommandRotateCW;
+    public static void RaiseChatCommandRotateCW() => ChatCommandRotateCW?.Invoke();
+
+    // [발행] ChatManager.cs — "counterrotate" 채팅 감지 시
+    // [수신] PlayerInputHandler.cs — 반시계 방향 회전 커맨드 (TAB과 동일)
+    public static event Action ChatCommandRotateCCW;
+    public static void RaiseChatCommandRotateCCW() => ChatCommandRotateCCW?.Invoke();
+
+    // [발행] ChatManager.cs — "move" 채팅 감지 시
+    // [수신] PlayerInputHandler.cs — 이동 커맨드 (F4와 동일)
+    public static event Action ChatCommandMove;
+    public static void RaiseChatCommandMove() => ChatCommandMove?.Invoke();
+
+    // [발행] ChatManager.cs — "dance" 채팅 감지 시 (이스터에그)
+    // [수신] EnemyBehaviour.cs — Dance 애니메이션 재생
+    public static event Action ChatCommandDance;
+    public static void RaiseChatCommandDance() => ChatCommandDance?.Invoke();
+
+    // [발행] ChatManager.cs — "i love you" 채팅 감지 시 (이스터에그)
+    // [수신] EnemyBehaviour.cs — Love 애니메이션 재생
+    public static event Action ChatCommandLove;
+    public static void RaiseChatCommandLove() => ChatCommandLove?.Invoke();
+
+    // [발행] ChatManager.cs — "whistle" 채팅 감지 시 (이스터에그)
+    // [수신] 오디오 매니저 — 휘파람 효과음 재생
+    public static event Action ChatCommandWhistle;
+    public static void RaiseChatCommandWhistle() => ChatCommandWhistle?.Invoke();
+
+    #endregion
+
+    #region Visual Effects
+
+    // [발행] CanvasShake.cs / 특정 타일 기믹 · 게임오버 연출
+    // [수신] CanvasShake.cs — 화면 글리치 연출 실행
     public static event Action GlitchTriggered;
-    // 호출 위치: CanvasShake.cs (또는 특정 타일 기믹/게임오버 연출 등에서 호출)
     public static void RaiseGlitchTriggered() => GlitchTriggered?.Invoke();
+
+    #endregion
+
 
 }
