@@ -3,10 +3,6 @@
 using UnityEngine;
 using DG.Tweening;
 using System;
-using System.Collections;
-using TMPro; // Start()의 코루틴 때문에 유지
-
-using UnityEngine.UI;
 
 public class CutoutFade : MonoBehaviour
 {
@@ -65,5 +61,10 @@ public class CutoutFade : MonoBehaviour
                 // 이 블록 안의 코드는 애니메이션이 '정말로' 끝났을 때 실행됩니다.
                 onFadeComplete?.Invoke();
             });
+    }
+
+    private void OnDestroy()
+    {
+        rectTransform.DOKill(this);
     }
 }

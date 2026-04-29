@@ -20,7 +20,5 @@ public class Intro_GameStateManagement : MonoBehaviour
             SoundManager.Instance.RenewalBGMForSCene(introScene);
         }
         
-        Debug.Log(UnityEngine.SceneManagement.SceneManager.sceneCount);
-        
     }
 }

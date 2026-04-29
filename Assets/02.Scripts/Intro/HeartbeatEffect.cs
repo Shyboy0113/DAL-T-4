@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using DG.Tweening; // DoTween 네임스페이스 추가
 
@@ -30,5 +31,10 @@ public class HeartbeatEffect : MonoBehaviour
         transform.DOScale(maxScale, pulseDuration)
             .SetLoops(-1, LoopType.Yoyo) // 무한 반복, Yoyo는 갔다가 돌아오는 방식
             .SetEase(setEase); 
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
     }
 }
