@@ -17,6 +17,7 @@ public class ElectricGlitchController : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.GlitchTriggered += ToggleGlitch;
+        GameEvents.PlayerDied += ToggleGlitch;
     }
     
     private void Start()
@@ -32,6 +33,7 @@ public class ElectricGlitchController : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.GlitchTriggered -= ToggleGlitch;
+        GameEvents.PlayerDied -= ToggleGlitch;
         
         // 컴포넌트가 꺼질 때 실행 중인 트윈이 있다면 강제 종료 (메모리 누수 및 버그 방지)
         glitchOverlay.DOKill();

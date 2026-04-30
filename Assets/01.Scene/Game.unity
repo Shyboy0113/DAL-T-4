@@ -1360,7 +1360,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2786201527454922157, guid: 53cedb5f1e3414f4880cd7c08a95e6d6, type: 3}
       propertyPath: m_fontSize
-      value: 72
+      value: 70.55
       objectReference: {fileID: 0}
     - target: {fileID: 2786201527454922157, guid: 53cedb5f1e3414f4880cd7c08a95e6d6, type: 3}
       propertyPath: m_fontSizeBase
@@ -12638,7 +12638,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElectricGlitchController
   glitchOverlay: {fileID: 296846508}
   fadeInDuration: 0.05
-  fadeOutDuration: 0.5
+  fadeOutDuration: 5
   maxAlpha: 1
 --- !u!1 &1436032818
 GameObject:

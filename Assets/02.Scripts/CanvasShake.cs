@@ -31,11 +31,13 @@ public class CanvasShake : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.GlitchTriggered += TriggerRootShake;
+        GameEvents.PlayerDied += TriggerRootShake;
     }
 
     private void OnDisable()
     {
         GameEvents.GlitchTriggered -= TriggerRootShake;
+        GameEvents.PlayerDied -= TriggerRootShake;
         
         // 비활성화 시 즉시 정리
         _rectTransform.DOKill();
