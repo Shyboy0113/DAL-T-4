@@ -21,9 +21,6 @@ public class StageLoader : MonoBehaviour
     [Header("Enemy")]
     [SerializeField] private EnemyManager enemyManager;
 
-    [Header("UI")]
-    [SerializeField] private SecondMapScreenPanel secondMapScreenPanel;
-
     private GameObject _currentStageObject;
 
     [SerializeField] private TMP_Text stageText;
@@ -54,9 +51,7 @@ public class StageLoader : MonoBehaviour
         CenterCamerasOnTiles();
 
         GameManager.Instance.InitStageData(chapterNum, stageNum, stageData);
-
-        secondMapScreenPanel?.UpdatePanel();
-
+        
         if (SoundManager.Instance != null)
             SoundManager.Instance.RenewalBGM(stageData.bgmClip, stageData.stageName);
 

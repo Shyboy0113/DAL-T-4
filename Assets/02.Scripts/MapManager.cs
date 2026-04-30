@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -93,7 +94,10 @@ public class MapManager : MonoBehaviour
 
     public void Init()
     {
-        _isFirst      = true;
+        _isFirst = true;
+        _preChangeIsFirst        = false;
+        _mapChangedSinceLastSave = false;
+        
         _currentRoot  = mapFirstRoot;
 
         _activatedRoot   = mapFirstRoot.transform;
@@ -116,7 +120,6 @@ public class MapManager : MonoBehaviour
         player.gameObject.layer = LayerMask.NameToLayer("Map 1");
 
         SetCameraLayer();
-        //GameEvents.RaiseMapActivated(true);
     }
 
     private void ChangeTileMap()
