@@ -885,12 +885,12 @@ GameObject:
   - component: {fileID: 112610822}
   - component: {fileID: 112610821}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Glitch Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &112610820
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3310,7 +3310,6 @@ MonoBehaviour:
   mapLabel: {fileID: 1138241795}
   noMapOverlay: {fileID: 1095363322}
   mapManager: {fileID: 1887074968}
-  screen: {fileID: 2007340506}
   firstMap: {fileID: 2007340506}
   secondMap: {fileID: 828133216}
   firstTexture: {fileID: 8400000, guid: baa88828d0886224e916ab8955545824, type: 2}
@@ -5322,7 +5321,6 @@ MonoBehaviour:
   map1Camera: {fileID: 1139805366}
   map2Camera: {fileID: 987032174}
   enemyManager: {fileID: 0}
-  secondMapScreenPanel: {fileID: 392235733}
   stageText: {fileID: 221155286}
 --- !u!1 &661051925
 GameObject:
@@ -9786,7 +9784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2786201527454922157, guid: 53cedb5f1e3414f4880cd7c08a95e6d6, type: 3}
       propertyPath: m_fontSize
-      value: 50
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 2786201527454922157, guid: 53cedb5f1e3414f4880cd7c08a95e6d6, type: 3}
       propertyPath: m_fontColor.b
@@ -12597,11 +12595,11 @@ RectTransform:
   - {fileID: 1138803097}
   - {fileID: 2139439549}
   - {fileID: 576236550}
-  - {fileID: 306749980}
-  - {fileID: 2076162489}
   - {fileID: 19834944}
   - {fileID: 221155285}
   - {fileID: 112610820}
+  - {fileID: 306749980}
+  - {fileID: 2076162489}
   m_Father: {fileID: 600278179}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
