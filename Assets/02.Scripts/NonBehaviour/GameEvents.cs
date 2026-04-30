@@ -136,6 +136,11 @@ public static class GameEvents
     // [수신] MapManager.cs — _isFirst 토글 및 활성 맵 전환
     public static event Action TileMapChanged;
     public static void RaiseTileMapChanged() => TileMapChanged?.Invoke();
+    
+    // [발행] MapManager.cs — Init() · ActivateFirst() · ActivateSecond() (Undo 복원 포함)
+    // [수신] SecondMapScreenPanel.cs — screen/firstMap/secondMap RenderTexture 및 레이블 일괄 갱신
+    public static event Action<bool> MapActivated; // bool: isFirst (Map 1 활성 여부)
+    public static void RaiseMapActivated(bool isFirst) => MapActivated?.Invoke(isFirst);
 
     // [발행] TileBehaviour.cs — Quarter/Half Rotation 타일을 밟았을 때
     // [수신] MapManager.cs — RotateAroundCell() 애니메이션 실행
@@ -160,10 +165,6 @@ public static class GameEvents
     public static event Action<float> TileIconRotated; // float: 역회전 보정 각도
     public static void RaiseTileIconRotated(float angle) => TileIconRotated?.Invoke(angle);
 
-    // [발행] MapManager.cs — Init() · ActivateFirst() · ActivateSecond() (Undo 복원 포함)
-    // [수신] SecondMapScreenPanel.cs — screen/firstMap/secondMap RenderTexture 및 레이블 일괄 갱신
-    public static event Action<bool> MapActivated; // bool: isFirst (Map 1 활성 여부)
-    public static void RaiseMapActivated(bool isFirst) => MapActivated?.Invoke(isFirst);
 
     // [발행] MapManager.cs — InitializeNewStage() 완료 직후
     // [수신] EnemyManager.cs — MapManager의 타일맵을 참조하여 적 스폰
@@ -276,8 +277,8 @@ public static class GameEvents
 
     // [발행] CanvasShake.cs / 특정 타일 기믹 · 게임오버 연출
     // [수신] CanvasShake.cs — 화면 글리치 연출 실행
-    public static event Action GlitchTriggered;
-    public static void RaiseGlitchTriggered() => GlitchTriggered?.Invoke();
+    public static event Action GlitchTriggered; // 테스트용
+    public static void RaiseGlitchTriggered() => GlitchTriggered?.Invoke(); // 테스트용
 
     public static event Action TeleportTriggered;
     public static void  RaiseTeleportTriggered() => TeleportTriggered?.Invoke();
