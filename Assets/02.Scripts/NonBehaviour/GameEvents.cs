@@ -279,6 +279,9 @@ public static class GameEvents
     public static event Action GlitchTriggered;
     public static void RaiseGlitchTriggered() => GlitchTriggered?.Invoke();
 
+    public static event Action TeleportTriggered;
+    public static void  RaiseTeleportTriggered() => TeleportTriggered?.Invoke();
+
     #endregion
 
 
