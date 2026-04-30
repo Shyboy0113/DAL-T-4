@@ -11,104 +11,108 @@ public interface ICommand
 
 public class ClockwiseRotateCommand : ICommand
 {
-    private readonly PlayerBehaviour _playerBehaviour;
+    private readonly PlayerBehaviour _pb;
     private readonly bool            _isMap1; // 키를 누른 시점의 맵 캡처
 
-    public ClockwiseRotateCommand(PlayerBehaviour playerBehaviour)
+    public ClockwiseRotateCommand(PlayerBehaviour pb)
     {
-        _playerBehaviour = playerBehaviour;
-        _isMap1          = playerBehaviour.IsMap1Layer();
+        _pb = pb;
+        _isMap1          = pb.IsMap1Layer();
     }
 
     public void Execute()
     {
-        _playerBehaviour.CalculateRotationCount(1, _isMap1);
-        _playerBehaviour.UpdateDirection(1);
-        _playerBehaviour.RotateArrow(isMap1Override: _isMap1);
+        _pb.CalculateRotationCount(1, _isMap1);
+        _pb.UpdateDirection(1);
+        _pb.RotateArrow(isMap1Override: _isMap1);
     }
 
     public void Undo()
     {
-        _playerBehaviour.UpdateDirection(-1);
-        _playerBehaviour.RotateArrow(immediate: true, isMap1Override: _isMap1);
-        _playerBehaviour.CalculateRotationCount(-1, _isMap1);
-        _playerBehaviour.UpdateSequenceCanvas(-1);
+        _pb.UpdateDirection(-1);
+        _pb.RotateArrow(immediate: true, isMap1Override: _isMap1);
+        _pb.CalculateRotationCount(-1, _isMap1);
+        _pb.UpdateSequenceCanvas(-1);
     }
 }
 
 public class CounterClockwiseRotateCommand : ICommand
 {
-    private readonly PlayerBehaviour _playerBehaviour;
+    private readonly PlayerBehaviour _pb;
     private readonly bool            _isMap1; // 키를 누른 시점의 맵 캡처
 
-    public CounterClockwiseRotateCommand(PlayerBehaviour playerBehaviour)
+    public CounterClockwiseRotateCommand(PlayerBehaviour pb)
     {
-        _playerBehaviour = playerBehaviour;
-        _isMap1          = playerBehaviour.IsMap1Layer();
+        _pb = pb;
+        _isMap1          = pb.IsMap1Layer();
     }
 
     public void Execute()
     {
-        _playerBehaviour.CalculateRotationCount(1, _isMap1);
-        _playerBehaviour.UpdateDirection(-1);
-        _playerBehaviour.RotateArrow(isMap1Override: _isMap1);
+        _pb.CalculateRotationCount(1, _isMap1);
+        _pb.UpdateDirection(-1);
+        _pb.RotateArrow(isMap1Override: _isMap1);
     }
 
     public void Undo()
     {
-        _playerBehaviour.UpdateDirection(1);
-        _playerBehaviour.RotateArrow(immediate: true, isMap1Override: _isMap1);
-        _playerBehaviour.CalculateRotationCount(-1, _isMap1);
-        _playerBehaviour.UpdateSequenceCanvas(-1);
+        _pb.UpdateDirection(1);
+        _pb.RotateArrow(immediate: true, isMap1Override: _isMap1);
+        _pb.CalculateRotationCount(-1, _isMap1);
+        _pb.UpdateSequenceCanvas(-1);
     }
 }
 
 public class MoveCommand : ICommand
 {
-    private readonly PlayerBehaviour _playerBehaviour;
+    private readonly PlayerBehaviour _pb;
     private Vector3                  _previousPosition;
     private readonly bool            _isMap1; // 키를 누른 시점의 맵 캡처
 
-    public MoveCommand(PlayerBehaviour playerBehaviour)
+    public MoveCommand(PlayerBehaviour pb)
     {
-        _playerBehaviour = playerBehaviour;
-        _isMap1          = playerBehaviour.IsMap1Layer();
+        _pb = pb;
+        _isMap1          = pb.IsMap1Layer();
     }
 
     public void Execute()
     {
-        _previousPosition = _playerBehaviour.transform.position;
-        _playerBehaviour.CalculateMoveCount(1, _isMap1);
-        _playerBehaviour.MovePlayer();
+        Debug.Log("MoveCommand Execute");
+        
+        _previousPosition = _pb.transform.position;
+        _pb.CalculateMoveCount(1, _isMap1);
+        _pb.MovePlayer();
     }
 
     public void Undo()
     {
-        _playerBehaviour.EnableIceMode(false);
-        _playerBehaviour.transform.position = _previousPosition;
-        _playerBehaviour.CalculateMoveCount(-1, _isMap1);
-        _playerBehaviour.UpdateSequenceCanvas(-1);
-        _playerBehaviour.StopVelocity();
+        Debug.Log("MoveCommand Undo");
+        
+        _pb.EnableIceMode(false);
+        _pb.transform.position = _previousPosition;
+        _pb.CalculateMoveCount(-1, _isMap1);
+        _pb.UpdateSequenceCanvas(-1);
+        _pb.StopVelocity();
     }
 }
 
 public class SuicideCommand : ICommand
 {
-    private readonly PlayerBehaviour _playerBehaviour;
+    private readonly PlayerBehaviour _pb;
 
-    public SuicideCommand(PlayerBehaviour playerBehaviour)
+    public SuicideCommand(PlayerBehaviour pb)
     {
-        _playerBehaviour = playerBehaviour;
+        _pb = pb;
     }
 
     public void Execute()
     {
-        _playerBehaviour.SetDeadState(true);
+        _pb.SetDeadState(true);
     }
 
     public void Undo()
     {
-        _playerBehaviour.SetDeadState(false);
+        _pb.SetDeadState(false);
     }
 }
 
@@ -189,12 +193,16 @@ public class TileMapChangeCommand : ICommand
 
     public void Execute()
     {
+        Debug.Log("TileMApChangeCommand Execute");
+        
         GameEvents.RaiseTileMapChanged();
         GameEvents.RaiseMapSwitched();
     }
 
     public void Undo()
     {
+        Debug.Log("TileMApChangeCommand Undo");
+        
         GameEvents.RaiseTileMapChanged(); // 다시 전환하면 원래대로
     }
 }
