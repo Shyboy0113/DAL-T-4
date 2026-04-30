@@ -163,6 +163,9 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
         {
             _selectPlayer?.PlayEnterSound();
             OnConfirmed?.Invoke(this);
+            
+            // 텔레포트 이펙트 발동
+            GameEvents.RaiseTeleportTriggered();
         }
     }
 

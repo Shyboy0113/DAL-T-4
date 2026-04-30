@@ -111,7 +111,7 @@ public class StageSelectManagement : MonoBehaviour
         GameManager.Instance.chapter = node.stageData.chapterNum;
         GameManager.Instance.stage   = node.stageData.stageNum;
         
-        StartCoroutine(IFadeOut(1.0f));
+        StartCoroutine(IFadeOut(2.0f));
         
     }
 
