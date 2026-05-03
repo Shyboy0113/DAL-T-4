@@ -30,6 +30,7 @@ public class CutoutFade : MonoBehaviour
     // UI의 크기를 0에서 해상도의 2배로 확장시켜 화면을 덮습니다.
     public void FadeIn(Action onFadeComplete = null)
     {
+        rectTransform.DOKill();
         // FadeIn은 특별한 콜백이 필요 없으므로 그대로 둡니다.
         rectTransform.sizeDelta = Vector2.zero;
         //Vector2 targetSize = new Vector2(Screen.width * 2, Screen.height * 2);
@@ -53,6 +54,7 @@ public class CutoutFade : MonoBehaviour
     // UI의 크기를 현재 해상도에서 0으로 축소시켜 사라지게 합니다.
     public void FadeOut(Action onFadeComplete = null)
     {
+        rectTransform.DOKill();
         // DOSizeDelta 뒤에 .OnComplete()를 연결하는 것이 핵심입니다.
         rectTransform.DOSizeDelta(Vector2.zero, fadeDuration)
             .SetEase(easeType)
