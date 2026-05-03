@@ -35,7 +35,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 785208180736
-    m_Localized: "\uC5D4\uD130\uB97C \uB204\uB974\uBA74 \uD14D\uC2A4\uD2B8 \uC785\uB825..."
+    m_Localized: "[T] \uD0A4\uB97C \uB204\uB978 \uB4A4 \uD14D\uC2A4\uD2B8 \uC785\uB825..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7873608874659840
+    m_Localized: "Ctrl + Z \uD639\uC740 \uC7AC\uC2DC\uC791(R)\uC744 \uB204\uB974\uC138\uC694!"
     m_Metadata:
       m_Items: []
   references:

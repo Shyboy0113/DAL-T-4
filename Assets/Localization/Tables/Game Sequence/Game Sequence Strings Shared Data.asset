@@ -35,6 +35,10 @@ MonoBehaviour:
     m_Key: Enter_Text
     m_Metadata:
       m_Items: []
+  - m_Id: 7873608874659840
+    m_Key: GameOver_Text
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
