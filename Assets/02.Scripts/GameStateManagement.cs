@@ -169,17 +169,32 @@ public class GameStateManagement : MonoBehaviour
             int nextChapter = GameManager.Instance.chapter;
             int nextStage = GameManager.Instance.stage + 1;
 
-            // 다음 스테이지가 존재하지 않는다면 (마지막 스테이지)
-            if (!stageLoader.LoadStage(nextChapter, nextStage))
+            // 다음 스테이지가 존재하지 않는다면 (챕터 마지막 스테이지)
+            bool loaded = stageLoader.LoadStage(nextChapter, nextStage);
+            if (!loaded)
             {
                 nextChapter++;
                 nextStage = 1;
-                
+                loaded = stageLoader.LoadStage(nextChapter, nextStage);
+
                 // 추후 게임 클리어 관련 업적이나 축하 메세지 로직 추가
-                if (!stageLoader.LoadStage(nextChapter, nextStage))
+                if (!loaded)
                 {
                     StartCoroutine(SceneLoader.LoadScene(stageSelectScene));
-                }    
+                }
+            }
+
+            // LoadStage 내부에서 InitStageData가 호출된 뒤 isAppeared를 true로 설정 및 저장
+            // (챕터 경계를 포함해 정확한 nextChapter/nextStage가 결정된 이후에 실행)
+            if (loaded)
+            {
+                var jdm = GameManager.Instance.jsonDataManager;
+                if (jdm != null)
+                {
+                    var nextData = jdm.GetStageData(nextChapter, nextStage);
+                    nextData.isAppeared = true;
+                    jdm.SaveStageData(nextData);
+                }
             }
 
             GameManager.Instance.chapter = nextChapter;

@@ -73,7 +73,6 @@ public class GameManager : Singleton<GameManager>
     public void GoToNextScene()
     {
         ResetData();
-        UnlockNextStage();
     }
 
     public void ResetData()
@@ -173,18 +172,4 @@ public class GameManager : Singleton<GameManager>
         }
     }
     
-    private void UnlockNextStage()
-    {
-        if (jsonDataManager == null) return;
-
-        int nextStage = stage + 1;
-        StageProgressData nextStageData = jsonDataManager.GetStageData(chapter, nextStage);
-
-        if (nextStageData != null)
-        {
-            nextStageData.isAppeared = true;
-            jsonDataManager.SaveStageData(nextStageData);
-        }
-    }
-
 }
