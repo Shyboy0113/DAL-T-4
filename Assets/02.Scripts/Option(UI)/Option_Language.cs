@@ -61,7 +61,7 @@ public class Option_Language : MonoBehaviour
         _isChanging = false;
     }
     
-    public void ApplyAndClose()
+    public void Apply()
     {
         _originalLocale = LocalizationSettings.SelectedLocale;
     }

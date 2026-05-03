@@ -26,6 +26,9 @@ public class Option_Resolution : MonoBehaviour
     [Header("CutOutFade")]
     private CutoutFade _cutoutFade;
 
+    [Tooltip("true: 드롭다운/토글 변경 즉시 화면에 반영 (취소 시 롤백)\nfalse: 확인 버튼을 눌러야 화면에 반영")]
+    [SerializeField] private bool isAfterApply = false;
+
     private void Awake()
     {
         _cutoutFade = FindFirstObjectByType<CutoutFade>();
@@ -132,24 +135,14 @@ public class Option_Resolution : MonoBehaviour
                 index = resolutions.Length - 1;
         }
 
-        resolutionDropdown.value = index;
+        // SetValueWithoutNotify: OnValueChanged 이벤트 발동 없이 UI만 갱신
+        resolutionDropdown.SetValueWithoutNotify(index);
         resolutionDropdown.RefreshShownValue();
 
         _selectedResolution = resolutions[index];
-        
+
         bool isFullScreen = (PlayerPrefs.GetInt(FullScreenPrefKey, 0) == 1);
-        
-            if (isFullScreen)
-            {
-                Resolution native = Screen.currentResolution;
-                Screen.SetResolution(native.width, native.height, true);
-            }
-            else
-            {
-                Screen.SetResolution(_selectedResolution.width, _selectedResolution.height, false);
-            }
-        
-            if (_cutoutFade != null) _cutoutFade.ResizeResolution();
+        ApplyResolution(_selectedResolution, isFullScreen);
     }
 
     // --- 패널 열릴 때 동기화 ---
@@ -159,6 +152,7 @@ public class Option_Resolution : MonoBehaviour
             fullscreenToggle.SetIsOnWithoutNotify(Screen.fullScreen);
     }
 
+    // 항상 SetValueWithoutNotify 사용 — 동기화 목적의 호출이 SetResolution을 발동시키면 안 됨
     private void SyncDropdownToCurrentResolution()
     {
         if (resolutionDropdown == null || resolutions == null || resolutions.Length == 0)
@@ -170,10 +164,32 @@ public class Option_Resolution : MonoBehaviour
         int index = FindResolutionIndex(savedWidth, savedHeight);
         if (index != -1)
         {
-            resolutionDropdown.value = index;
+            resolutionDropdown.SetValueWithoutNotify(index);
             resolutionDropdown.RefreshShownValue();
             _selectedResolution = resolutions[index];
         }
+    }
+
+    // --- 공통 해상도 적용 ---
+    private void ApplyResolution(Resolution resolution, bool isFullScreen)
+    {
+        Screen.fullScreen = isFullScreen;
+
+        if (isFullScreen)
+        {
+            Resolution native = Screen.currentResolution;
+            Screen.SetResolution(native.width, native.height, true);
+        }
+        else
+        {
+            Screen.SetResolution(resolution.width, resolution.height, false);
+        }
+
+        if (_cutoutFade != null) _cutoutFade.ResizeResolution();
+
+        var letterbox = Camera.main?.GetComponent<LetterboxCamera>();
+        if (letterbox != null)
+            letterbox.Apply(resolution.width, resolution.height, isFullScreen);
     }
 
     // --- 유틸리티 ---
@@ -188,56 +204,56 @@ public class Option_Resolution : MonoBehaviour
     }
 
     // --- 외부 호출 ---
+
     public void SetResolution(int resolutionIndex)
     {
         _selectedResolution = resolutions[resolutionIndex];
+
+        // isAfterApply=true: 선택만 저장, Apply()에서 반영
+        // isAfterApply=false: 드롭다운 변경 즉시 화면 반영
+        if (!isAfterApply)
+            ApplyResolution(_selectedResolution, _selectedFullScreen);
     }
 
     public void SetFullScreen(bool isFullScreen)
     {
         _selectedFullScreen = isFullScreen;
+
+        if (!isAfterApply)
+            ApplyResolution(_selectedResolution, _selectedFullScreen);
     }
 
-    // OK 버튼
-    public void ApplyAndClose()
+    // 확인 버튼
+    public void Apply()
     {
-        Screen.fullScreen = _selectedFullScreen;
         PlayerPrefs.SetInt(FullScreenPrefKey, _selectedFullScreen ? 1 : 0);
-
-        if (_selectedFullScreen)
-        {
-            Resolution native = Screen.currentResolution;
-            Screen.SetResolution(native.width, native.height, true);
-        }
-        else
-        {
-            Screen.SetResolution(_selectedResolution.width, _selectedResolution.height, false);
-        }
-
         PlayerPrefs.SetInt(ResolutionWidthKey, _selectedResolution.width);
         PlayerPrefs.SetInt(ResolutionHeightKey, _selectedResolution.height);
         PlayerPrefs.Save();
 
-        if (_cutoutFade != null) _cutoutFade.ResizeResolution();
-
-        // 패널이 닫히기 전에 동기 적용 (코루틴은 panel.SetActive(false) 시 소멸)
-        var letterbox = Camera.main?.GetComponent<LetterboxCamera>();
-        if (letterbox != null)
-            letterbox.Apply(_selectedResolution.width, _selectedResolution.height, _selectedFullScreen);
+        // isAfterApply=false: 이미 적용됐지만 안전망으로 한 번 더
+        // isAfterApply=true: 이 시점에 처음으로 화면 적용
+        ApplyResolution(_selectedResolution, _selectedFullScreen);
     }
 
-    // Cancel / ESC
+    // 취소 / ESC
     public void CancelChange()
     {
         _selectedResolution = _originalResolution;
+        _selectedFullScreen = _originalFullScreen;
+
         int index = FindResolutionIndex(_originalResolution.width, _originalResolution.height);
         if (index != -1)
         {
-            resolutionDropdown.value = index;
+            resolutionDropdown.SetValueWithoutNotify(index);
             resolutionDropdown.RefreshShownValue();
         }
 
-        _selectedFullScreen = _originalFullScreen;
         fullscreenToggle.SetIsOnWithoutNotify(_originalFullScreen);
+
+        // isAfterApply=true: 화면은 변하지 않았으므로 롤백 불필요
+        // isAfterApply=false: 미리보기로 변경된 화면을 원래대로 롤백
+        if (!isAfterApply)
+            ApplyResolution(_originalResolution, _originalFullScreen);
     }
 }

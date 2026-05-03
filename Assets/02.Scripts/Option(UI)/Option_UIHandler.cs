@@ -8,14 +8,6 @@ public class Option_UIHandler : MonoBehaviour
     public Option_Resolution resolution;
     public Option_Language language;
     public Option_SoundUI sound;
-    
-    private void Awake()
-    {
-        if (panel != null)
-        {
-            panel.SetActive(false);
-        }
-    }
 
     private void OnEnable() 
     {
@@ -58,10 +50,10 @@ public class Option_UIHandler : MonoBehaviour
     // OK 버튼의 OnClick에 연결
     public void OnOKButtonClicked()
     {
-        if (resolution != null) resolution.ApplyAndClose();
-        if (language != null)   language.ApplyAndClose();
-        if (sound != null)      sound.ApplyAndClose();
-
+        if (resolution != null) resolution.Apply();
+        if (language != null)   language.Apply();
+        if (sound != null)      sound.Apply();
+        
         optionEvent.Raise(false);
     }
 

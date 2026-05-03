@@ -14,9 +14,17 @@ public class LetterboxCamera : MonoBehaviour
     private bool _lastFs;
     private bool _initialized;
 
+    // [수정 포인트 1] 현재 타겟으로 삼고 있는 해상도를 기억할 변수 추가
+    private int _targetWidth;
+    private int _targetHeight;
+
     private void Awake()
     {
         _cam = GetComponent<Camera>();
+        
+        // [수정 포인트 2] 처음에만 PlayerPrefs에서 저장된 값을 가져와 초기 타겟으로 설정합니다.
+        _targetWidth  = PlayerPrefs.GetInt("ResolutionWidth", BaseWidth);
+        _targetHeight = PlayerPrefs.GetInt("ResolutionHeight", BaseHeight);
     }
 
     private void Update()
@@ -25,6 +33,7 @@ public class LetterboxCamera : MonoBehaviour
         int  curH  = Screen.height;
         bool curFs = Screen.fullScreen;
 
+        // 화면 크기나 전체화면 여부가 변했다면 (창 드래그, 옵션 조작 등)
         if (!_initialized || curW != _lastW || curH != _lastH || curFs != _lastFs)
         {
             _lastW       = curW;
@@ -32,14 +41,17 @@ public class LetterboxCamera : MonoBehaviour
             _lastFs      = curFs;
             _initialized = true;
 
-            int selectedW = PlayerPrefs.GetInt("ResolutionWidth",  1920);
-            int selectedH = PlayerPrefs.GetInt("ResolutionHeight", 1080);
-            Apply(selectedW, selectedH, curFs);
+            // [수정 포인트 3] PlayerPrefs를 다시 읽지 않고, 기억해둔 타겟 해상도로 Apply를 호출합니다.
+            Apply(_targetWidth, _targetHeight, curFs);
         }
     }
 
     public void Apply(int selectedWidth, int selectedHeight, bool isFullScreen)
     {
+        // [수정 포인트 4] 외부(옵션 창 등)에서 Apply가 호출되면, 타겟 해상도를 새 값으로 갱신해 줍니다.
+        _targetWidth = selectedWidth;
+        _targetHeight = selectedHeight;
+
         // 창모드면 뷰포트 풀로
         if (!isFullScreen)
         {
@@ -55,24 +67,20 @@ public class LetterboxCamera : MonoBehaviour
 
         if (selectedWidth <= BaseWidth && selectedHeight <= BaseHeight)
         {
-            // 선택 해상도가 기준(1920x1080) 이하 → 선택 크기 그대로 가운데 배치
             innerW = selectedWidth;
             innerH = selectedHeight;
         }
         else
         {
-            // 선택 해상도가 기준 초과 → 네이티브 안에서 16:9 최대 영역 계산
             float outerAspect = (float)outerW / outerH;
 
             if (outerAspect >= BaseAspect)
             {
-                // 모니터가 16:9보다 넓다 → 세로를 채우고 좌우 레터박스
                 innerH = outerH;
                 innerW = Mathf.RoundToInt(outerH * BaseAspect);
             }
             else
             {
-                // 모니터가 16:9보다 좁다 (예: 2560x1600) → 가로를 채우고 위아래 레터박스
                 innerW = outerW;
                 innerH = Mathf.RoundToInt(outerW / BaseAspect);
             }

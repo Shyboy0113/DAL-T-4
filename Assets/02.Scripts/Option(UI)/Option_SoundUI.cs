@@ -88,7 +88,7 @@ public class Option_SoundUI : MonoBehaviour
     }
 
     // OK 버튼 — 현재 값을 PlayerPrefs에 저장
-    public void ApplyAndClose()
+    public void Apply()
     {
         PlayerPrefs.SetFloat("MasterVolume", _masterVolume);
         PlayerPrefs.SetFloat("BGMVolume",    _bgmVolume);
@@ -128,6 +128,6 @@ public class Option_SoundUI : MonoBehaviour
     
     private void OnApplicationQuit()
     {
-        ApplyAndClose();
+        Apply();
     }
 }
