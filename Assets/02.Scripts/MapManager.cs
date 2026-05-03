@@ -117,9 +117,9 @@ public class MapManager : MonoBehaviour
         _undoMapHistory.Clear();
 
         player.ChangePlayerTransform(new Vector3(player.transform.position.x,player.transform.position.y,mapFirstRoot.transform.position.z));
-        player.gameObject.layer = LayerMask.NameToLayer("Map 1");
+        player.SetPlayerLayer("Map 1");
 
-        SetCameraLayer();
+        //SetCameraLayer();
     }
 
     private void ChangeTileMap()
@@ -139,9 +139,9 @@ public class MapManager : MonoBehaviour
         _currentRoot     = mapFirstRoot;
 
         player.ChangePlayerTransform(new Vector3(player.transform.position.x, player.transform.position.y, mapFirstRoot.transform.position.z));
-        player.gameObject.layer = LayerMask.NameToLayer("Map 1");
+        player.SetPlayerLayer("Map 1");
 
-        SetCameraLayer();
+        //SetCameraLayer();
         GameEvents.RaiseMapActivated(true);
     }
 
@@ -152,9 +152,9 @@ public class MapManager : MonoBehaviour
         _currentRoot     = mapSecondRoot;
 
         player.ChangePlayerTransform(new Vector3(player.transform.position.x, player.transform.position.y, mapSecondRoot.transform.position.z));
-        player.gameObject.layer = LayerMask.NameToLayer("Map 2");
+        player.SetPlayerLayer("Map 2");
 
-        SetCameraLayer();
+        //SetCameraLayer();
         GameEvents.RaiseMapActivated(false);
     }
 

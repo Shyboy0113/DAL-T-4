@@ -14,14 +14,12 @@ public class ChatPanel : MonoBehaviour
         public readonly string[] Keywords;
         public readonly string   EasterEggKey; // String Table 키
         public readonly Action   Effect;
-        public readonly bool IsSlashCommand;
 
-        public ChatCommand(string[] keywords, string easterEggKey, Action effect, bool isSlashCommand= false)
+        public ChatCommand(string[] keywords, string easterEggKey, Action effect)
         {
             Keywords     = keywords;
             EasterEggKey = easterEggKey;
             Effect       = effect;
-            IsSlashCommand = isSlashCommand;
         }
     }
 
@@ -61,26 +59,22 @@ public class ChatPanel : MonoBehaviour
             new ChatCommand(
                 keywords     : new[] { "suicide" },
                 easterEggKey : "chat_suicide",
-                effect       : GameEvents.RaiseChatCommandSuicide,
-                isSlashCommand : true
+                effect       : GameEvents.RaiseChatCommandSuicide
             ),
             new ChatCommand(
                 keywords     : new[] { "counterrotate", "counter rotate", "TAB", "tab", "탭", "역회전", "반대로", "반대로 회전" },
                 easterEggKey : "chat_ccw",
-                effect       : GameEvents.RaiseChatCommandRotateCCW,
-                isSlashCommand : true
+                effect       : GameEvents.RaiseChatCommandRotateCCW
             ),
             new ChatCommand(
                 keywords     : new[] { "rotate", "ALT", "alt", "LeftALT", "Leftalt", "Left alt", "알트", "레프트알트", "레프트 알트", "회전" },
                 easterEggKey : "chat_cw",
-                effect       : GameEvents.RaiseChatCommandRotateCW,
-                isSlashCommand : true
+                effect       : GameEvents.RaiseChatCommandRotateCW
             ),
             new ChatCommand(
                 keywords     : new[] { "move", "F4", "f4", "push", "go", "앞으로", "앞", "무브", "이동" },
                 easterEggKey : "chat_move",
-                effect       : GameEvents.RaiseChatCommandMove,
-                isSlashCommand : true
+                effect       : GameEvents.RaiseChatCommandMove
             ),
             new ChatCommand(
                 keywords     : new[] { "dance" },
@@ -128,7 +122,7 @@ public class ChatPanel : MonoBehaviour
     private void Update()
     {
         if (!chatInputField.gameObject.activeSelf &&
-            Input.GetKeyDown(KeyCode.Return) &&
+            Input.GetKeyDown(KeyCode.T) &&
             Time.frameCount != _lastClosedFrame)
         {
             OpenChatInput();
@@ -209,48 +203,21 @@ public class ChatPanel : MonoBehaviour
         int    bestPos = int.MaxValue;
         int    bestIdx = -1;
 
-        // 1) 슬래시 커맨드 우선 처리
-        if (lower.StartsWith("/"))
+        for (int i = 0; i < _chatCommands.Length; i++)
         {
-            string slashBody = lower.Substring(1).Trim(); // "/" 제거
-
-            for (int i = 0; i < _chatCommands.Length; i++)
+            foreach (string kw in _chatCommands[i].Keywords)
             {
-                if (!_chatCommands[i].IsSlashCommand) continue;
+                int pos = lower.IndexOf(kw, StringComparison.Ordinal);
+                if (pos < 0 || pos >= bestPos) continue;
 
-                foreach (string kw in _chatCommands[i].Keywords)
+                bool startOk = (pos == 0 || !char.IsLetterOrDigit(lower[pos - 1]));
+                bool endOk   = (pos + kw.Length >= lower.Length || !char.IsLetterOrDigit(lower[pos + kw.Length]));
+
+                if (startOk && endOk)
                 {
-                    if (slashBody == kw)
-                    {
-                        bestIdx = i;
-                        break;
-                    }
-                }
-                if (bestIdx >= 0) break;
-            }
-        }
-        // 2) 자연어 이스터에그 — 단어 경계 체크
-        else
-        {
-            for (int i = 0; i < _chatCommands.Length; i++)
-            {
-                if (_chatCommands[i].IsSlashCommand) continue;
-
-                foreach (string kw in _chatCommands[i].Keywords)
-                {
-                    int pos = lower.IndexOf(kw, StringComparison.Ordinal);
-                    if (pos < 0 || pos >= bestPos) continue;
-
-                    bool startOk = (pos == 0 || !char.IsLetterOrDigit(lower[pos - 1]));
-                    bool endOk   = (pos + kw.Length >= lower.Length
-                                    || !char.IsLetterOrDigit(lower[pos + kw.Length]));
-
-                    if (startOk && endOk)
-                    {
-                        bestPos = pos;
-                        bestIdx = i;
-                        break;
-                    }
+                    bestPos = pos;
+                    bestIdx = i;
+                    break;
                 }
             }
         }

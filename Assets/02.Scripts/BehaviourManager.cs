@@ -89,6 +89,9 @@ public class BehaviourManager : MonoBehaviour
 
         undoState.BeginUndo();
 
+        // GameOver Text와 Button의 UI Bounce를 멈춥니다. 
+        GameEvents.RaiseGameOverUIDisabled();
+        
         // 1. 플레이어 커맨드 위에 쌓인 비플레이어 커맨드(타일/적) 먼저 Undo
         _history.PopNonPlayerCommands(undo: true);
 
@@ -167,6 +170,9 @@ public class BehaviourManager : MonoBehaviour
 
         if (mapManager != null) mapManager.Init();
 
+        // GameOver Text와 Button의 UI Bounce를 멈춥니다. 
+        GameEvents.RaiseGameOverUIDisabled();
+        
         GameEvents.RaiseUndoCountChanged(0, 0);
     }
 

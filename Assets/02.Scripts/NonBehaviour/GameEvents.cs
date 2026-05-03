@@ -285,5 +285,18 @@ public static class GameEvents
 
     #endregion
 
+    #region UI Bounce (Dotween)
+    
+    // [발행] PlayerBehaviour — 플레이어 사망 연출(혹은 게임오버) 후 SetDeadState(true)
+    // [수신] BounceButton.cs / BounceText.cs — Undo/Restart 버튼, Text 바운스 활성화
+    public static event Action GameOverUIEnabled;
+    public static void RaiseGameOverUIEnabled() => GameOverUIEnabled?.Invoke();
+    
+    // [발행] PlayerBehaviour — Undo 혹은 Restart시 SetDeadState(false), BehaviourManager - Init 함수
+    // [수신] BounceButton.cs / GameOverUI.cs — 버튼 바운스 종료 및 텍스트 숨김
+    public static event Action GameOverUIDisabled;
+    public static void RaiseGameOverUIDisabled() => GameOverUIDisabled?.Invoke();
+    
+    #endregion
 
 }

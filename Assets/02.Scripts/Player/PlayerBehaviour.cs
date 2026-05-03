@@ -551,6 +551,10 @@ public void CalculateRotationCount(int delta, bool isFirst)
             GameEvents.RaisePlayerDied();
             GameEvents.RaiseInputLockChanged(false);
             _isEnemyActing = false;
+            
+            // GameOver Text와 Button의 UI Bounce를 시작합니다. 
+            GameEvents.RaiseGameOverUIEnabled();
+            
         }
         else
         {
@@ -570,6 +574,9 @@ public void CalculateRotationCount(int delta, bool isFirst)
             
             // 4. 위치/상태 변경을 물리 엔진에 즉시 동기화
             Physics2D.SyncTransforms();
+            
+            // GameOver Text와 Button의 UI Bounce를 멈춥니다. 
+            GameEvents.RaiseGameOverUIDisabled();
         }
     }
 
@@ -756,6 +763,31 @@ public void CalculateRotationCount(int delta, bool isFirst)
         return LayerMask.LayerToName(gameObject.layer) == "Map 1";
     }
 
+    public void SetPlayerLayer(string layerName)
+    {
+        // 1. 레이어 이름을 int 값으로 변환
+        int newLayer = LayerMask.NameToLayer(layerName);
+    
+        // 2. 부모(자기 자신)의 레이어 변경
+        gameObject.layer = newLayer;
+        
+        // 3. 자식들의 레이어를 변경하는 재귀 함수 호출
+        ChangeChildLayer(transform, newLayer);
+    }
+
+    private void ChangeChildLayer(Transform parent, int layer)
+    {
+        // parent의 바로 아래에 있는 자식들을 순회
+        foreach (Transform child in parent)
+        {
+            // 자식의 레이어 변경
+            child.gameObject.layer = layer;
+        
+            // 자식의 자식(손자)들도 변경하기 위해 자기 자신을 다시 호출 (재귀)
+            ChangeChildLayer(child, layer);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
@@ -763,4 +795,5 @@ public void CalculateRotationCount(int delta, bool isFirst)
             if (collision.GetComponent<EnemyBehaviour>().IsOnSameMapAsPlayer()) PlayExplosion();
         }
     }
+    
 }
