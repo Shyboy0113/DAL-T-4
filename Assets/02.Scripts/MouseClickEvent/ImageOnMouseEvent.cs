@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -9,7 +8,12 @@ public class ImageOnMouseEvent : MonoBehaviour,
 {
     [SerializeField] private float hoverScale = 1.1f;
 
+    [SerializeField] private Image image;
+    
     private Vector3 _originalScale;
+    
+    private Color _originalColor;
+    [SerializeField] private Color hoverColor = Color.yellow;
     
     private RectTransform _rectTransform;
     private Button _button;
@@ -25,6 +29,8 @@ public class ImageOnMouseEvent : MonoBehaviour,
         
         _originalScale = _rectTransform.localScale;
         
+        if (image is not null) _originalColor = image.color; 
+        
     }
 
     private bool IsInteractable => _button == null || _button.interactable;
@@ -37,10 +43,14 @@ public class ImageOnMouseEvent : MonoBehaviour,
         if (_isHovered || _isSelected)
         {
             _rectTransform.localScale = _originalScale * hoverScale;
+            
+            if (image is not null) image.color = hoverColor;
         }
         else
         {
             _rectTransform.localScale = _originalScale;
+            
+            if (image is not null) image.color = _originalColor;
         }
     }
 
