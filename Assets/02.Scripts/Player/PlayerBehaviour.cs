@@ -267,7 +267,8 @@ public void CalculateRotationCount(int delta, bool isFirst)
     private void Update()
     {
         if (CheckSkip()) return;
-        if (GameManager.Instance.isGameOver || GameManager.Instance.isCleared) return;
+        if (GameManager.Instance.isGameOver
+            || GameManager.Instance.isCleared) return;
 
         UpdateParticle();
     }

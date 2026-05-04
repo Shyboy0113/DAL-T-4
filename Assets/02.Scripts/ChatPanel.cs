@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Localization.Settings;
@@ -121,6 +122,9 @@ public class ChatPanel : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance is null
+            || GameManager.Instance.isOption) return;
+        
         if (!chatInputField.gameObject.activeSelf &&
             Input.GetKeyDown(KeyCode.T) &&
             Time.frameCount != _lastClosedFrame)
