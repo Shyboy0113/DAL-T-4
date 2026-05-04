@@ -296,7 +296,7 @@ public class TileBehaviour : BaseTile
                 break;
 
             case TileType.FirstDestination:
-                if (pb != null && pb.IsFirstTile() && !GameManager.Instance.isCleared)
+                if (pb != null && (pb.IsFirstTile() || LayerMask.LayerToName(gameObject.layer) == "Static") && !GameManager.Instance.isCleared)
                 {
                     GameManager.Instance.isCleared = true;
                     pb.ReachedDestination();
@@ -304,7 +304,7 @@ public class TileBehaviour : BaseTile
                 break;
 
             case TileType.SecondDestination:
-                if (pb != null && !pb.IsFirstTile() && !GameManager.Instance.isCleared)
+                if (pb != null && (!pb.IsFirstTile() || LayerMask.LayerToName(gameObject.layer) == "Static") && !GameManager.Instance.isCleared)
                 {
                     GameManager.Instance.isCleared = true;
                     pb.ReachedDestination();
@@ -749,19 +749,25 @@ public class TileBehaviour : BaseTile
     // OnTriggerEnter2D: 점유 등록만 담당. 실제 로직은 타일 로직 턴에서 처리
     protected override void OnPlayerEnter(PlayerBehaviour pb)
     {
+        bool isSameLayer   = pb.gameObject.layer == gameObject.layer;
+        bool isStaticLayer = gameObject.layer == LayerMask.NameToLayer("Static");
+        
         // 플레이어가 속한 맵 레이어와 타일의 레이어가 다르면 무시 (크로스맵 오감지 방지)
-        if (pb.gameObject.layer != gameObject.layer) return;
+        if (!isSameLayer && !isStaticLayer) return;
         _isPlayerOnMe  = true;
         if (!IsUndoOr)
             _pendingPlayer = pb;
     }
 
-    protected override void OnEnemyEnter(EnemyBehaviour enemy)
+    protected override void OnEnemyEnter(EnemyBehaviour eb)
     {
-        if (enemy.gameObject.layer != gameObject.layer) return;
+        bool isSameLayer   = eb.gameObject.layer == gameObject.layer;
+        bool isStaticLayer = gameObject.layer == LayerMask.NameToLayer("Static");
+        
+        if (!isSameLayer && !isStaticLayer) return;
         _isEnemyOnMe      = true;
-        _currentEnemyOnMe = enemy;
-        _pendingEnemy     = enemy;
+        _currentEnemyOnMe = eb;
+        _pendingEnemy     = eb;
     }
 
     // 타일 로직 턴: BehaviourManager가 시퀀스를 제어하며 발동
