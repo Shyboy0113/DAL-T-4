@@ -16,7 +16,7 @@ MonoBehaviour:
     asset: {fileID: 102900000, guid: 679bed9f935d42741b3754da429cb0e4, type: 3}
     guid: 679bed9f935d42741b3754da429cb0e4
   additiveScenes:
-  - asset: {fileID: 102900000, guid: 2f94b840058d154428f656455f2e3078, type: 3}
-    guid: 2f94b840058d154428f656455f2e3078
   - asset: {fileID: 102900000, guid: 09fd58ac13f37864594f10dd99a96bae, type: 3}
     guid: 09fd58ac13f37864594f10dd99a96bae
+  - asset: {fileID: 102900000, guid: 2f94b840058d154428f656455f2e3078, type: 3}
+    guid: 2f94b840058d154428f656455f2e3078
