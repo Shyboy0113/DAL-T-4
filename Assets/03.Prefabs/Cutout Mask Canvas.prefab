@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 7585020275509755785}
-  fadeDuration: 1
+  fadeDuration: 0.5
   easeType: 0
   background: {fileID: 2866853364957776771}
 --- !u!1 &3926275444775924889
