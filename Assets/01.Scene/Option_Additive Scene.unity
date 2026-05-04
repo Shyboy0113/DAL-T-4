@@ -621,6 +621,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverScale: 1.1
+  image: {fileID: 0}
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &109332791
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,6 +1554,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverScale: 1.1
+  image: {fileID: 0}
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1001 &309367805
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1895,6 +1899,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverScale: 1.1
+  image: {fileID: 0}
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &309367809 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2714735464381463379, guid: 53cedb5f1e3414f4880cd7c08a95e6d6, type: 3}
@@ -2684,6 +2690,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverScale: 1.1
+  image: {fileID: 0}
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &461520264
 GameObject:
   m_ObjectHideFlags: 0
@@ -4146,6 +4154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverScale: 1.1
+  image: {fileID: 0}
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &923242102 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2714735464381463379, guid: 53cedb5f1e3414f4880cd7c08a95e6d6, type: 3}
@@ -6744,6 +6754,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverScale: 1.1
+  image: {fileID: 0}
+  hoverColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &1610498208
 GameObject:
   m_ObjectHideFlags: 0
@@ -7687,6 +7699,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resolutionDropdown: {fileID: 1901106718}
   fullscreenToggle: {fileID: 1779177412}
+  isAfterApply: 0
 --- !u!114 &1846097123
 MonoBehaviour:
   m_ObjectHideFlags: 0
