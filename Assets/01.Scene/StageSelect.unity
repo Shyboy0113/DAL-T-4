@@ -536,7 +536,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &71838382
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4551,7 +4551,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &535193381
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5737,7 +5737,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8843112750957263534, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: panelOffset.y
-      value: 1400
+      value: 1200
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -6547,7 +6547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8843112750957263534, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: panelOffset.y
-      value: 600
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -7076,7 +7076,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 89b68d8bbe4749f418aa6a9f505eca1a, type: 2}
     - target: {fileID: 8843112750957263534, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: panelOffset.y
-      value: -200
+      value: -400
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -10808,7 +10808,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8843112750957263534, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: panelOffset.y
-      value: 1000
+      value: 800
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -11001,7 +11001,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: d7afef848eaaaa44d9cc61209e712368, type: 2}
     - target: {fileID: 8843112750957263534, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: panelOffset.y
-      value: 50
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -15950,7 +15950,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8843112750957263534, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: panelOffset.y
-      value: 500
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -16208,7 +16208,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2120631099
 RectTransform:
   m_ObjectHideFlags: 0
