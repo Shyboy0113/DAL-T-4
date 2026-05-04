@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 039fabbffc8bfba4b81225acd3f16cd2
+guid: 76f5f05f3086e064685ae44347716c27
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7370136575064634033
-    second: Chapter 1 HDD_0
+      213: -7596195713732574150
+    second: Chapter 1 HDD-export_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Chapter 1 HDD_0
+      name: Chapter 1 HDD-export_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2754
-        height: 1536
+        width: 5254
+        height: 3016
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1b277d69a2cf74660800000000000000
-      internalID: 7370136575064634033
+      spriteID: a3400a6ae34e49690800000000000000
+      internalID: -7596195713732574150
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Chapter 1 HDD_0: 7370136575064634033
+      Chapter 1 HDD-export_0: -7596195713732574150
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
