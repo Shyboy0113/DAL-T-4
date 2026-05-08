@@ -25,6 +25,9 @@ public class TeleportVFXController : MonoBehaviour
 
     public void PlayTeleportCoroutine()
     {
+        //기존의 코루틴을 제거
+        StopCoroutine(ITeleport());
+        
         StartCoroutine(ITeleport());
     }
     
