@@ -162,8 +162,8 @@ public static class GameEvents
 
     // [발행] MapManager.cs — 맵 회전 완료 후 타일 아이콘 역회전 보정 시
     // [수신] TileBehaviour.cs — 각 타일 아이콘을 역방향으로 회전하여 원래 시점 유지
-    public static event Action<float> TileIconRotated; // float: 역회전 보정 각도
-    public static void RaiseTileIconRotated(float angle) => TileIconRotated?.Invoke(angle);
+    public static event Action<float,bool> TileIconRotated; // float: 역회전 보정 각도
+    public static void RaiseTileIconRotated(float angle, bool isFirst) => TileIconRotated?.Invoke(angle, isFirst);
 
 
     // [발행] MapManager.cs — InitializeNewStage() 완료 직후

@@ -224,7 +224,7 @@ public class MapManager : MonoBehaviour
         Vector3 snappedPivot = new Vector3(
             Mathf.Floor(pb.transform.position.x) + 0.5f,
             Mathf.Floor(pb.transform.position.y) + 0.5f,
-            0
+            pb.transform.position.z
         );
         pb.transform.position = snappedPivot;
 
@@ -246,7 +246,7 @@ public class MapManager : MonoBehaviour
                 .OnComplete(() =>
                 {
                     _firstTileIconZRotation += -angle;
-                    GameEvents.RaiseTileIconRotated(-angle);
+                    GameEvents.RaiseTileIconRotated(-angle, true);
 
                     DOVirtual.DelayedCall(0.55f, () =>
                     {
@@ -274,7 +274,7 @@ public class MapManager : MonoBehaviour
                 .OnComplete(() =>
                 {
                     _secondTileIconZRotation += -angle;
-                    GameEvents.RaiseTileIconRotated(-angle);
+                    GameEvents.RaiseTileIconRotated(-angle, false);
 
                     DOVirtual.DelayedCall(0.55f, () =>
                     {

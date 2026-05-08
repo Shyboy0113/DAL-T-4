@@ -895,12 +895,18 @@ public class TileBehaviour : BaseTile
         transform.localPosition = Vector3.zero;
     }
 
-    private void RotateTileIcon(float angle)
+    private void RotateTileIcon(float angle, bool isFirst)
     {
         if (LayerMask.LayerToName(gameObject.layer) == "Static") return;
         
+        // 자신이 속한 맵이 아니면 무시
+        string myLayer = LayerMask.LayerToName(gameObject.layer);
+        string targetLayer = isFirst ? "Map 1" : "Map 2";
+        if (myLayer != targetLayer) return;
+        
         transform.DORotate(new Vector3(0, 0, angle), 0.5f, RotateMode.LocalAxisAdd)
             .SetEase(Ease.OutBounce);
+        
     }
 
     private void OnAfterMapRotated(bool freeze)
