@@ -33,6 +33,7 @@ public class Option_Resolution : MonoBehaviour
     {
         _cutoutFade = FindFirstObjectByType<CutoutFade>();
         InitializeResolutions();
+        ApplySavedResolution();
     }
 
     private void OnEnable()
@@ -55,7 +56,6 @@ public class Option_Resolution : MonoBehaviour
     private void Start()
     {
         InitializeFullscreen();
-        ApplySavedResolution();
     }
 
     private void OnApplicationFocus(bool hasFocus)
