@@ -273,8 +273,13 @@ public class TileBehaviour : BaseTile
                 {
                     bool wasOnIce = pb.IsOnIce();
 
-                    // Map 1 -> Map 2 혹은 Map 2 -> Map 1 이동처럼, 다른 타일맵으로 이동하는 텔레포트 로직인지
-                    bool isCrossMap = (this.gameObject.layer != teleportTarget.gameObject.layer);
+                    // Map 1 <-> Map 2 전환인 경우에만 크로스맵으로 판정.
+                    // Static 레이어는 양쪽 맵에 공유되므로 크로스맵 판정에서 제외한다.
+                    int staticLayer = LayerMask.NameToLayer("Static");
+                    bool startIsStatic = this.gameObject.layer == staticLayer;
+                    bool endIsStatic   = teleportTarget.gameObject.layer == staticLayer;
+                    bool isCrossMap    = !startIsStatic && !endIsStatic &&
+                                        (this.gameObject.layer != teleportTarget.gameObject.layer);
 
                     if (isCrossMap)
                     {
@@ -667,7 +672,8 @@ public class TileBehaviour : BaseTile
     private void HandleColorToggle(TileColor color, int layer)
     {
         if (currentTileType != TileType.ToggleTargeted) return;
-        if (gameObject.layer != layer) return;
+        bool isStaticLayer = gameObject.layer == LayerMask.NameToLayer("Static");
+        if (gameObject.layer != layer && !isStaticLayer) return;
 
         if ((CurrentTileColor & color) != 0)
         {
@@ -683,7 +689,8 @@ public class TileBehaviour : BaseTile
 
     private void HandleToggle(int currentCount, int layer)
     {
-        if (gameObject.layer != layer) return;
+        bool isStaticLayer = gameObject.layer == LayerMask.NameToLayer("Static");
+        if (gameObject.layer != layer && !isStaticLayer) return;
 
         UpdateCountText(currentCount);
 
