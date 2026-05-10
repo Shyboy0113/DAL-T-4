@@ -11,12 +11,16 @@ public class Option_Language : MonoBehaviour
     [SerializeField] private TMP_Dropdown languageDropdown;
 
     private bool _isChanging = false;
+    private bool _initialized = false;
     
     private Locale _originalLocale; // 기존 로케일(언어)
 
     private void OnEnable()
     {
-        CaptureOriginalLocale();
+        if (!_initialized)
+            StartCoroutine(InitializeDropdown()); // 초기화 안 됐으면 여기서 시작
+        else
+            CaptureOriginalLocale(); // 이미 초기화됐으면 원본만 캡처
     }
 
     /// <summary>옵션 패널이 열릴 때 현재 언어를 저장합니다. 패널이 항상 활성 상태인 씬에서 명시적으로 호출하세요.</summary>
@@ -25,26 +29,23 @@ public class Option_Language : MonoBehaviour
         _originalLocale = LocalizationSettings.SelectedLocale;
     }
 
-    void Start()
+    private IEnumerator InitializeDropdown()
     {
-        languageDropdown.ClearOptions();
+        yield return LocalizationSettings.InitializationOperation;
 
+        languageDropdown.ClearOptions();
         var locales = LocalizationSettings.AvailableLocales.Locales;
         var options = new List<string>();
-
         foreach (var locale in locales)
-        {
             options.Add(locale.LocaleName);
-        }
-
         languageDropdown.AddOptions(options);
 
-        // 현재 선택된 로케일에 맞춰 드롭다운 동기화
         int currentIndex = locales.IndexOf(LocalizationSettings.SelectedLocale);
         if (currentIndex != -1)
-        {
             languageDropdown.SetValueWithoutNotify(currentIndex);
-        }
+
+        _initialized = true;
+        CaptureOriginalLocale();
     }
 
     public void OnLanguageChanged(int index)
