@@ -60,9 +60,11 @@ public class StageSelectManagement : MonoBehaviour
             selectPlayer.SnapTo(firstFocus.GetComponent<RectTransform>());
         }
 
+        selectPlayer.Lock();
         _isTransitioning = true; // FadeIn 중 Q/E 입력 차단
         cutoutFade.FadeIn(() =>
         {
+            selectPlayer.Unlock();
             _isTransitioning = false;
         });
     }
@@ -188,6 +190,11 @@ public class StageSelectManagement : MonoBehaviour
 
             cutoutFade.FadeIn(() =>
             {
+                // FocusKeeper.SetInitialFocusDeferred() 가 FadeIn 시작 직후 1프레임 후에
+                // 포커스를 firstSelectedObject로 되돌릴 수 있으므로 FadeIn 완료 후 재확정.
+                if (firstFocus != null && firstFocus.gameObject.activeInHierarchy)
+                    EventSystem.current.SetSelectedGameObject(firstFocus.gameObject);
+
                 selectPlayer.Unlock();
                 _isTransitioning = false;
             });
