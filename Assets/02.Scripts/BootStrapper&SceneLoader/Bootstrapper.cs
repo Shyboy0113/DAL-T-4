@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using Eflatun.SceneReference;
@@ -22,6 +23,8 @@ public class Bootstrapper : MonoBehaviour
 
     private IEnumerator LoadAdditiveScenes()
     {
+        yield return LocalizationSettings.InitializationOperation;
+        
         // 1. Additive 씬들 먼저 로드 (System → Option 순서)
         foreach (var sceneRef in defaultGroup.additiveScenes)
         {
