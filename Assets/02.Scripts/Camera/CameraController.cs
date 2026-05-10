@@ -89,6 +89,14 @@ public class CameraController : MonoBehaviour
         DOTween.Kill(transform, complete: false);
         _isTweening = false;
         InitializeCameraPosition();
+        SetCameraMode();
+    }
+
+    private void SetCameraMode()
+    {
+        var stageData = GameManager.Instance.currentStageData;
+        if (stageData != null)
+            cameraMode = stageData.trackingMode;
     }
 
     private void OnPlayerActionFinished(int layer)
