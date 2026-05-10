@@ -147,6 +147,7 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     public void Confirm()
     {
         if (!CanEnter()) return;
+        if (_selectPlayer != null && _selectPlayer.IsLocked) return;
 
         if (!_isPanelOpen)
         {
@@ -161,9 +162,15 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
         }
         else
         {
+            // OnConfirmed 발화 전에 상태를 명시적으로 초기화.
+            // OnNodeConfirmed가 _isTransitioning으로 early-return할 경우
+            // OnDeselect → ClosePanel 체인이 발동하지 않아 _isPanelOpen이 true로 고착되는 버그 방지.
+            _isPanelOpen = false;
+            infoPanel?.Hide();
+
             _selectPlayer?.PlayEnterSound();
             OnConfirmed?.Invoke(this);
-            
+
             // 텔레포트 이펙트 발동
             GameEvents.RaiseTeleportTriggered();
         }
