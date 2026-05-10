@@ -55,4 +55,7 @@ public class SO_StageData : ScriptableObject
     [Header("스피드런 업적")]
     [Tooltip("이 시간(초) 이내에 클리어하면 스피드런 업적 달성. 0이면 기본값(30초) 사용.")]
     public float speedRunTime = 0f;
+    
+    // 게임 시작 시, 카메라가 움직이는 모드 설정
+    public CameraTrackingMode trackingMode = CameraTrackingMode.FrameEntireMap;
 }

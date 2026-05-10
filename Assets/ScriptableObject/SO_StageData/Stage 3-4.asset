@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9ce091a50fdc34bbe98cb1fa21e5b7, type: 3}
   m_Name: Stage 3-4
   m_EditorClassIdentifier: 
-  stageDescription: 
   stagePrefab: {fileID: 2685018636728712195, guid: 9a9b302ef14f95745b7c123185c4ea22, type: 3}
   bgmClip: {fileID: 8300000, guid: ba505de1b6cab8a43b65c7913ec7aabf, type: 3}
   chapterNum: 3
@@ -21,6 +20,7 @@ MonoBehaviour:
   canUseLeftALT: 1
   canUseTAB: 0
   hasSecondMap: 0
+  continueIceModeAfterTeleport: 0
   limitNumberALT: 0
   limitNumberF4: 0
   limitNumberTAB: 0
@@ -31,3 +31,4 @@ MonoBehaviour:
   thirdMissionType: 5
   forbiddenFeature: 3
   speedRunTime: 0
+  trackingMode: 1
