@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
@@ -24,6 +25,9 @@ public class MapManager : MonoBehaviour
         public float   secondZRotation;             // Map2(또는 Map2 Pivot)의 Z 회전값
         public float   secondAccumulatedRotation;   // Map2의 누적 회전각
         public float   secondTileIconZRotation;     // Map2 타일 아이콘들의 역회전 보정값
+        
+        public Vector3[] firstChildLocalPositions;   
+        public Vector3[] secondChildLocalPositions;  
     }
 
     private Stack<MapState> _undoMapHistory = new Stack<MapState>();
@@ -295,6 +299,9 @@ public class MapManager : MonoBehaviour
         // 직전에 맵 전환이 있었다면 전환 전 isFirst 값을 사용
         bool isFirstSnapshot     = _mapChangedSinceLastSave ? _preChangeIsFirst : _isFirst;
         _mapChangedSinceLastSave = false;
+        
+        var firstChildren  = mapFirstPivot.Cast<Transform>().ToArray();
+        var secondChildren = mapSecondPivot.Cast<Transform>().ToArray();
 
         var state = new MapState
         {
@@ -312,6 +319,8 @@ public class MapManager : MonoBehaviour
             secondAccumulatedRotation =  _secondAccumulatedRotation,
             
             isFirst             = isFirstSnapshot,
+            firstChildLocalPositions  = firstChildren.Select(t => t.localPosition).ToArray(),
+            secondChildLocalPositions = secondChildren.Select(t => t.localPosition).ToArray(),
         };
 
         _undoMapHistory.Push(state);
@@ -329,9 +338,17 @@ public class MapManager : MonoBehaviour
         mapFirstPivot.position = lastState.firstPivotPosition;
         mapFirstPivot.rotation = Quaternion.Euler(0, 0, lastState.firstZRotation);
         
+        var firstChildren = mapFirstPivot.Cast<Transform>().ToArray();
+        for (int i = 0; i < firstChildren.Length && i < lastState.firstChildLocalPositions.Length; i++)
+            firstChildren[i].localPosition = lastState.firstChildLocalPositions[i];
+        
         mapSecondPivot.position = lastState.secondPivotPosition;
         mapSecondPivot.rotation = Quaternion.Euler(0, 0, lastState.secondZRotation);
 
+        var secondChildren = mapSecondPivot.Cast<Transform>().ToArray();
+        for (int i = 0; i < secondChildren.Length && i < lastState.secondChildLocalPositions.Length; i++)
+            secondChildren[i].localPosition = lastState.secondChildLocalPositions[i];
+        
         mapFirstRoot.transform.position  = lastState.firstRootPosition;
         mapSecondRoot.transform.position = lastState.secondRootPosition;
 
