@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: d91d1feb411acf5419bea58708bef493
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3961776007817762758
+    second: Teleport Remake_0
+  - first:
+      213: 6329923017329671011
+    second: Teleport Remake_1
+  - first:
+      213: 3420271982063328560
+    second: Teleport Remake_2
+  - first:
+      213: 836259201090662849
+    second: Teleport Remake_3
+  - first:
+      213: -4678647702117584546
+    second: Teleport Remake_4
+  - first:
+      213: 7808081562303718327
+    second: Teleport Remake_5
+  - first:
+      213: 2434502277212044097
+    second: Teleport Remake_6
+  - first:
+      213: -3857369206645968286
+    second: Teleport Remake_7
+  - first:
+      213: -184583722337454786
+    second: Teleport Remake_8
+  - first:
+      213: 5965230555189046239
+    second: Teleport Remake_9
+  - first:
+      213: 1293530930081285452
+    second: Teleport Remake_10
+  - first:
+      213: -5154087518529311558
+    second: Teleport Remake_11
+  - first:
+      213: -528312514703620417
+    second: Teleport Remake_12
+  - first:
+      213: 4472050697733901417
+    second: Teleport Remake_13
+  - first:
+      213: -3448318754214812415
+    second: Teleport Remake_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Teleport Remake_0
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 1256
+        width: 650
+        height: 633
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a386b5616b1f409c0800000000000000
+      internalID: -3961776007817762758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_1
+      rect:
+        serializedVersion: 2
+        x: 443
+        y: 1884
+        width: 42
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36bf087627768d750800000000000000
+      internalID: 6329923017329671011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_2
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 1884
+        width: 20
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03d1b1e0f3f377f20800000000000000
+      internalID: 3420271982063328560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_3
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 1594
+        width: 180
+        height: 275
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c1392d005dfa9b00800000000000000
+      internalID: 836259201090662849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_4
+      rect:
+        serializedVersion: 2
+        x: 1194
+        y: 1256
+        width: 648
+        height: 572
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e51751614ba121fb0800000000000000
+      internalID: -4678647702117584546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_5
+      rect:
+        serializedVersion: 2
+        x: 1430
+        y: 1604
+        width: 181
+        height: 278
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b3e36adfc0eb5c60800000000000000
+      internalID: 7808081562303718327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_6
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 876
+        width: 347
+        height: 316
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14b7a1e2ce619c120800000000000000
+      internalID: 2434502277212044097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_7
+      rect:
+        serializedVersion: 2
+        x: 680
+        y: 887
+        width: 182
+        height: 275
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 262365ec42fd77ac0800000000000000
+      internalID: -3857369206645968286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_8
+      rect:
+        serializedVersion: 2
+        x: 1174
+        y: 887
+        width: 180
+        height: 275
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e35b1ce151a307df0800000000000000
+      internalID: -184583722337454786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_9
+      rect:
+        serializedVersion: 2
+        x: 1685
+        y: 888
+        width: 181
+        height: 274
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdb6955b591c8c250800000000000000
+      internalID: 5965230555189046239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_10
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 374
+        width: 386
+        height: 388
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c45c979078b83f110800000000000000
+      internalID: 1293530930081285452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_11
+      rect:
+        serializedVersion: 2
+        x: 577
+        y: 374
+        width: 389
+        height: 388
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abc29cc95b00978b0800000000000000
+      internalID: -5154087518529311558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_12
+      rect:
+        serializedVersion: 2
+        x: 1062
+        y: 375
+        width: 396
+        height: 387
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb682b6219e0ba8f0800000000000000
+      internalID: -528312514703620417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_13
+      rect:
+        serializedVersion: 2
+        x: 1531
+        y: 470
+        width: 193
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96c87f76a6aef0e30800000000000000
+      internalID: 4472050697733901417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Remake_14
+      rect:
+        serializedVersion: 2
+        x: 1800
+        y: 470
+        width: 194
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10565beec5c1520d0800000000000000
+      internalID: -3448318754214812415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Teleport Remake_0: -3961776007817762758
+      Teleport Remake_1: 6329923017329671011
+      Teleport Remake_10: 1293530930081285452
+      Teleport Remake_11: -5154087518529311558
+      Teleport Remake_12: -528312514703620417
+      Teleport Remake_13: 4472050697733901417
+      Teleport Remake_14: -3448318754214812415
+      Teleport Remake_2: 3420271982063328560
+      Teleport Remake_3: 836259201090662849
+      Teleport Remake_4: -4678647702117584546
+      Teleport Remake_5: 7808081562303718327
+      Teleport Remake_6: 2434502277212044097
+      Teleport Remake_7: -3857369206645968286
+      Teleport Remake_8: -184583722337454786
+      Teleport Remake_9: 5965230555189046239
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

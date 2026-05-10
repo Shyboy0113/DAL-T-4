@@ -1,0 +1,429 @@
+fileFormatVersion: 2
+guid: 8ecf14adbf77f6b4cb9dad82f6777aa4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1586993885900110774
+    second: Teleport Tile Remake 2_0
+  - first:
+      213: 5666687462680943739
+    second: Teleport Tile Remake 2_1
+  - first:
+      213: -8885180688972815874
+    second: Teleport Tile Remake 2_2
+  - first:
+      213: 3421627239202117084
+    second: Teleport Tile Remake 2_3
+  - first:
+      213: 8163379687981992716
+    second: Teleport Tile Remake 2_4
+  - first:
+      213: 4107261707012944463
+    second: Teleport Tile Remake 2_5
+  - first:
+      213: -6312597251510088857
+    second: Teleport Tile Remake 2_6
+  - first:
+      213: -2615906679996543857
+    second: Teleport Tile Remake 2_7
+  - first:
+      213: -4856106996186734227
+    second: Teleport Tile Remake 2_8
+  - first:
+      213: -7883521696232910709
+    second: Teleport Tile Remake 2_9
+  - first:
+      213: 4068636774969132989
+    second: Teleport Tile Remake 2_10
+  - first:
+      213: 5064234047841061312
+    second: Teleport Tile Remake 2_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_0
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 1555
+        width: 176
+        height: 279
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a440532187dd9f9e0800000000000000
+      internalID: -1586993885900110774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_1
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 1596
+        width: 177
+        height: 269
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7cd142593e14ae40800000000000000
+      internalID: 5666687462680943739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_2
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 1555
+        width: 177
+        height: 279
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef16d943d3f71b480800000000000000
+      internalID: -8885180688972815874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_3
+      rect:
+        serializedVersion: 2
+        x: 1207
+        y: 1565
+        width: 176
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd5517278df0c7f20800000000000000
+      internalID: 3421627239202117084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_4
+      rect:
+        serializedVersion: 2
+        x: 1432
+        y: 1606
+        width: 177
+        height: 269
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0b4ec423962a4170800000000000000
+      internalID: 8163379687981992716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_5
+      rect:
+        serializedVersion: 2
+        x: 1648
+        y: 1565
+        width: 176
+        height: 259
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f423216e2cceff830800000000000000
+      internalID: 4107261707012944463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_6
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 1258
+        width: 647
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76b42adce362568a0800000000000000
+      internalID: -6312597251510088857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_7
+      rect:
+        serializedVersion: 2
+        x: 1198
+        y: 1258
+        width: 643
+        height: 320
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c0c35fbbe62bbd0800000000000000
+      internalID: -2615906679996543857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_8
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 880
+        width: 339
+        height: 309
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d61200d6a64ab9cb0800000000000000
+      internalID: -4856106996186734227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_9
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 890
+        width: 176
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b80d3f439ca189290800000000000000
+      internalID: -7883521696232910709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_10
+      rect:
+        serializedVersion: 2
+        x: 1177
+        y: 890
+        width: 176
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db7402c1793b67830800000000000000
+      internalID: 4068636774969132989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Teleport Tile Remake 2_11
+      rect:
+        serializedVersion: 2
+        x: 1689
+        y: 890
+        width: 176
+        height: 268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c94109f806c74640800000000000000
+      internalID: 5064234047841061312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Teleport Tile Remake 2_0: -1586993885900110774
+      Teleport Tile Remake 2_1: 5666687462680943739
+      Teleport Tile Remake 2_10: 4068636774969132989
+      Teleport Tile Remake 2_11: 5064234047841061312
+      Teleport Tile Remake 2_2: -8885180688972815874
+      Teleport Tile Remake 2_3: 3421627239202117084
+      Teleport Tile Remake 2_4: 8163379687981992716
+      Teleport Tile Remake 2_5: 4107261707012944463
+      Teleport Tile Remake 2_6: -6312597251510088857
+      Teleport Tile Remake 2_7: -2615906679996543857
+      Teleport Tile Remake 2_8: -4856106996186734227
+      Teleport Tile Remake 2_9: -7883521696232910709
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
