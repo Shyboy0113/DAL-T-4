@@ -320,7 +320,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -540,15 +540,15 @@ MonoBehaviour:
   manualTileType: 0
   tileSprites:
   - {fileID: 21300000, guid: 2f0fd9bbe2a75af43861a313a3e47467, type: 3}
-  - {fileID: 21300000, guid: 56df28303e309c44c8c5f5169316d8af, type: 3}
-  - {fileID: 21300000, guid: c7cdc78a6321c4c419f56b150b3fb4ad, type: 3}
-  - {fileID: 21300000, guid: 7669a85a88abfe64b8f56d597a4e3199, type: 3}
-  - {fileID: 21300000, guid: ec1ae068a2341ab4faa6cbcb2061a8ac, type: 3}
+  - {fileID: -3568110771189597089, guid: 976a9c4efb7961d4ca11e800811f8ef6, type: 3}
+  - {fileID: 1927034626, guid: 976a9c4efb7961d4ca11e800811f8ef6, type: 3}
+  - {fileID: 1552253753, guid: 976a9c4efb7961d4ca11e800811f8ef6, type: 3}
+  - {fileID: -367609073, guid: 976a9c4efb7961d4ca11e800811f8ef6, type: 3}
   - {fileID: 21300000, guid: 0e141d726758c044696530003d59db4d, type: 3}
   - {fileID: 21300000, guid: f2af15fccdd2def459f7951f35fac10e, type: 3}
-  - {fileID: 21300000, guid: fd8c0b2698ccffd4381340c2a5001a30, type: 3}
+  - {fileID: -4716157695976959930, guid: a6191735cf79db04897bbfb53439ac8e, type: 3}
   - {fileID: 21300000, guid: 26a6211cc45417a4db921d859a712c08, type: 3}
-  - {fileID: 21300000, guid: b20d30e3505689e48bef56d887c4db44, type: 3}
+  - {fileID: -3723597976761435112, guid: 7cea970fab097f643a8bed8e5081c0c8, type: 3}
   - {fileID: 21300000, guid: 10c23f8196303b145b91461fd1f0bdbe, type: 3}
   - {fileID: 21300000, guid: 63ac0ef9dd4d5704dbb3ff17c9d97823, type: 3}
   - {fileID: 21300000, guid: 93cb236cdf2097b458cd1a0db74b8d75, type: 3}
@@ -572,10 +572,10 @@ MonoBehaviour:
   breakSound: {fileID: 8300000, guid: 2f881375b96639f49856bef4a9a3221f, type: 3}
   starSound: {fileID: 8300000, guid: 62439643b9040e944ac9975d6477ebfd, type: 3}
   breakableSprites:
-  - {fileID: 21300000, guid: beb7b245bbe7398428be67e9ba549f69, type: 3}
-  - {fileID: 21300000, guid: 41e601b9a09aa0d4a9e54aa39c98dac1, type: 3}
-  - {fileID: 21300000, guid: 38290fe7ce89f174fa95300c93f07093, type: 3}
-  - {fileID: 21300000, guid: fd8c0b2698ccffd4381340c2a5001a30, type: 3}
+  - {fileID: 677439483, guid: a6191735cf79db04897bbfb53439ac8e, type: 3}
+  - {fileID: 15611959, guid: a6191735cf79db04897bbfb53439ac8e, type: 3}
+  - {fileID: 1321262545, guid: a6191735cf79db04897bbfb53439ac8e, type: 3}
+  - {fileID: -4716157695976959930, guid: a6191735cf79db04897bbfb53439ac8e, type: 3}
   isToggled: 0
   toggleOnSprite: {fileID: 21300000, guid: b23a15ba896d9f44db21f8eaba152682, type: 3}
   trapToggleOnSprite: {fileID: 21300000, guid: 53a0fa648e8a9424e89ea8e71f25f70b, type: 3}
