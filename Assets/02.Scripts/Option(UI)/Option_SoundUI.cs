@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
@@ -26,10 +27,37 @@ public class Option_SoundUI : MonoBehaviour
     private float _originalMasterVolume;
     private float _originalBgmVolume;
     private float _originalSfxVolume;
-    
+
+    private void Awake()
+    {
+        _masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
+        _bgmVolume    = PlayerPrefs.GetFloat("BGMVolume",    1f);
+        _sfxVolume    = PlayerPrefs.GetFloat("SFXVolume",    1f);
+
+        SetMasterVolume(_masterVolume);
+        SetBGMVolume(_bgmVolume);
+        SetSFXVolume(_sfxVolume);
+    }
+
+
     private void OnEnable()
     {
         SyncUIWithMixer();
+    }
+
+    private void Start()
+    {
+        // UI 슬라이더에 반영
+        masterScrollbar.value = _masterVolume;
+        bgmScrollbar.value    = _bgmVolume;
+        sfxScrollbar.value    = _sfxVolume;
+    }
+
+    private void Update()
+    {
+        masterData.text = (masterScrollbar.value*100f).ToString("F2") + "%";
+        bgmData.text = (bgmScrollbar.value*100f).ToString("F2") + "%";
+        sfxData.text = (sfxScrollbar.value*100f).ToString("F2") + "%";
     }
     
     private void SyncUIWithMixer()
@@ -52,31 +80,6 @@ public class Option_SoundUI : MonoBehaviour
             _sfxVolume = Mathf.Pow(10, sfxDB / 20);
             sfxScrollbar.value = _sfxVolume;
         }
-    }
-
-    private void Start()
-    {
-        // PlayerPrefs에서 저장된 볼륨 값을 불러옴 (없으면 기본값 1f)
-        _masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
-        _bgmVolume    = PlayerPrefs.GetFloat("BGMVolume",    1f);
-        _sfxVolume    = PlayerPrefs.GetFloat("SFXVolume",    1f);
-
-        // 오디오 믹서에 적용
-        SetMasterVolume(_masterVolume);
-        SetBGMVolume(_bgmVolume);
-        SetSFXVolume(_sfxVolume);
-
-        // UI 슬라이더에 반영
-        masterScrollbar.value = _masterVolume;
-        bgmScrollbar.value    = _bgmVolume;
-        sfxScrollbar.value    = _sfxVolume;
-    }
-
-    private void Update()
-    {
-        masterData.text = masterScrollbar.value.ToString("F2") + "f";
-        bgmData.text = bgmScrollbar.value.ToString("F2") + "f";
-        sfxData.text = sfxScrollbar.value.ToString("F2") + "f";
     }
 
     // 패널이 열릴 때 호출 — 현재 값을 원본으로 캡처
