@@ -205,6 +205,15 @@ public class TileMapChangeCommand : ICommand
         
         GameEvents.RaiseTileMapChanged(); // 다시 전환하면 원래대로
     }
+} 
+
+// Command.cs에 추가
+public class TileBreakCommand : ICommand
+{
+    private readonly TileBehaviour _tile;
+    public TileBreakCommand(TileBehaviour tile) => _tile = tile;
+    public void Execute() => _tile.ApplyBreak();
+    public void Undo()    => _tile.RevertBreak();
 }
 
 #endregion

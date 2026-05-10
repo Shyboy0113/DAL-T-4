@@ -53,37 +53,44 @@ public enum TileColor
 
 public class TileBehaviour : BaseTile
 {
-    [SerializeField] private BehaviourManager          behaviourManager;
+    [SerializeField] private BehaviourManager behaviourManager;
     [SerializeField] private PlayerUndoStateBridge undoState;
 
-    [Header("Scriptable Object Data")]
-    [SerializeField] private List<SO_TileData> allDataAssets;
-    [SerializeField] private SO_TileData       tileData;
+    [Header("Scriptable Object Data")] [SerializeField]
+    private List<SO_TileData> allDataAssets;
 
-    [Header("Breakable Tile Data")]
-    [SerializeField] private OverridableInt   maxBreakCount;
-    [SerializeField] private OverridableInt   breakHitCount;
+    [SerializeField] private SO_TileData tileData;
+
+    [Header("Breakable Tile Data")] [SerializeField]
+    private OverridableInt maxBreakCount;
+
+    [SerializeField] private OverridableInt breakHitCount;
     [SerializeField] private OverridableFloat breakDelay;
-    
-    [Header("Toggle Tile Data")]
-    [SerializeField] private OverridableInt   toggleActivationCount;
 
-    [Header("Color Tile Data")]
-    [SerializeField] private TileColor overrideColor      = TileColor.White;
-    [SerializeField] private int       overrideTeleportID = 0;
+    [Header("Toggle Tile Data")] [SerializeField]
+    private OverridableInt toggleActivationCount;
 
-    private int   CurrentMaxBreakCount    => maxBreakCount.GetValue(tileData ? tileData.baseMaxBreakCount : -1);
-    private int   CurrentBreakHitCount         => breakHitCount.GetValue(tileData ? tileData.baseBreakHitCount : 2);
-    private float CurrentBreakDelay            => breakDelay.GetValue(tileData ? tileData.baseBreakDelay : 0.5f);
-    private int   CurrentToggleActivationCount => toggleActivationCount.GetValue(tileData ? tileData.baseToggleActivationCount : 2);
+    [Header("Color Tile Data")] [SerializeField]
+    private TileColor overrideColor = TileColor.White;
+
+    [SerializeField] private int overrideTeleportID = 0;
+
+    private int CurrentMaxBreakCount => maxBreakCount.GetValue(tileData ? tileData.baseMaxBreakCount : -1);
+    private int CurrentBreakHitCount => breakHitCount.GetValue(tileData ? tileData.baseBreakHitCount : 2);
+    private float CurrentBreakDelay => breakDelay.GetValue(tileData ? tileData.baseBreakDelay : 0.5f);
+
+    private int CurrentToggleActivationCount =>
+        toggleActivationCount.GetValue(tileData ? tileData.baseToggleActivationCount : 2);
 
     private TileColor CurrentTileColor =>
         overrideColor != TileColor.White ? overrideColor : (tileData ? tileData.baseColor : TileColor.White);
+
     private int CurrentTeleportID =>
         overrideTeleportID != 0 ? overrideTeleportID : (tileData ? tileData.baseTeleportID : 0);
 
-    [Header("Tile Settings")]
-    [SerializeField] private TileType manualTileType;
+    [Header("Tile Settings")] [SerializeField]
+    private TileType manualTileType;
+
     public TileType currentTileType => tileData != null ? tileData.tileType : manualTileType;
 
     // Star 타일이 수집되었는지 여부 (미션 달성 판정에서 사용)
@@ -91,52 +98,49 @@ public class TileBehaviour : BaseTile
 
     [SerializeField] private Sprite[] tileSprites;
 
-    [Header("Renderers")]
-    [SerializeField] private SpriteRenderer backgroundRenderer;
+    [Header("Renderers")] [SerializeField] private SpriteRenderer backgroundRenderer;
     [SerializeField] private SpriteRenderer iconRenderer;
 
-    [Header("Activation & Stats")]
-    private bool _isWaitPlayerExit = false;
-    private bool _isWaitEnemyExit  = false;
-    private bool _isPlayerOnMe     = false;
-    private bool _isEnemyOnMe      = false;
+    [Header("Activation & Stats")] private bool _isWaitPlayerExit = false;
+    private bool _isWaitEnemyExit = false;
+    private bool _isPlayerOnMe = false;
+    private bool _isEnemyOnMe = false;
     private EnemyBehaviour _currentEnemyOnMe;
 
     // OnTriggerEnter2D에서 등록 후, 타일 로직 턴에서 처리할 pending 참조
     private PlayerBehaviour _pendingPlayer = null;
-    private EnemyBehaviour  _pendingEnemy  = null;
+    private EnemyBehaviour _pendingEnemy = null;
 
-    [Header("SFX & Visuals")]
-    private AudioSource _effectSound;
+    [Header("SFX & Visuals")] private AudioSource _effectSound;
     [SerializeField] private AudioClip toggleSound;
     [SerializeField] private AudioClip rotationSound;
     [SerializeField] private AudioClip crackSound;
     [SerializeField] private AudioClip breakSound;
     [SerializeField] private AudioClip starSound;
 
-    [Header("Breakable")]
-    [SerializeField] private Sprite[] breakableSprites;
+    [Header("Breakable")] [SerializeField] private Sprite[] breakableSprites;
     private int _currentHit = 0;
     private Coroutine _shakeCoroutine;
-    private bool      _isShaking = false;
+    private bool _isShaking = false;
 
-    [Header("Toggle")]
-    [SerializeField] private bool isToggled = false;
+    [Header("Toggle")] [SerializeField] private bool isToggled = false;
     public bool IsToggled => isToggled;
-    
+
     // 그 외 Toggle의 On 상태의 까만 Sprite
-    [SerializeField] private Sprite          toggleOnSprite;
-    [SerializeField] private Sprite          trapToggleOnSprite;
+    [SerializeField] private Sprite toggleOnSprite;
+    [SerializeField] private Sprite trapToggleOnSprite;
     [SerializeField] private PlayerBehaviour player;
 
-    [Header("Animations")]
-    [SerializeField] private Animator animator;
+    [Header("Animations")] [SerializeField]
+    private Animator animator;
 
-    [Header("Tilemap")]
-    private Tilemap _tilemap;
+    [Header("Tilemap")] private Tilemap _tilemap;
     [SerializeField] private MapManager mapManager;
 
     private Collider2D _collider;
+
+    // Breaktile 관련 변수
+    private Coroutine _breakCoroutine;
 
     private bool IsUndoOr => undoState != null && undoState.IsUndo;
 
@@ -158,36 +162,45 @@ public class TileBehaviour : BaseTile
             player ? player.TotalActionCount : 0,
             transform.rotation,
             iconRenderer.enabled,
-            _isShaking
+            _isShaking,
+            transform.localPosition
         );
     }
 
     public void RestoreSnapshot(TileStateSnapshot snapshot)
     {
         _currentHit = snapshot.hitCount;
-        isToggled   = snapshot.isToggled;
+        isToggled = snapshot.isToggled;
 
         if (player != null) player.gameObject.layer = snapshot.playerLayer;
 
         if (IsRotationTile())
             transform.rotation = snapshot.rotation;
 
-        iconRenderer.enabled       = snapshot.isVisible;
+        iconRenderer.enabled = snapshot.isVisible;
         backgroundRenderer.enabled = snapshot.isVisible;
-        _collider.enabled          = snapshot.isVisible;
+        _collider.enabled = snapshot.isVisible;
 
         _isWaitPlayerExit = false;
-        _isWaitEnemyExit  = false;
-        _pendingPlayer    = null;
-        _pendingEnemy     = null;
+        _isWaitEnemyExit = false;
+        _pendingPlayer = null;
+        _pendingEnemy = null;
 
         StopShake();
+        // BreakTile Coroutine 명시적 취소
+        if (_breakCoroutine != null)
+        {
+            StopCoroutine(_breakCoroutine);
+            _breakCoroutine = null;
+        }
+
+        transform.localPosition = snapshot.localPosition;
 
         if (snapshot.isShaking && _shakeCoroutine == null)
             _shakeCoroutine = StartCoroutine(ShakeUntilBreak());
 
         UpdateVisuals(true);
-        
+
         if (snapshot.playerIsMap1)
         {
             int snapshotCount = currentTileType switch
@@ -197,7 +210,7 @@ public class TileBehaviour : BaseTile
                 TileType.ActiveToggle => snapshot.playerMap1ActionCount,
                 _ => 0
             };
-            
+
             UpdateCountText(snapshotCount);
         }
         else
@@ -209,19 +222,24 @@ public class TileBehaviour : BaseTile
                 TileType.ActiveToggle => snapshot.playerMap2ActionCount,
                 _ => 0
             };
-            
+
             UpdateCountText(snapshotCount);
         }
 
-        
+
     }
 
     public void ApplyTileCommand(PlayerBehaviour pb = null, EnemyBehaviour eb = null)
     {
         if (pb != null) _isWaitPlayerExit = true;
-        if (eb != null) _isWaitEnemyExit  = true;
+        if (eb != null) _isWaitEnemyExit = true;
 
-        if (IsRotationTile() || currentTileType == TileType.Ice || currentTileType == TileType.Stop)
+        if (IsRotationTile() ||
+            currentTileType == TileType.Ice ||
+            currentTileType == TileType.Stop ||
+            currentTileType == TileType.FirstDestination ||
+            currentTileType == TileType.SecondDestination
+            )
         {
             Transform target = pb != null ? pb.transform : (eb != null ? eb.transform : null);
             if (target != null)
@@ -273,6 +291,7 @@ public class TileBehaviour : BaseTile
                     if (wasOnIce && !continueIceModeAfterTeleport)
                         pb.StopIceAndFinish();
                 }
+
                 break;
 
             case TileType.EndTeleport: break;
@@ -296,19 +315,23 @@ public class TileBehaviour : BaseTile
                 break;
 
             case TileType.FirstDestination:
-                if (pb != null && (pb.IsFirstTile() || LayerMask.LayerToName(gameObject.layer) == "Static") && !GameManager.Instance.isCleared)
+                if (pb != null && (pb.IsFirstTile() || LayerMask.LayerToName(gameObject.layer) == "Static") &&
+                    !GameManager.Instance.isCleared)
                 {
                     GameManager.Instance.isCleared = true;
                     pb.ReachedDestination();
                 }
+
                 break;
 
             case TileType.SecondDestination:
-                if (pb != null && (!pb.IsFirstTile() || LayerMask.LayerToName(gameObject.layer) == "Static") && !GameManager.Instance.isCleared)
+                if (pb != null && (!pb.IsFirstTile() || LayerMask.LayerToName(gameObject.layer) == "Static") &&
+                    !GameManager.Instance.isCleared)
                 {
                     GameManager.Instance.isCleared = true;
                     pb.ReachedDestination();
                 }
+
                 break;
 
             case TileType.StepOn:
@@ -324,9 +347,10 @@ public class TileBehaviour : BaseTile
                 isToggled = !isToggled;
                 if (isToggled)
                 {
-                    if (_isPlayerOnMe && player != null)            player.PlayExplosion();
-                    if (_isEnemyOnMe  && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
+                    if (_isPlayerOnMe && player != null) player.PlayExplosion();
+                    if (_isEnemyOnMe && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
                 }
+
                 break;
 
             case TileType.TrapToggle:
@@ -344,11 +368,12 @@ public class TileBehaviour : BaseTile
                 // 플레이어가 처음 밟았을 때만 수집 처리 (이미 수집된 타일 재발동 방지)
                 if (pb != null && iconRenderer.enabled)
                 {
-                    iconRenderer.enabled       = false;
-                    _collider.enabled          = false;
+                    iconRenderer.enabled = false;
+                    _collider.enabled = false;
                     GameEvents.RaiseStarCollected();
                     if (starSound) _effectSound.PlayOneShot(starSound);
                 }
+
                 break;
         }
 
@@ -366,7 +391,7 @@ public class TileBehaviour : BaseTile
         if (countText == null) return;
 
         string targetText = "";
-        
+
         if (IsCountableTile())
         {
             if (CurrentToggleActivationCount <= 0) return;
@@ -374,18 +399,18 @@ public class TileBehaviour : BaseTile
             int remaining = CurrentToggleActivationCount - (safeCount % CurrentToggleActivationCount);
             if (remaining == 0) remaining = CurrentToggleActivationCount;
             targetText = remaining.ToString();
-            
+
             if (countText.text != targetText)
             {
                 countText.text = targetText;
-            
+
                 countText.transform.DOKill();
                 countText.transform.localScale = Vector3.one;
 
                 countText.transform.DOPunchPosition(new Vector3(0, 10f, 0), 0.3f, 10, 1);
                 countText.transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f), 0.3f, 10, 1);
             }
-            
+
         }
         else if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
         {
@@ -398,8 +423,8 @@ public class TileBehaviour : BaseTile
     #region Type Helpers
 
     public bool IsPlayerActionTile() =>
-        currentTileType == TileType.ActiveToggle   ||
-        currentTileType == TileType.MoveToggle     ||
+        currentTileType == TileType.ActiveToggle ||
+        currentTileType == TileType.MoveToggle ||
         currentTileType == TileType.RotationToggle;
 
     public bool IsStepOnTile() =>
@@ -407,21 +432,21 @@ public class TileBehaviour : BaseTile
         currentTileType == TileType.TrapToggle;
 
     public bool IsAnimationTile() =>
-        currentTileType == TileType.ToggleTargeted  ||
-        currentTileType == TileType.ActiveToggle    ||
-        currentTileType == TileType.MoveToggle      ||
-        currentTileType == TileType.RotationToggle  ||
+        currentTileType == TileType.ToggleTargeted ||
+        currentTileType == TileType.ActiveToggle ||
+        currentTileType == TileType.MoveToggle ||
+        currentTileType == TileType.RotationToggle ||
         currentTileType == TileType.TrapToggle;
 
     public bool IsCountableTile() =>
-        currentTileType == TileType.ActiveToggle   ||
-        currentTileType == TileType.MoveToggle     ||
+        currentTileType == TileType.ActiveToggle ||
+        currentTileType == TileType.MoveToggle ||
         currentTileType == TileType.RotationToggle;
 
     private bool IsRotationTile() =>
-        currentTileType == TileType.HalfClockwiseRotation         ||
-        currentTileType == TileType.HalfCounterClockwiseRotation   ||
-        currentTileType == TileType.QuarterClockwiseRotation       ||
+        currentTileType == TileType.HalfClockwiseRotation ||
+        currentTileType == TileType.HalfCounterClockwiseRotation ||
+        currentTileType == TileType.QuarterClockwiseRotation ||
         currentTileType == TileType.QuarterCounterClockwiseRotation;
 
     #endregion
@@ -430,15 +455,15 @@ public class TileBehaviour : BaseTile
     {
         return tileColor switch
         {
-            TileColor.Black   => new Color(50/255f, 50/255f, 50/255f, 1f),
-            TileColor.Blue    => Color.blue,
-            TileColor.Green   => Color.green,
-            TileColor.Red     => Color.red,
-            TileColor.Yellow  => Color.yellow,
-            TileColor.Cyan    => Color.cyan,
+            TileColor.Black => new Color(50 / 255f, 50 / 255f, 50 / 255f, 1f),
+            TileColor.Blue => Color.blue,
+            TileColor.Green => Color.green,
+            TileColor.Red => Color.red,
+            TileColor.Yellow => Color.yellow,
+            TileColor.Cyan => Color.cyan,
             TileColor.Magenta => Color.magenta,
-            TileColor.White   => Color.white,
-            _                 => Color.white
+            TileColor.White => Color.white,
+            _ => Color.white
         };
     }
 
@@ -455,8 +480,8 @@ public class TileBehaviour : BaseTile
 
     #region Teleport Logic
 
-    [Header("Teleport")]
-    [SerializeField] private TileBehaviour teleportTarget;
+    [Header("Teleport")] [SerializeField] private TileBehaviour teleportTarget;
+
     /// <summary>
     /// true  : Ice 슬라이딩 중 텔레포트 → EndTeleport 도착 후 Ice 유지 (계속 미끄러짐)
     /// false : Ice 슬라이딩 중 텔레포트 → EndTeleport 도착 후 Ice 종료 (Stop 타일과 동일)
@@ -464,18 +489,18 @@ public class TileBehaviour : BaseTile
     [SerializeField] private bool continueIceModeAfterTeleport = false;
 
     [SerializeField] private bool overrideContinueIceModeAfterTeleport = false;
-    
+
     // StageLoader에서 스테이지를 호출할 때, SO_StageData에 있는 continueIceModeAfterTeleport 변수 값을 반영시킴
     public void SetcontinueIceModeAfterTeleport(bool setting)
     {
         if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
         {
             if (overrideContinueIceModeAfterTeleport) return;
-            
+
             continueIceModeAfterTeleport = setting;
         }
     }
-    
+
     private void AutoLinkTeleport()
     {
         int myID = CurrentTeleportID;
@@ -484,11 +509,12 @@ public class TileBehaviour : BaseTile
             if (teleportTarget != null)
             {
                 teleportTarget = null;
-                
-                #if UNITY_EDITOR
+
+#if UNITY_EDITOR
                 UnityEditor.EditorUtility.SetDirty(this);
-                #endif
+#endif
             }
+
             return;
         }
 
@@ -512,10 +538,10 @@ public class TileBehaviour : BaseTile
         if (teleportTarget != foundTarget)
         {
             teleportTarget = foundTarget;
-            
-            #if UNITY_EDITOR
+
+#if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
-            #endif
+#endif
         }
     }
 
@@ -526,9 +552,9 @@ public class TileBehaviour : BaseTile
         SyncLayerWithParent();
 
         if (behaviourManager == null) behaviourManager = FindFirstObjectByType<BehaviourManager>();
-        if (undoState == null)        undoState        = FindFirstObjectByType<PlayerUndoStateBridge>();
+        if (undoState == null) undoState = FindFirstObjectByType<PlayerUndoStateBridge>();
 
-        _tilemap     = GetComponentInParent<Tilemap>();
+        _tilemap = GetComponentInParent<Tilemap>();
         _effectSound = GetComponentInParent<AudioSource>();
 
         if (currentTileType == TileType.Breakable)
@@ -537,7 +563,7 @@ public class TileBehaviour : BaseTile
         if (animator == null) animator = GetComponent<Animator>();
         animator.enabled = IsAnimationTile();
 
-        if (player == null)     player     = FindFirstObjectByType<PlayerBehaviour>();
+        if (player == null) player = FindFirstObjectByType<PlayerBehaviour>();
         if (mapManager == null) mapManager = FindFirstObjectByType<MapManager>();
 
         if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
@@ -557,6 +583,9 @@ public class TileBehaviour : BaseTile
         UpdateCountText(0);
         UpdateVisuals(true);
         CheckOccupantsAfterToggle();
+        
+        // Star 획득 도전과제 클리어 시, Star 비활성화
+        CheckStarMissionCleared();
     }
 
 #if UNITY_EDITOR
@@ -573,9 +602,9 @@ public class TileBehaviour : BaseTile
             if (matchedData != null && tileData != matchedData)
             {
                 tileData = matchedData;
-                #if UNITY_EDITOR
+#if UNITY_EDITOR
                 UnityEditor.EditorUtility.SetDirty(this);
-                #endif
+#endif
             }
         }
 
@@ -589,8 +618,8 @@ public class TileBehaviour : BaseTile
 
     private void OnEnable()
     {
-        GameEvents.ColorToggleTriggered  += HandleColorToggle;
-        GameEvents.TileLogicTurnStarted  += OnTileLogicTurn;
+        GameEvents.ColorToggleTriggered += HandleColorToggle;
+        GameEvents.TileLogicTurnStarted += OnTileLogicTurn;
         GameEvents.StageLoaded += SetcontinueIceModeAfterTeleport;
 
         switch (currentTileType)
@@ -614,8 +643,8 @@ public class TileBehaviour : BaseTile
         GameEvents.MapRotationCompleted += OnAfterMapRotated;
 
         // Ice 슬라이딩 중 자동 반응해야 하는 타일만 IceTileLogicTurnStarted를 구독
-        if (currentTileType == TileType.Stop             ||
-            currentTileType == TileType.StartTeleport    ||
+        if (currentTileType == TileType.Stop ||
+            currentTileType == TileType.StartTeleport ||
             currentTileType == TileType.FirstDestination ||
             currentTileType == TileType.SecondDestination)
             GameEvents.IceTileLogicTurnStarted += OnIceTileLogicTurn;
@@ -623,15 +652,15 @@ public class TileBehaviour : BaseTile
 
     private void OnDisable()
     {
-        GameEvents.ColorToggleTriggered    -= HandleColorToggle;
-        GameEvents.TileLogicTurnStarted    -= OnTileLogicTurn;
+        GameEvents.ColorToggleTriggered -= HandleColorToggle;
+        GameEvents.TileLogicTurnStarted -= OnTileLogicTurn;
         GameEvents.IceTileLogicTurnStarted -= OnIceTileLogicTurn;
-        GameEvents.ToggleTriggered         -= HandleToggle;
-        GameEvents.PlayerActed             -= HandleToggle;
-        GameEvents.PlayerMoved             -= HandleToggle;
-        GameEvents.PlayerRotated           -= HandleToggle;
-        GameEvents.TileIconRotated       -= RotateTileIcon;
-        GameEvents.MapRotationCompleted  -= OnAfterMapRotated;
+        GameEvents.ToggleTriggered -= HandleToggle;
+        GameEvents.PlayerActed -= HandleToggle;
+        GameEvents.PlayerMoved -= HandleToggle;
+        GameEvents.PlayerRotated -= HandleToggle;
+        GameEvents.TileIconRotated -= RotateTileIcon;
+        GameEvents.MapRotationCompleted -= OnAfterMapRotated;
         GameEvents.StageLoaded -= SetcontinueIceModeAfterTeleport;
     }
 
@@ -643,11 +672,11 @@ public class TileBehaviour : BaseTile
         if ((CurrentTileColor & color) != 0)
         {
             behaviourManager.ExecuteCommand(new TileCommand(this));
-            
+
             if (isToggled && IsAnimationTile())
             {
-                if (_isPlayerOnMe && player != null)            player.PlayExplosion();
-                if (_isEnemyOnMe  && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
+                if (_isPlayerOnMe && player != null) player.PlayExplosion();
+                if (_isEnemyOnMe && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
             }
         }
     }
@@ -675,16 +704,17 @@ public class TileBehaviour : BaseTile
         {
             if (!isToggled)
             {
-                if (_isPlayerOnMe && player != null)            player.PlayExplosion();
-                if (_isEnemyOnMe  && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
+                if (_isPlayerOnMe && player != null) player.PlayExplosion();
+                if (_isEnemyOnMe && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
             }
+
             return;
         }
 
         if ((IsPlayerActionTile() || currentTileType == TileType.ToggleTargeted) && isToggled)
         {
-            if (_isPlayerOnMe && player != null)            player.PlayExplosion();
-            if (_isEnemyOnMe  && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
+            if (_isPlayerOnMe && player != null) player.PlayExplosion();
+            if (_isEnemyOnMe && _currentEnemyOnMe != null) _currentEnemyOnMe.PlayExplosion();
         }
     }
 
@@ -714,7 +744,7 @@ public class TileBehaviour : BaseTile
         if (backgroundRenderer == null || iconRenderer == null) return;
 
         backgroundRenderer.sprite = tileSprites[0];
-        backgroundRenderer.color  = (currentTileType == TileType.ToggleTargeted)
+        backgroundRenderer.color = (currentTileType == TileType.ToggleTargeted)
             ? GetUnityColor(CurrentTileColor)
             : Color.white;
 
@@ -726,8 +756,8 @@ public class TileBehaviour : BaseTile
 
         if (currentTileType == TileType.Breakable && breakableSprites?.Length > 0)
         {
-            int remaining    = CurrentMaxBreakCount - _currentHit;
-            int spriteIndex  = Mathf.Clamp(remaining - 1, 0, breakableSprites.Length - 1);
+            int remaining = CurrentMaxBreakCount - _currentHit;
+            int spriteIndex = Mathf.Clamp(remaining - 1, 0, breakableSprites.Length - 1);
             nextIcon = breakableSprites[spriteIndex];
         }
         else if (currentTileType == TileType.ToggleTargeted || IsPlayerActionTile())
@@ -749,25 +779,25 @@ public class TileBehaviour : BaseTile
     // OnTriggerEnter2D: 점유 등록만 담당. 실제 로직은 타일 로직 턴에서 처리
     protected override void OnPlayerEnter(PlayerBehaviour pb)
     {
-        bool isSameLayer   = pb.gameObject.layer == gameObject.layer;
+        bool isSameLayer = pb.gameObject.layer == gameObject.layer;
         bool isStaticLayer = gameObject.layer == LayerMask.NameToLayer("Static");
-        
+
         // 플레이어가 속한 맵 레이어와 타일의 레이어가 다르면 무시 (크로스맵 오감지 방지)
         if (!isSameLayer && !isStaticLayer) return;
-        _isPlayerOnMe  = true;
+        _isPlayerOnMe = true;
         if (!IsUndoOr)
             _pendingPlayer = pb;
     }
 
     protected override void OnEnemyEnter(EnemyBehaviour eb)
     {
-        bool isSameLayer   = eb.gameObject.layer == gameObject.layer;
+        bool isSameLayer = eb.gameObject.layer == gameObject.layer;
         bool isStaticLayer = gameObject.layer == LayerMask.NameToLayer("Static");
-        
+
         if (!isSameLayer && !isStaticLayer) return;
-        _isEnemyOnMe      = true;
+        _isEnemyOnMe = true;
         _currentEnemyOnMe = eb;
-        _pendingEnemy     = eb;
+        _pendingEnemy = eb;
     }
 
     // 타일 로직 턴: BehaviourManager가 시퀀스를 제어하며 발동
@@ -776,7 +806,7 @@ public class TileBehaviour : BaseTile
         var pb = _pendingPlayer;
         var eb = _pendingEnemy;
         _pendingPlayer = null;
-        _pendingEnemy  = null;
+        _pendingEnemy = null;
 
         // 플레이어 로직
         if (pb != null && !IsUndoOr && !_isWaitPlayerExit)
@@ -835,15 +865,16 @@ public class TileBehaviour : BaseTile
             _pendingPlayer = null;
 
             if (currentTileType == TileType.Breakable &&
-                _currentHit >= CurrentMaxBreakCount   &&
+                _currentHit >= CurrentMaxBreakCount &&
                 gameObject.activeInHierarchy)
             {
-                StartCoroutine(BreakTile());
+                if (_breakCoroutine != null) StopCoroutine(_breakCoroutine); // 중복 방지
+                _breakCoroutine = StartCoroutine(BreakTile());
             }
         }
         else if (other.CompareTag("Enemy"))
         {
-            _isEnemyOnMe      = false;
+            _isEnemyOnMe = false;
             _currentEnemyOnMe = null;
             _pendingEnemy = null;
 
@@ -858,20 +889,57 @@ public class TileBehaviour : BaseTile
         GameEvents.RaiseTileMapRotated(player, angle);
     }
 
+
+
+    private void RotateTileIcon(float angle, bool isFirst)
+    {
+        if (LayerMask.LayerToName(gameObject.layer) == "Static") return;
+
+        // 자신이 속한 맵이 아니면 무시
+        string myLayer = LayerMask.LayerToName(gameObject.layer);
+        string targetLayer = isFirst ? "Map 1" : "Map 2";
+        if (myLayer != targetLayer) return;
+
+        transform.DORotate(new Vector3(0, 0, angle), 0.5f, RotateMode.LocalAxisAdd)
+            .SetEase(Ease.OutBounce);
+
+    }
+
+    private void OnAfterMapRotated(bool freeze)
+    {
+        if (freeze) return;
+        _isWaitEnemyExit = false;
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
+    #region BreakTile
+
     private IEnumerator BreakTile()
     {
         yield return new WaitForSeconds(CurrentBreakDelay);
 
-        if (IsUndoOr) yield break;
-        if (_currentHit < CurrentMaxBreakCount) yield break;
+        if (IsUndoOr)
+        {
+            _breakCoroutine = null;
+            yield break;
+        }
+
+        if (_currentHit < CurrentMaxBreakCount)
+        {
+            _breakCoroutine = null;
+            yield break;
+        }
 
         StopShake();
 
-        iconRenderer.enabled       = false;
-        backgroundRenderer.enabled = false;
-        _collider.enabled          = false;
+        _breakCoroutine = null;
 
-        if (breakSound) _effectSound.PlayOneShot(breakSound);
+        // 타일이 파괴되는 상황도 커맨드로 등록
+        behaviourManager.ExecuteCommand(new TileBreakCommand(this));
     }
 
     private IEnumerator ShakeUntilBreak()
@@ -892,31 +960,50 @@ public class TileBehaviour : BaseTile
         StopCoroutine(_shakeCoroutine);
         _shakeCoroutine = null;
         transform.DOKill();
-        transform.localPosition = Vector3.zero;
     }
 
-    private void RotateTileIcon(float angle, bool isFirst)
+    public void ApplyBreak()
     {
-        if (LayerMask.LayerToName(gameObject.layer) == "Static") return;
-        
-        // 자신이 속한 맵이 아니면 무시
-        string myLayer = LayerMask.LayerToName(gameObject.layer);
-        string targetLayer = isFirst ? "Map 1" : "Map 2";
-        if (myLayer != targetLayer) return;
-        
-        transform.DORotate(new Vector3(0, 0, angle), 0.5f, RotateMode.LocalAxisAdd)
-            .SetEase(Ease.OutBounce);
-        
+        iconRenderer.enabled = false;
+        backgroundRenderer.enabled = false;
+        _collider.enabled = false;
+        if (breakSound) _effectSound.PlayOneShot(breakSound);
     }
 
-    private void OnAfterMapRotated(bool freeze)
+    public void RevertBreak()
     {
-        if (freeze) return;
-        _isWaitEnemyExit = false;
+        iconRenderer.enabled = true;
+        backgroundRenderer.enabled = true;
+        _collider.enabled = true;
     }
 
-    private void OnDestroy()
+    #endregion
+
+    #region Star Tile
+
+    private void CheckStarMissionCleared()
     {
-        StopAllCoroutines();
+        if (currentTileType == TileType.Star)
+        {
+            var gm = GameManager.Instance;
+            if (gm?.currentStageData != null && gm.currentProgressData != null)
+            {
+                var sd = gm.currentStageData;
+                var pd = gm.currentProgressData;
+
+                bool starMissionCleared =
+                    (sd.firstMissionType  == MissionType.CollectStar && pd.isFirstMissionCleared)  ||
+                    (sd.secondMissionType == MissionType.CollectStar && pd.isSecondMissionCleared) ||
+                    (sd.thirdMissionType  == MissionType.CollectStar && pd.isThirdMissionCleared);
+
+                if (starMissionCleared)
+                {
+                    iconRenderer.enabled = false;
+                    _collider.enabled    = false;
+                }
+            }
+        }
     }
+
+#endregion
 }

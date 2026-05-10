@@ -19,11 +19,13 @@ public class TileStateSnapshot
     public bool isVisible;   // Breakable 타일의 파괴 여부 체크용
     public bool isShaking;   // Breakable 타일의 흔들림 상태
 
+    public Vector3 localPosition;
+    
     public TileStateSnapshot(int hit, bool toggled, bool isMap1, int layer,
         int map1MoveCount, int map1RotationCount, int map1ActionCount,
         int map2MoveCount, int map2RotationCount, int map2ActionCount,
         int totalActionCount,
-        Quaternion rot, bool visible, bool shaking)
+        Quaternion rot, bool visible, bool shaking, Vector3 snapLocalPosition)
     {
         hitCount = hit;
         isToggled = toggled;
@@ -39,5 +41,6 @@ public class TileStateSnapshot
         rotation = rot;
         isVisible = visible;
         isShaking = shaking;
+        localPosition = snapLocalPosition;
     }
 }
