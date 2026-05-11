@@ -503,7 +503,7 @@ PrefabInstance:
     - target: {fileID: 4951251146867796789, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 0e141d726758c044696530003d59db4d, type: 3}
+      objectReference: {fileID: -6312597251510088857, guid: 8ecf14adbf77f6b4cb9dad82f6777aa4, type: 3}
     - target: {fileID: 5953477763822285097, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -597,7 +597,7 @@ PrefabInstance:
     - target: {fileID: 4951251146867796789, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 26a6211cc45417a4db921d859a712c08, type: 3}
+      objectReference: {fileID: -3723597976761435112, guid: 7cea970fab097f643a8bed8e5081c0c8, type: 3}
     - target: {fileID: 5953477763822285097, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -613,10 +613,10 @@ PrefabInstance:
     - target: {fileID: 8584471514876223204, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: tileData
       value: 
-      objectReference: {fileID: 11400000, guid: 54e5ea5f308f29e49bbd9d4b28e0507e, type: 2}
+      objectReference: {fileID: 11400000, guid: cd0c3a09875b736418adddf0c5849b82, type: 2}
     - target: {fileID: 8584471514876223204, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: manualTileType
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -843,7 +843,7 @@ PrefabInstance:
     - target: {fileID: 4951251146867796789, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 0c6fcc9a8bc0f204dbce34154a1b9bca, type: 3}
+      objectReference: {fileID: 1998325524802637754, guid: a006b6a9afd47f142adb48442687bd2a, type: 3}
     - target: {fileID: 5953477763822285097, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1175,7 +1175,7 @@ PrefabInstance:
     - target: {fileID: 4951251146867796789, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 0e141d726758c044696530003d59db4d, type: 3}
+      objectReference: {fileID: -6312597251510088857, guid: 8ecf14adbf77f6b4cb9dad82f6777aa4, type: 3}
     - target: {fileID: 5953477763822285097, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1269,7 +1269,7 @@ PrefabInstance:
     - target: {fileID: 4951251146867796789, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: f2af15fccdd2def459f7951f35fac10e, type: 3}
+      objectReference: {fileID: -2615906679996543857, guid: 8ecf14adbf77f6b4cb9dad82f6777aa4, type: 3}
     - target: {fileID: 5953477763822285097, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
