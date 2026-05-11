@@ -63,13 +63,15 @@ public class CameraController : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.MapInitialized      += OnMapInitialized;
+        GameEvents.MapActivated        += OnMapActivated;
         GameEvents.PlayerActionFinished += OnPlayerActionFinished;
-        GameEvents.GlitchTriggered     += TriggerGlitchShake; 
+        GameEvents.GlitchTriggered     += TriggerGlitchShake;
     }
 
     private void OnDisable()
     {
         GameEvents.MapInitialized      -= OnMapInitialized;
+        GameEvents.MapActivated        -= OnMapActivated;
         GameEvents.PlayerActionFinished -= OnPlayerActionFinished;
         GameEvents.GlitchTriggered     -= TriggerGlitchShake;
     }
@@ -85,11 +87,17 @@ public class CameraController : MonoBehaviour
 
     private void OnMapInitialized()
     {
-        // 맵 교체 시 즉시 중심으로 이동
         DOTween.Kill(transform, complete: false);
         _isTweening = false;
         InitializeCameraPosition();
         SetCameraMode();
+    }
+
+    private void OnMapActivated(bool isFirst)
+    {
+        DOTween.Kill(transform, complete: false);
+        _isTweening = false;
+        InitializeCameraPosition();
     }
 
     private void SetCameraMode()

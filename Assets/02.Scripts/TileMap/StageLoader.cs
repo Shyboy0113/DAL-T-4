@@ -44,13 +44,13 @@ public class StageLoader : MonoBehaviour
 
         _currentStageObject = Instantiate(stageData.stagePrefab, mapParent);
 
+        GameManager.Instance.InitStageData(chapterNum, stageNum, stageData);
+
         var mapManager = FindFirstObjectByType<MapManager>();
         if (mapManager != null)
             mapManager.InitializeNewStage(_currentStageObject);
 
         CenterCamerasOnTiles();
-
-        GameManager.Instance.InitStageData(chapterNum, stageNum, stageData);
         
         if (SoundManager.Instance != null)
             SoundManager.Instance.RenewalBGM(stageData.bgmClip, stageData.stageName);
