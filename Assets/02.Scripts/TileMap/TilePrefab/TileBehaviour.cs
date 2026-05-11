@@ -139,6 +139,7 @@ public class TileBehaviour : BaseTile
 
     private Collider2D _collider;
 
+    
     // Breaktile 관련 변수
     private Coroutine _breakCoroutine;
 
@@ -391,6 +392,10 @@ public class TileBehaviour : BaseTile
 
     [SerializeField] private TMP_Text countText;
 
+    private Vector3 _countTextOriginLocalPos;
+    private bool _countTextOriginCached = false;
+    
+    
     public void UpdateCountText(int count)
     {
         if (countText == null) return;
@@ -411,6 +416,8 @@ public class TileBehaviour : BaseTile
 
                 countText.transform.DOKill();
                 countText.transform.localScale = Vector3.one;
+                if (_countTextOriginCached)
+                    countText.transform.localPosition = _countTextOriginLocalPos;  // ← 위치도 명시적 리셋
 
                 countText.transform.DOPunchPosition(new Vector3(0, 10f, 0), 0.3f, 10, 1);
                 countText.transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f), 0.3f, 10, 1);
@@ -421,6 +428,11 @@ public class TileBehaviour : BaseTile
         {
             countText.text = CurrentTeleportID > 0 ? CurrentTeleportID.ToString() : "";
         }
+        else
+        {
+            countText.text = "";
+        }
+        
     }
 
     #endregion
@@ -581,6 +593,12 @@ public class TileBehaviour : BaseTile
             _collider.enabled = true;
         else
             _collider.enabled = true;
+        
+        if (countText != null)
+        {
+            _countTextOriginLocalPos = countText.transform.localPosition;
+            _countTextOriginCached = true;
+        }
     }
 
     private void Start()
@@ -651,7 +669,8 @@ public class TileBehaviour : BaseTile
         if (currentTileType == TileType.Stop ||
             currentTileType == TileType.StartTeleport ||
             currentTileType == TileType.FirstDestination ||
-            currentTileType == TileType.SecondDestination)
+            currentTileType == TileType.SecondDestination ||
+            currentTileType == TileType.Star)
             GameEvents.IceTileLogicTurnStarted += OnIceTileLogicTurn;
     }
 
