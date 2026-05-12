@@ -10,10 +10,8 @@ public class SceneBGM
     public AudioClip bgm;
 }
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
-    public static SoundManager Instance { get; private set;}
-    
     [SerializeField]
     private AudioSource audioSource;
     public List<SceneBGM> sceneBGMList;
@@ -22,21 +20,6 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private string currentStage;
     [SerializeField] private AudioClip currentAudioClip;
     
-    private void Awake()
-    {
-        // 싱글톤 구현
-        if (Instance == null)
-        {
-            Instance = this;
-            
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     public void RenewalBGMForSCene(SceneReference sceneReference)
     {
         var entry = sceneBGMList.Find(x => x.scene.Name == sceneReference.Name);
