@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,6 +19,14 @@ public class CanvasCameraAssigner : MonoBehaviour
     {
         // 메모리 누수 방지를 위해 이벤트 해제
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void Update()
+    {
+        if (_canvas.worldCamera != Camera.main && Camera.main != null)
+        {
+            _canvas.worldCamera = Camera.main;
+        }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
