@@ -23,7 +23,9 @@
       "Bash(git *)",
       "mcp__UnityMCP__manage_prefabs",
       "mcp__UnityMCP__manage_script",
-      "mcp__UnityMCP__execute_menu_item"
+      "mcp__UnityMCP__execute_menu_item",
+      "Bash(grep -n \"script: {fileID: 11500000, guid: \" \"C:\\\\Users\\\\ghdrl\\\\Downloads\\\\Individual Project\\\\DAL-T-4\\\\Assets\\\\01.Scene\\\\StageSelect.unity\")",
+      "Bash(SceneLoader/Bootstrapper.cs)"
     ]
   }
 }
