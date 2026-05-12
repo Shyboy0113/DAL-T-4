@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9ce091a50fdc34bbe98cb1fa21e5b7, type: 3}
   m_Name: Stage 1-1
   m_EditorClassIdentifier: 
-  stagePrefab: {fileID: 2685018636728712195, guid: a09c3c9026e6fb14a89ef6df89d1a3ea, type: 3}
+  stagePrefab: {fileID: 2685018636728712195, guid: 883f00e126a50234aa8eedae37a3b3b6, type: 3}
   bgmClip: {fileID: 8300000, guid: 1941009284d8ab941b796272b711ff43, type: 3}
   chapterNum: 1
   stageNum: 1
@@ -31,3 +31,4 @@ MonoBehaviour:
   thirdMissionType: 5
   forbiddenFeature: 3
   speedRunTime: 0
+  trackingMode: 0
