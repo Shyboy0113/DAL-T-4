@@ -193,16 +193,12 @@ public class TileMapChangeCommand : ICommand
 
     public void Execute()
     {
-        Debug.Log("TileMApChangeCommand Execute");
-        
         GameEvents.RaiseTileMapChanged();
         GameEvents.RaiseMapSwitched();
     }
 
     public void Undo()
     {
-        Debug.Log("TileMApChangeCommand Undo");
-        
         GameEvents.RaiseTileMapChanged(); // 다시 전환하면 원래대로
     }
 } 
