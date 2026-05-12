@@ -409,12 +409,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -1333,12 +1333,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 2029645034}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
@@ -1527,12 +1531,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1983443985}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -1836,12 +1844,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 2059397775}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 265096316}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -2029,12 +2041,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 766665798}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1102309310}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -2222,12 +2238,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 2018559762}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -2419,12 +2439,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 182385532}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -2616,20 +2636,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 901207866}
+      objectReference: {fileID: 857239869}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 857239869}
+      objectReference: {fileID: 901207866}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2809,12 +2829,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 542182374}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -3006,20 +3026,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 2029645034}
+      objectReference: {fileID: 2016147284}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 2016147284}
+      objectReference: {fileID: 2029645034}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3199,12 +3219,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 791989778}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1029394572}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -3608,20 +3632,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 936960760}
+      objectReference: {fileID: 905373879}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 905373879}
+      objectReference: {fileID: 936960760}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4022,7 +4046,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -4211,12 +4235,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 623311347}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -4408,20 +4436,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 1163705528}
+      objectReference: {fileID: 1016067583}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 1016067583}
+      objectReference: {fileID: 1163705528}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4774,12 +4802,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 293139887}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -4971,20 +5003,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 1990813731}
+      objectReference: {fileID: 969969833}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 969969833}
+      objectReference: {fileID: 1990813731}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5168,12 +5200,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 480438791}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 2018559762}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -5544,12 +5580,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -5741,12 +5781,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 1324346535}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1029394572}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -5867,7 +5911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -6087,14 +6131,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 2064398205}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
       value: 
       objectReference: {fileID: 2064398205}
     m_RemovedComponents: []
@@ -6338,12 +6390,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 689104169}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 237853817}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -6551,20 +6607,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 1327654790}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 316368255}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 1327654790}
+      objectReference: {fileID: 316368255}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 316368255}
+      objectReference: {fileID: 1327654790}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6748,12 +6808,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 282241178}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 13409733}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -7080,12 +7144,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1327654790}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -7400,12 +7468,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1990813731}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
@@ -7598,12 +7670,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 476949623}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -7795,20 +7867,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 1846263191}
+      objectReference: {fileID: 282241178}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 282241178}
+      objectReference: {fileID: 1846263191}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8329,14 +8401,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnRight
       value: 
       objectReference: {fileID: 398547392}
     m_RemovedComponents: []
@@ -8522,20 +8598,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 1016067583}
+      objectReference: {fileID: 398547392}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 398547392}
+      objectReference: {fileID: 1016067583}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8723,20 +8799,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 610703107}
+      objectReference: {fileID: 1152224432}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 1152224432}
+      objectReference: {fileID: 610703107}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9235,20 +9311,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 514299461}
+      objectReference: {fileID: 936960760}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 936960760}
+      objectReference: {fileID: 514299461}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9428,12 +9504,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 316368255}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -9621,12 +9697,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 237853817}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1910433171}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -9634,7 +9714,7 @@ PrefabInstance:
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 237853817}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14877,20 +14957,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 2046301281}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
-      propertyPath: m_Navigation.m_SelectOnLeft
+      propertyPath: m_Navigation.m_SelectOnDown
       value: 
       objectReference: {fileID: 969969833}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnLeft
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 2046301281}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15074,20 +15158,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 2084502597}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 514299461}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 2084502597}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 514299461}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15179,7 +15267,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -238
+      value: -51
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_LocalRotation.w
@@ -15199,11 +15287,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 428
+      value: 228
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 10
+      value: -98
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -15271,20 +15359,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 1799999808}
+      objectReference: {fileID: 1846263191}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 1846263191}
+      objectReference: {fileID: 1799999808}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15721,12 +15809,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 2064398205}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 701969149}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -15914,12 +16006,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 867294311}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 791989778}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -16395,12 +16491,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -16435,17 +16531,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2846797254929727479, guid: 53cedb5f1e3414f4880cd7c08a95e6d6, type: 3}
   m_PrefabInstance: {fileID: 1982397590}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1539704253 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2714735464381463379, guid: 53cedb5f1e3414f4880cd7c08a95e6d6, type: 3}
-  m_PrefabInstance: {fileID: 1247429421}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1558245614
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16608,12 +16693,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -16923,12 +17008,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 1648941897}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -17120,12 +17205,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1597965498}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -17313,20 +17402,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 1983443985}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1866096137}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 1983443985}
+      objectReference: {fileID: 1866096137}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 1866096137}
+      objectReference: {fileID: 1983443985}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17510,12 +17603,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -17855,12 +17948,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
@@ -17956,7 +18049,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 100
+      value: -65
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_LocalRotation.w
@@ -17976,11 +18069,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 264
+      value: 411
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -79
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1669741708893892365, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -18048,12 +18141,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1228757646}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -18061,7 +18158,7 @@ PrefabInstance:
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 1228757646}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18241,20 +18338,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 1228757646}
+      objectReference: {fileID: 901207866}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 901207866}
+      objectReference: {fileID: 1228757646}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18367,7 +18464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -18583,12 +18680,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 1690532429}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -18776,12 +18873,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 1102309310}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -18789,7 +18886,7 @@ PrefabInstance:
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 1102309310}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19351,12 +19448,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 145670748}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1690532429}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -19548,12 +19649,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 878258983}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 610703107}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -19749,12 +19854,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -19942,12 +20047,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 260268923}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -20139,20 +20244,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
-      objectReference: {fileID: 144019280}
+      objectReference: {fileID: 311826460}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
-      objectReference: {fileID: 311826460}
+      objectReference: {fileID: 144019280}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -20473,12 +20578,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -20670,12 +20775,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -20863,12 +20968,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 753109115}
+    - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
+      propertyPath: m_Navigation.m_SelectOnDown
+      value: 
+      objectReference: {fileID: 1324346535}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -21060,12 +21169,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1982397593}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnLeft
       value: 
@@ -21328,12 +21437,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1539704253}
+      objectReference: {fileID: 0}
     - target: {fileID: 8915931069979590607, guid: dab7f72bd3ff2d34b9ce102b60ea9167, type: 3}
       propertyPath: m_Navigation.m_SelectOnRight
       value: 
