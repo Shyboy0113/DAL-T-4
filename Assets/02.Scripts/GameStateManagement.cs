@@ -17,8 +17,6 @@ public class GameStateManagement : MonoBehaviour
     [SerializeField] private SceneReference stageSelectScene;
     
     [SerializeField] private BehaviourManager behaviourManager;
-
-    [SerializeField] private CanvasGroup mapPanel;
     [SerializeField] private GameObject howToPlayPanel;
     [SerializeField] private GameObject pausePanel;
     
@@ -42,7 +40,6 @@ public class GameStateManagement : MonoBehaviour
         
         // UI 패널들 초기화
         HideHowToPlayPanel();
-        HideMapUI();
         HidePausePanel();
         
         stageLoader.LoadStage(GameManager.Instance.chapter, GameManager.Instance.stage);
@@ -73,11 +70,6 @@ public class GameStateManagement : MonoBehaviour
         {
             RestartStage();
         }
-        
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            ToggleMapUI();
-        }
 
         if (Input.GetKeyDown(KeyCode.H))
         {
@@ -95,12 +87,6 @@ public class GameStateManagement : MonoBehaviour
     {
         GameEvents.StageCleared -= ChangeStage;
     }
-
-    public void ToggleMapUI()
-    {
-        bool newState = !mapPanel.gameObject.activeSelf;
-        mapPanel.gameObject.SetActive(newState);
-    }
     
     public void ToggleHowToPlayPanel()
     {
@@ -117,11 +103,6 @@ public class GameStateManagement : MonoBehaviour
     public void HideHowToPlayPanel()
     {
         howToPlayPanel.SetActive(false);
-    }
-    
-    public void HideMapUI()
-    {
-        mapPanel.gameObject.SetActive(false);
     }
 
     public void HidePausePanel()
@@ -220,7 +201,6 @@ public class GameStateManagement : MonoBehaviour
         {
             // UI 패널들 초기화
             HideHowToPlayPanel();
-            HideMapUI();
             HidePausePanel();
             
             // 데이터 리셋
