@@ -6,9 +6,14 @@ public class GameClearEffect : MonoBehaviour
     [SerializeField] private ParticleSystem confettiParticle;
     [SerializeField] private int burstCount = 150;
 
-    private void Start()
+    private void OnEnable()
     {
-        PlayCelebration();
+        GameEvents.StageCleared += PlayCelebration;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.StageCleared -= PlayCelebration;
     }
 
     public void PlayCelebration()
