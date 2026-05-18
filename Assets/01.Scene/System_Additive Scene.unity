@@ -8653,8 +8653,8 @@ MonoBehaviour:
   stageSection: {fileID: 1468537860}
   lobbySection: {fileID: 1421479213}
   speedText: {fileID: 1840478526}
-  speedUpButton: {fileID: 1358462901}
-  speedDownButton: {fileID: 1581506238}
+  speedUpButton: {fileID: 1581506238}
+  speedDownButton: {fileID: 1358462901}
   tabToggleButton: {fileID: 614523080}
   tabToggleText: {fileID: 160094284}
   mission1Button: {fileID: 1351777083}

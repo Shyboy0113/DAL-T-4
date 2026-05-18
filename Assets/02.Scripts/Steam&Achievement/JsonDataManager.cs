@@ -203,11 +203,10 @@ public class JsonDataManager : MonoBehaviour
 
     public void LockSpecificRange(int startChapter, int startStage, int endChapter, int endStage, int stagesPerChapter)
     {
+        // 자연 해금 여부와 무관하게 범위 내 모든 스테이지를 강제 잠금·초기화
         ForEachInRange(startChapter, startStage, endChapter, endStage, stagesPerChapter, (ch, st) =>
         {
-            var prev = GetPreviousStageData(ch, st, stagesPerChapter);
-            bool naturallyUnlocked = (ch == 1 && st == 1) || (prev != null && prev.isCleared);
-            stageDataDict[$"{ch}-{st}"] = new StageProgressData(ch, st) { isAppeared = naturallyUnlocked };
+            stageDataDict[$"{ch}-{st}"] = new StageProgressData(ch, st) { isAppeared = false };
         });
         SaveAllData();
         GameEvents.RaiseSaveDataChanged();
@@ -267,6 +266,11 @@ public class JsonDataManager : MonoBehaviour
     {
         ForEachInRange(startChapter, startStage, endChapter, endStage, stagesPerChapter,
             (ch, st) => ApplyClear(GetStageData(ch, st), clearFirst, clearSecond, clearThird));
+
+        // 실제 게임과 동일하게: 범위 마지막 스테이지 클리어 → 바로 다음 스테이지 해금
+        int nextSt = endStage < stagesPerChapter ? endStage + 1 : 1;
+        int nextCh = endStage < stagesPerChapter ? endChapter : endChapter + 1;
+        GetStageData(nextCh, nextSt).isAppeared = true;
 
         SaveAllData();
         GameEvents.RaiseSaveDataChanged();
