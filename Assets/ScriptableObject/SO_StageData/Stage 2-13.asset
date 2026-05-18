@@ -18,7 +18,7 @@ MonoBehaviour:
   stageNum: 13
   canUseF4: 1
   canUseLeftALT: 1
-  canUseTAB: 0
+  canUseTAB: 1
   hasSecondMap: 0
   continueIceModeAfterTeleport: 0
   limitNumberALT: 0

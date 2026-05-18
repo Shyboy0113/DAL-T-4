@@ -31,3 +31,4 @@ MonoBehaviour:
   thirdMissionType: 5
   forbiddenFeature: 3
   speedRunTime: 0
+  trackingMode: 0
