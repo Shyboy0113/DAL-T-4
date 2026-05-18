@@ -375,7 +375,6 @@ public class TileBehaviour : BaseTile
                 if (pb != null && iconRenderer.enabled)
                 {
                     iconRenderer.enabled = false;
-                    _collider.enabled = false;
                     GameEvents.RaiseStarCollected();
                     if (starSound) _effectSound.PlayOneShot(starSound);
                 }
@@ -478,7 +477,7 @@ public class TileBehaviour : BaseTile
             TileColor.Red => Color.red,
             TileColor.Yellow => Color.yellow,
             TileColor.Cyan => Color.cyan,
-            TileColor.Magenta => Color.magenta,
+            TileColor.Magenta => new Color(0.5f, 0f, 0.5f),
             TileColor.White => Color.white,
             _ => Color.white
         };
@@ -693,8 +692,9 @@ public class TileBehaviour : BaseTile
         if (currentTileType != TileType.ToggleTargeted) return;
         bool isStaticLayer = gameObject.layer == LayerMask.NameToLayer("Static");
         if (gameObject.layer != layer && !isStaticLayer) return;
-
-        if ((CurrentTileColor & color) != 0)
+        
+        bool shouldToggle = (CurrentTileColor & color) == CurrentTileColor;
+        if (shouldToggle)
         {
             behaviourManager.ExecuteCommand(new TileCommand(this));
 
@@ -1025,7 +1025,6 @@ public class TileBehaviour : BaseTile
                 if (starMissionCleared)
                 {
                     iconRenderer.enabled = false;
-                    _collider.enabled    = false;
                 }
             }
         }
