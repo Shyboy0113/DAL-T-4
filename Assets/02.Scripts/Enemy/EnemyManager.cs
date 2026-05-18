@@ -139,4 +139,16 @@ public class EnemyManager : MonoBehaviour
         IsAnyEnemyActing = false;
     }
     
+    public void HideAllActiveEnemyShadows()
+    {
+        foreach (var enemy in _enemies)
+        {
+            // 오브젝트가 활성화되어 있고, 아직 죽지 않은 적들만 골라서 그림자 숨김
+            if (enemy.gameObject.activeSelf && !enemy.IsDead)
+            {
+                enemy.HideShadow();
+            }
+        }
+    }
+    
 }

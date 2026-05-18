@@ -251,6 +251,14 @@ public class EnemyBehaviour : MonoBehaviour
         // 자식 레이어들도 전부 Map 1 혹은 Map 2 레이어로 재설정
         GetComponent<Enemy_ChangeLayerByParent>().ApplyParentLayer();
     }
+    
+    public void HideShadow()
+    {
+        if (enemyShadow != null)
+        {
+            enemyShadow.Hide();
+        }
+    }
 
     public void SetDeadState(bool isDead)
     {
@@ -278,7 +286,7 @@ public class EnemyBehaviour : MonoBehaviour
             
             StartCoroutine(IDisableSprite());
 
-            enemyShadow?.Hide();
+            HideShadow();
 
         }
         else

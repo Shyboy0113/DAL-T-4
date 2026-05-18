@@ -26,6 +26,7 @@ public class BehaviourManager : MonoBehaviour
         GameEvents.EnemyTurnStarted     += StartEnemyTurn;
         GameEvents.PlayerDied           += StopAllEnemiesTurn;
         GameEvents.PlayerActionFinished += OnPlayerActionFinished;
+        GameEvents.ChatCommandUndo         += UndoTurn;
     }
 
     private void OnDisable()
@@ -34,6 +35,7 @@ public class BehaviourManager : MonoBehaviour
         GameEvents.EnemyTurnStarted     -= StartEnemyTurn;
         GameEvents.PlayerDied           -= StopAllEnemiesTurn;
         GameEvents.PlayerActionFinished -= OnPlayerActionFinished;
+        GameEvents.ChatCommandUndo         -= UndoTurn;
     }
 
     public void ExecuteCommand(ICommand command)
@@ -81,54 +83,57 @@ public class BehaviourManager : MonoBehaviour
     }
 
     public void UndoTurn()
+{
+    if (currentTurn != TurnState.Player) return;
+    if (playerBehaviour.CheckSkip())     return;
+    if (undoState.IsUndo)                return;
+    if (!_history.HasUndo)               return;
+
+    undoState.BeginUndo();
+
+    GameEvents.RaiseGameOverUIDisabled();
+
+    _history.PopNonPlayerCommands(undo: true);
+
+    ICommand playerCommand = _history.PopUndoPlayerCommand();
+    if (playerCommand != null)
     {
-        if (currentTurn != TurnState.Player) return;
-        if (playerBehaviour.CheckSkip())     return;
-        if (undoState.IsUndo)            return;
-        if (!_history.HasUndo)               return;
+        GameEvents.RaiseUndoTriggered();
 
-        undoState.BeginUndo();
-
-        // GameOver Text와 Button의 UI Bounce를 멈춥니다. 
-        GameEvents.RaiseGameOverUIDisabled();
-        
-        // 1. 플레이어 커맨드 위에 쌓인 비플레이어 커맨드(타일/적) 먼저 Undo
-        _history.PopNonPlayerCommands(undo: true);
-
-        // 2. 플레이어 커맨드 Undo
-        ICommand playerCommand = _history.PopUndoPlayerCommand();
-        if (playerCommand != null)
+        // Undo 시 키 카운터 복원
+        switch (ReturnKeyType(playerCommand))
         {
-            GameEvents.RaiseUndoTriggered();
-            
-            playerCommand.Undo();
-            playerBehaviour.UndoState();
-
-            if (playerBehaviour.IsMap1Layer()) // 이 부분 수정
-            {
-                GameEvents.RaisePlayerActed(playerBehaviour.map1ActionCount, playerBehaviour.gameObject.layer);
-                
-                if (playerCommand is MoveCommand)
-                    GameEvents.RaisePlayerMoved(playerBehaviour.map1MoveCount, playerBehaviour.gameObject.layer);
-                else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
-                    GameEvents.RaisePlayerRotated(playerBehaviour.map1RotationCount, playerBehaviour.gameObject.layer);
-            }
-            else
-            {
-                GameEvents.RaisePlayerActed(playerBehaviour.map2ActionCount, playerBehaviour.gameObject.layer);
-                
-                if (playerCommand is MoveCommand)
-                    GameEvents.RaisePlayerMoved(playerBehaviour.map2MoveCount, playerBehaviour.gameObject.layer);
-                else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
-                    GameEvents.RaisePlayerRotated(playerBehaviour.map2RotationCount, playerBehaviour.gameObject.layer);
-            }
-
-            
+            case KeyType.Alt: GameManager.Instance.pushedNumberALT = Mathf.Max(0, GameManager.Instance.pushedNumberALT - 1); break;
+            case KeyType.F4:  GameManager.Instance.pushedNumberF4  = Mathf.Max(0, GameManager.Instance.pushedNumberF4  - 1); break;
+            case KeyType.Tab: GameManager.Instance.pushedNumberTAB = Mathf.Max(0, GameManager.Instance.pushedNumberTAB - 1); break;
         }
 
-        UpdateUndoUI();
-        StartCoroutine(EndUndoAfterSync());
+        playerCommand.Undo();
+        playerBehaviour.UndoState();
+
+        if (playerBehaviour.IsMap1Layer())
+        {
+            GameEvents.RaisePlayerActed(playerBehaviour.map1ActionCount, playerBehaviour.gameObject.layer);
+
+            if (playerCommand is MoveCommand)
+                GameEvents.RaisePlayerMoved(playerBehaviour.map1MoveCount, playerBehaviour.gameObject.layer);
+            else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
+                GameEvents.RaisePlayerRotated(playerBehaviour.map1RotationCount, playerBehaviour.gameObject.layer);
+        }
+        else
+        {
+            GameEvents.RaisePlayerActed(playerBehaviour.map2ActionCount, playerBehaviour.gameObject.layer);
+
+            if (playerCommand is MoveCommand)
+                GameEvents.RaisePlayerMoved(playerBehaviour.map2MoveCount, playerBehaviour.gameObject.layer);
+            else if (playerCommand is ClockwiseRotateCommand || playerCommand is CounterClockwiseRotateCommand)
+                GameEvents.RaisePlayerRotated(playerBehaviour.map2RotationCount, playerBehaviour.gameObject.layer);
+        }
     }
+
+    UpdateUndoUI();
+    StartCoroutine(EndUndoAfterSync());
+}
 
     private void UpdateUndoUI()
     {

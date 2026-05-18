@@ -68,7 +68,7 @@ public class ChatPanel : MonoBehaviour
                 effect       : GameEvents.RaiseChatCommandRotateCCW
             ),
             new ChatCommand(
-                keywords     : new[] { "rotate", "ALT", "alt", "LeftALT", "Leftalt", "Left alt", "알트", "레프트알트", "레프트 알트", "회전" },
+                keywords     : new[] { "rotate", "turn", "TURN","ALT", "alt", "LeftALT", "Leftalt", "Left alt", "알트", "레프트알트", "레프트 알트", "회전" },
                 easterEggKey : "chat_cw",
                 effect       : GameEvents.RaiseChatCommandRotateCW
             ),
@@ -78,7 +78,7 @@ public class ChatPanel : MonoBehaviour
                 effect       : GameEvents.RaiseChatCommandMove
             ),
             new ChatCommand(
-                keywords     : new[] { "dance" },
+                keywords     : new[] { "dance", "댄스" },
                 easterEggKey : "chat_dance",
                 effect       : GameEvents.RaiseChatCommandDance
             ),
@@ -90,7 +90,22 @@ public class ChatPanel : MonoBehaviour
             new ChatCommand(
                 keywords     : new[] { "whistle", "whistling" },
                 easterEggKey : "chat_whistle",
-                effect       : PlayWhistle
+                effect       : GameEvents.RaiseChatCommandWhistle
+            ),
+            new ChatCommand(
+                keywords     : new[] { "esc", "escape", "옵션","일시정지","pause", "PAUSE", "멈춤" },
+                easterEggKey : "chat_pause",
+                effect       : GameEvents.RaiseChatCommandPause
+            ),
+            new ChatCommand(
+                keywords     : new[] { "restart", "reset", "재시작", "다시 시작", "다시시작", "리스타트", "리셋", "처음", "초기화" },
+                easterEggKey : "chat_restart",
+                effect       : GameEvents.RaiseChatCommandRestart
+            ),
+            new ChatCommand(
+                keywords     : new[] { "undo", "control + z", "ctrl + z", "ctrl z", "control z", "취소", "되돌리기", "언두","언도" },
+                easterEggKey : "chat_undo",
+                effect       : GameEvents.RaiseChatCommandUndo
             ),
         };
     }
@@ -102,6 +117,7 @@ public class ChatPanel : MonoBehaviour
         GameEvents.StageRestarted += OnStageRestarted;
         GameEvents.StageRestarted += ClearAll;
         GameEvents.StageCleared   += ClearAll;
+        GameEvents.ChatCommandWhistle += PlayWhistle;
     }
 
     private void OnDisable()
@@ -111,6 +127,7 @@ public class ChatPanel : MonoBehaviour
         GameEvents.StageRestarted -= OnStageRestarted;
         GameEvents.StageRestarted -= ClearAll;
         GameEvents.StageCleared   -= ClearAll;
+        GameEvents.ChatCommandWhistle -= PlayWhistle;
     }
 
     private void Start()
@@ -268,7 +285,7 @@ public class ChatPanel : MonoBehaviour
         _messages.Add(msg);
     }
 
-    private void ClearAll()
+    public void ClearAll()
     {
         foreach (TextMeshProUGUI msg in _messages)
             StartCoroutine(IFadeOut(msg));

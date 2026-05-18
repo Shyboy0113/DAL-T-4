@@ -27,12 +27,16 @@ public class MapManager : MonoBehaviour
         public float   secondTileIconZRotation;     // Map2 타일 아이콘들의 역회전 보정값
         
         public Vector3[] firstChildLocalPositions;   
-        public Vector3[] secondChildLocalPositions;  
+        public Vector3[] secondChildLocalPositions;
+        
+        public Vector3 mainCameraPosition;      // 메인 카메라의 위치
+        public Vector3 cameraBaseScrollPosition; // _baseScrollPosition 추가
     }
 
     private Stack<MapState> _undoMapHistory = new Stack<MapState>();
 
     private Camera _mainCamera;
+    [SerializeField] private CameraController cameraController;
 
     private bool _isFirst    = true;
     private bool _isRotating = false;
@@ -321,6 +325,9 @@ public class MapManager : MonoBehaviour
             isFirst             = isFirstSnapshot,
             firstChildLocalPositions  = firstChildren.Select(t => t.localPosition).ToArray(),
             secondChildLocalPositions = secondChildren.Select(t => t.localPosition).ToArray(),
+            
+            mainCameraPosition       = Camera.main.transform.position,
+            cameraBaseScrollPosition = cameraController.GetBaseScrollPosition(),
         };
 
         _undoMapHistory.Push(state);
@@ -357,15 +364,17 @@ public class MapManager : MonoBehaviour
         
         _firstAccumulatedRotation = lastState.firstAccumulatedRotation;
         _secondAccumulatedRotation = lastState.secondAccumulatedRotation;
-
+        
+        cameraController.RestoreCameraPosition(lastState.cameraBaseScrollPosition);
+        
         // 맵 전환 상태 복원 — ActivateFirst/Second 내부에서 MapActivated 이벤트 발행됨
         _isFirst = lastState.isFirst;
         if (_isFirst) ActivateFirst();
         else          ActivateSecond();
-
+        
         // Undo 후 다음 SaveMapState가 오염되지 않도록 플래그 초기화
         _mapChangedSinceLastSave = false;
-
+        
         Physics2D.SyncTransforms();
     }
 
