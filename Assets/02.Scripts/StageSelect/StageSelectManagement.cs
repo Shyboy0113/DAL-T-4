@@ -39,6 +39,9 @@ public class StageSelectManagement : MonoBehaviour
     /// <summary>현재 패널이 열려 있는 노드. null이면 패널 닫힘.</summary>
     private StageNode _panelOpenNode = null;
 
+    /// <summary>현재 StageSelect에서 포커스(선택)된 노드.</summary>
+    private StageNode _currentFocusNode = null;
+
     // ═══════════════════════════════════════════════════════════
     // Lifecycle
     // ═══════════════════════════════════════════════════════════
@@ -185,6 +188,8 @@ public class StageSelectManagement : MonoBehaviour
 
     private void OnNodeSelected(StageNode node)
     {
+        _currentFocusNode = node;
+
         // 다른 노드가 선택되면 열려있던 패널을 닫는다
         if (_panelOpenNode != null && _panelOpenNode != node)
             ClosePanel();
@@ -387,9 +392,21 @@ public class StageSelectManagement : MonoBehaviour
         var jdm = gm?.jsonDataManager;
         if (jdm == null) return;
 
-        // 현재 스테이지가 여전히 isAppeared면 이동 불필요
-        var current = jdm.GetStageData(gm.chapter, gm.stage);
-        if (current != null && current.isAppeared) return;
+        // _currentFocusNode : StageSelect에서 마지막으로 OnSelect된 노드.
+        // gm.chapter/stage는 마지막으로 '실제 입장'한 스테이지이므로
+        // Q/E 챕터 전환 후 다른 챕터 노드를 보고 있을 때 틀린 값을 가리킬 수 있음.
+        if (_currentFocusNode != null && _currentFocusNode.stageData != null)
+        {
+            var pd = jdm.GetStageData(_currentFocusNode.stageData.chapterNum,
+                                      _currentFocusNode.stageData.stageNum);
+            if (pd != null && pd.isAppeared) return;
+        }
+        else
+        {
+            // 포커스 노드 정보가 없으면 gm.chapter/stage로 폴백
+            var pd = jdm.GetStageData(gm.chapter, gm.stage);
+            if (pd != null && pd.isAppeared) return;
+        }
 
         // 전체 노드(비활성 챕터 포함) 중 isAppeared인 최고 스테이지 탐색
         var allNodes = FindObjectsByType<StageNode>(FindObjectsInactive.Include, FindObjectsSortMode.None);
