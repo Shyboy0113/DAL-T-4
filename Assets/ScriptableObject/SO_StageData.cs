@@ -32,19 +32,18 @@ public class SO_StageData : ScriptableObject
     [Header("기능 제한 (Feature Limits)")]
     public bool canUseF4 = true;
     public bool canUseLeftALT = true;
-    public bool canUseTAB = false;
+    public bool canUseTAB = true;
     
     public bool hasSecondMap = false;
 
-    public bool continueIceModeAfterTeleport = false;
-    
     public int limitNumberALT;
     public int limitNumberF4;
     public int limitNumberTAB;
     
     [Header("미션 및 업적 세팅")]
     public float limitTime;
-    public string steamAchievementKey;
+
+    public int missionActionCount;
     
     public MissionType firstMissionType = MissionType.None;
     public MissionType secondMissionType = MissionType.None;
@@ -52,10 +51,7 @@ public class SO_StageData : ScriptableObject
     
     public ForbiddenFeature forbiddenFeature = ForbiddenFeature.None;
     
-    [Header("스피드런 업적")]
-    [Tooltip("이 시간(초) 이내에 클리어하면 스피드런 업적 달성. 0이면 기본값(30초) 사용.")]
-    public float speedRunTime = 0f;
-    
+    public bool continueIceModeAfterTeleport = false;
     // 게임 시작 시, 카메라가 움직이는 모드 설정
     public CameraTrackingMode trackingMode = CameraTrackingMode.FrameEntireMap;
 }
