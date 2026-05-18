@@ -121,6 +121,7 @@ public class JsonDataManager : MonoBehaviour
         string key = $"{data.chapter}-{data.stage}";
         stageDataDict[key] = data;
         SaveAllData();
+        GameEvents.RaiseSaveDataChanged();
     }
 
     public GlobalStatsData GetGlobalStats() => globalStats;
@@ -186,6 +187,8 @@ public class JsonDataManager : MonoBehaviour
             for (int st = 1; st <= stagesPerChapter; st++)
                 GetStageData(ch, st).isAppeared = true;
         SaveAllData();
+        GameEvents.RaiseSaveDataChanged();
+        
         Debug.Log($"스테이지 해금: {minChapter}-1 ~ {maxChapter}-{stagesPerChapter}");
     }
 
@@ -194,6 +197,7 @@ public class JsonDataManager : MonoBehaviour
         ForEachInRange(startChapter, startStage, endChapter, endStage, stagesPerChapter,
             (ch, st) => GetStageData(ch, st).isAppeared = true);
         SaveAllData();
+        GameEvents.RaiseSaveDataChanged();
         Debug.Log($"스테이지 해금: {startChapter}-{startStage} ~ {endChapter}-{endStage}");
     }
 
@@ -206,6 +210,7 @@ public class JsonDataManager : MonoBehaviour
             stageDataDict[$"{ch}-{st}"] = new StageProgressData(ch, st) { isAppeared = naturallyUnlocked };
         });
         SaveAllData();
+        GameEvents.RaiseSaveDataChanged();
         Debug.Log($"스테이지 잠금: {startChapter}-{startStage} ~ {endChapter}-{endStage}");
     }
 
@@ -239,7 +244,41 @@ public class JsonDataManager : MonoBehaviour
         var firstStage = GetStageData(1, 1);
         firstStage.isAppeared = true;
         SaveAllData();
+        GameEvents.RaiseSaveDataChanged();
 
         Debug.Log("세이브 데이터가 초기화되었습니다.");
+    }
+    
+    // 지정 범위 클리어 처리
+    public void ClearStageRange(int minChapter, int maxChapter, int stagesPerChapter,
+        bool clearFirst, bool clearSecond, bool clearThird)
+    {
+        for (int ch = minChapter; ch <= maxChapter; ch++)
+        for (int st = 1; st <= stagesPerChapter; st++)
+            ApplyClear(GetStageData(ch, st), clearFirst, clearSecond, clearThird);
+
+        SaveAllData();
+        GameEvents.RaiseSaveDataChanged();
+        Debug.Log($"스테이지 올클리어: {minChapter}-1 ~ {maxChapter}-{stagesPerChapter}");
+    }
+
+    public void ClearSpecificRange(int startChapter, int startStage, int endChapter, int endStage,
+        int stagesPerChapter, bool clearFirst, bool clearSecond, bool clearThird)
+    {
+        ForEachInRange(startChapter, startStage, endChapter, endStage, stagesPerChapter,
+            (ch, st) => ApplyClear(GetStageData(ch, st), clearFirst, clearSecond, clearThird));
+
+        SaveAllData();
+        GameEvents.RaiseSaveDataChanged();
+        Debug.Log($"스테이지 클리어: {startChapter}-{startStage} ~ {endChapter}-{endStage}");
+    }
+
+    private void ApplyClear(StageProgressData data, bool clearFirst, bool clearSecond, bool clearThird)
+    {
+        data.isAppeared = true;
+        data.isCleared  = true;
+        if (clearFirst)  data.isFirstMissionCleared  = true;
+        if (clearSecond) data.isSecondMissionCleared = true;
+        if (clearThird)  data.isThirdMissionCleared  = true;
     }
 }

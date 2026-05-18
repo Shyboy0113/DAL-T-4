@@ -271,6 +271,21 @@ public static class GameEvents
     public static event Action ChatCommandWhistle;
     public static void RaiseChatCommandWhistle() => ChatCommandWhistle?.Invoke();
 
+    // [발행] ChatManager.cs — "Pause" 채팅 감지 시 (이스터에그)
+    // [수신] GameStateManagement.cs — 일시정지 패널 토글
+    public static event Action ChatCommandPause;
+    public static void RaiseChatCommandPause() => ChatCommandPause?.Invoke();
+    
+    // [발행] ChatManager.cs — "Restart" 채팅 감지 시 (이스터에그)
+    // [수신] GameStateManagement.cs — 스테이지 재시작
+    public static event Action ChatCommandRestart;
+    public static void RaiseChatCommandRestart() => ChatCommandRestart?.Invoke();
+    
+    // [발행] ChatManager.cs — "Undo" 채팅 감지 시 (이스터에그)
+    // [수신] behaviourManager.cs — 플레이어 행동 하나 되돌리기
+    public static event Action ChatCommandUndo;
+    public static void RaiseChatCommandUndo() => ChatCommandUndo?.Invoke();
+    
     #endregion
 
     #region Visual Effects
@@ -299,4 +314,12 @@ public static class GameEvents
     
     #endregion
 
+    #region StageSelect Node&Line Rendering
+
+    // jsonDataManager에서 특정 스테이지 해금 시 발동되는 이벤트로, 자동으로 스테이지 노드 간에 노선을 연결해줌
+    public static event Action OnSaveDataChanged; 
+    public static void RaiseSaveDataChanged() => OnSaveDataChanged?.Invoke();
+
+    #endregion
+    
 }
