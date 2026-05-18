@@ -63,6 +63,18 @@ MonoBehaviour:
     m_Key: Mission_NoSpecificFeature
     m_Metadata:
       m_Items: []
+  - m_Id: 12467183008550912
+    m_Key: Mission_NoSpecificFeature_Format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12533274778996736
+    m_Key: Mission_TimeLimit_Format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12533330244472832
+    m_Key: Mission_MoveCountLimit_Format
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

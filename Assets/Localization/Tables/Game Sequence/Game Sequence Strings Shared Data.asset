@@ -39,6 +39,18 @@ MonoBehaviour:
     m_Key: GameOver_Text
     m_Metadata:
       m_Items: []
+  - m_Id: 11518132498595840
+    m_Key: How To Play_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11518183329366016
+    m_Key: StageMission_Button
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11518601224650752
+    m_Key: StageMission_Text
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

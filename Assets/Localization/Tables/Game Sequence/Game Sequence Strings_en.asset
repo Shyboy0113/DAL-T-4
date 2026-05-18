@@ -48,6 +48,20 @@ MonoBehaviour:
     m_Localized: Press <color=red>Ctrl + Z</color> Or <color=red>R</color>estart!
     m_Metadata:
       m_Items: []
+  - m_Id: 11518132498595840
+    m_Localized: <color=red>H</color>ow To Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11518183329366016
+    m_Localized: '<color=yellow>LeftShift</color>
+
+      Stage Mission'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11518601224650752
+    m_Localized: <color=yellow>LeftShift</color><color=grey> Close this panel</color>
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

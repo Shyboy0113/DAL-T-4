@@ -42,6 +42,19 @@ MonoBehaviour:
     m_Localized: "Ctrl + Z \uD639\uC740 \uC7AC\uC2DC\uC791(R)\uC744 \uB204\uB974\uC138\uC694!"
     m_Metadata:
       m_Items: []
+  - m_Id: 11518132498595840
+    m_Localized: "<color=red>H</color> - \uC870\uC791\uBC29\uBC95"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11518183329366016
+    m_Localized: "<color=yellow>LeftShift</color>\n\uC2A4\uD14C\uC774\uC9C0 \uBBF8\uC158"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11518601224650752
+    m_Localized: "<color=yellow>LeftShift</color><color=grey>\uB97C \uB20C\uB7EC
+      \uCC3D \uB2EB\uAE30</color>"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

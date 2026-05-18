@@ -13,12 +13,22 @@ MonoBehaviour:
   m_Name: Localization-String-Tables-English (en)
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-English (en)
-  m_Data:
-    m_SerializedData: []
   m_GUID: 68e33166a68cc23419c8e4d73909b5ce
   m_SerializeEntries:
+  - m_GUID: 2304a88fbf7628a4d81ebb228d5ea334
+    m_Address: HowToPlay Strings_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 243397d45dfadbb4a9b1690a19381da3
     m_Address: Game Sequence Strings_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 33f31aa8778022e49bc29a717383df42
+    m_Address: Game Clear Strings_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
@@ -51,15 +61,15 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: d14e7b30e16d0bb49ae1fe78a9fab285
-    m_Address: Option Strings_en
+  - m_GUID: aa000000000000000000000000000004
+    m_Address: StageData Strings_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: aa000000000000000000000000000004
-    m_Address: StageData Strings_en
+  - m_GUID: d14e7b30e16d0bb49ae1fe78a9fab285
+    m_Address: Option Strings_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

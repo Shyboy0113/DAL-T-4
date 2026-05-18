@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: Localization-Assets-Shared
   m_EditorClassIdentifier: 
   m_GroupName: Localization-Assets-Shared
-  m_Data:
-    m_SerializedData: []
   m_GUID: 12c620cd84f391844a8f3609b6ded392
   m_SerializeEntries:
   - m_GUID: 396019705be8c6c428330b50333cd10c
@@ -28,8 +26,23 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b48acd05be1f4347a3d8e04a1c769c0
+    m_Address: Assets/Game Clear Strings Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 558601e8c8530df4fb5aafd17e62328a
+    m_Address: Assets/HowToPlay Strings Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7768f1537714c9e43b136a34e603ce3a
     m_Address: Assets/Localization/StageSelect Strings Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa000000000000000000000000000002
+    m_Address: Assets/Localization/Tables/StageData/StageData Strings Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -45,11 +58,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d6424e1e0ae26264bb86d6b59c500e99
     m_Address: Assets/UI_Strings Shared Data.asset
-    m_ReadOnly: 1
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: aa000000000000000000000000000002
-    m_Address: Assets/Localization/Tables/StageData/StageData Strings Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

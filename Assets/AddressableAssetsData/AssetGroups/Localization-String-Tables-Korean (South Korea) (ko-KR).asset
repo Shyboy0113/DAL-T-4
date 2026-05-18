@@ -13,10 +13,14 @@ MonoBehaviour:
   m_Name: Localization-String-Tables-Korean (South Korea) (ko-KR)
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Korean (South Korea) (ko-KR)
-  m_Data:
-    m_SerializedData: []
   m_GUID: 011fd2cb7dfe88549bd348b7b2609ff2
   m_SerializeEntries:
+  - m_GUID: 10892f21fb78d13499ac692de8f4083b
+    m_Address: Game Clear Strings_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 26ce0e86211d8294e8b0cf303a8013ce
     m_Address: Option Strings_ko-KR
     m_ReadOnly: 1
@@ -44,6 +48,13 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa000000000000000000000000000005
+    m_Address: StageData Strings_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c05f39ef3513ad7418a64d459757baf3
     m_Address: Game Chat Strings_ko-KR
     m_ReadOnly: 1
@@ -51,15 +62,14 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ff528f6f8adb19a428837206dea17ced
-    m_Address: Intro Strings_ko-KR
+  - m_GUID: cd53c2e136253264a9472f39d3f77617
+    m_Address: HowToPlay Strings_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR
-    - Preload
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: aa000000000000000000000000000005
-    m_Address: StageData Strings_ko-KR
+  - m_GUID: ff528f6f8adb19a428837206dea17ced
+    m_Address: Intro Strings_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR

@@ -66,6 +66,18 @@ MonoBehaviour:
     m_Localized: Clear without Specific Feature
     m_Metadata:
       m_Items: []
+  - m_Id: 12467183008550912
+    m_Localized: Clear without {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12533274778996736
+    m_Localized: Clear within {0} seconds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12533330244472832
+    m_Localized: Clear within {0} actions
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
