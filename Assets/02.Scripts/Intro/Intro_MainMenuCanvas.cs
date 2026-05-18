@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Eflatun.SceneReference;
@@ -10,6 +11,13 @@ public class Intro_MainMenuCanvas : MonoBehaviour
     public SO_UIEvent optionEvent;
     
     private GameObject _lastSelectedGameObject;
+
+    private bool _isStart;
+
+    private void Start()
+    {
+        _isStart = false;
+    }
 
     private void OnEnable()
     {
@@ -39,6 +47,10 @@ public class Intro_MainMenuCanvas : MonoBehaviour
 
     public void StartButton() // 게임 시작 버튼 클릭 시 Stage 선택창으로 넘어감
     {
+        if (_isStart) return;
+
+        _isStart = true;
+        
         cutoutFade.FadeOut(() => 
         {
             StartCoroutine(SceneLoader.LoadScene(stageSelectScene));

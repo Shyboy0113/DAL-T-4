@@ -37,6 +37,9 @@ public class Game_PauseCanvas : MonoBehaviour
 
     private void OnDisable()
     {
+        // Sequence Canvas의 마지막 선택 버튼으로 포커스 복귀
+        sequenceFocusKeeper.RestoreLastSelected();
+        
         optionEvent.OnActiveToggle.RemoveListener(OnOptionToggle);
     }
 
