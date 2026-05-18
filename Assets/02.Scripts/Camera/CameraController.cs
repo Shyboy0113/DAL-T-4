@@ -55,6 +55,16 @@ public class CameraController : MonoBehaviour
 
     // ─────────────────────────────────────────────────────────────────
 
+    public Vector3 GetBaseScrollPosition() => _baseScrollPosition;
+
+    public void RestoreCameraPosition(Vector3 baseScrollPos)
+    {
+        DOTween.Kill(transform, complete: false);
+        _baseScrollPosition = baseScrollPos;
+        transform.position  = _baseScrollPosition + new Vector3(cameraOffset.x, cameraOffset.y, 0f);
+        _isTweening = false;
+    }
+    
     private void Awake()
     {
         _camera = GetComponent<Camera>();

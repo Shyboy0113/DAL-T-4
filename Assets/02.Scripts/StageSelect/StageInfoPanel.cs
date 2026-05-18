@@ -16,7 +16,7 @@ public class StageInfoPanel : MonoBehaviour
     {
         public GameObject row;
         public TMP_Text   label;
-        public Image      clearMark;  // 클리어 시 활성화할 아이콘 Image
+        public Image      clearMark;
     }
 
     [Header("Canvas")]
@@ -25,12 +25,11 @@ public class StageInfoPanel : MonoBehaviour
 
     [Header("Stage Info")]
     [SerializeField] private TMP_Text stageNameText;
-    [SerializeField] private TMP_Text stageDescText;
 
     [Header("Status")]
-    [SerializeField] private GameObject clearBadge;   // 클리어 배지
-    [SerializeField] private GameObject lockedBadge;  // 잠금 배지
-    [SerializeField] private GameObject confirmHint;  // "Enter로 진입" 힌트
+    [SerializeField] private GameObject clearBadge;
+    [SerializeField] private GameObject lockedBadge;
+    [SerializeField] private GameObject confirmHint;
 
     [Header("Missions")]
     [SerializeField] private MissionRowUI mission1;
@@ -47,6 +46,7 @@ public class StageInfoPanel : MonoBehaviour
 
     private void OnEnable()
     {
+        ShowFromData(GameManager.Instance?.currentStageData);
         LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
     }
 
@@ -61,9 +61,6 @@ public class StageInfoPanel : MonoBehaviour
             RefreshTexts(_currentData);
     }
 
-    /// <summary>
-    /// 일시정지 패널 등 위치 조정 없이 현재 스테이지 데이터를 바로 표시합니다.
-    /// </summary>
     public void ShowFromData(SO_StageData data)
     {
         if (data == null) return;
@@ -88,6 +85,8 @@ public class StageInfoPanel : MonoBehaviour
 
     public void Show(StageNode node, RectTransform nodeRect, Vector2 offset)
     {
+        Debug.Log($"[InfoPanel] Show() 진입 | canvasGroup={canvasGroup != null} | stageData={node?.stageData?.name}");
+
         if (node?.stageData == null) return;
         _currentData = node.stageData;
 
@@ -104,6 +103,8 @@ public class StageInfoPanel : MonoBehaviour
         panelRect.position = nodeRect.position;
         panelRect.anchoredPosition += new Vector2(offset.x * sign, offset.y);
 
+        Debug.Log($"[InfoPanel] 포지션 설정 완료 | anchoredPos={panelRect.anchoredPosition}");
+
         bool isLocked  = node.CurrentState == StageNode.NodeState.Locked;
         bool isCleared = node.CurrentState == StageNode.NodeState.Cleared;
 
@@ -111,23 +112,30 @@ public class StageInfoPanel : MonoBehaviour
         if (lockedBadge != null) lockedBadge.SetActive(isLocked);
         if (confirmHint != null) confirmHint.SetActive(!isLocked);
 
-        RefreshTexts(_currentData);
+        try
+        {
+            RefreshTexts(_currentData);
+            Debug.Log("[InfoPanel] RefreshTexts 완료");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[InfoPanel] RefreshTexts 예외 발생: {e}");
+        }
 
         canvasGroup.DOFade(1f, fadeTime);
+        Debug.Log($"[InfoPanel] DOFade 시작 | fadeTime={fadeTime} | alpha={canvasGroup.alpha}");
     }
 
-    /// <summary>현재 언어로 텍스트 필드를 다시 채웁니다. 언어 변경 시에도 호출됩니다.</summary>
     private void RefreshTexts(SO_StageData data)
     {
         var jdm      = GameManager.Instance?.jsonDataManager;
         var progress = jdm?.GetStageData(data.chapterNum, data.stageNum);
 
         if (stageNameText != null) stageNameText.text = data.stageName;
-        if (stageDescText  != null) stageDescText.text = LDesc(data);
 
-        SetMission(mission1, data.firstMissionType,  progress?.isFirstMissionCleared  ?? false);
-        SetMission(mission2, data.secondMissionType, progress?.isSecondMissionCleared ?? false);
-        SetMission(mission3, data.thirdMissionType,  progress?.isThirdMissionCleared  ?? false);
+        SetMission(mission1, data.firstMissionType,  progress?.isFirstMissionCleared  ?? false, data);
+        SetMission(mission2, data.secondMissionType, progress?.isSecondMissionCleared ?? false, data);
+        SetMission(mission3, data.thirdMissionType,  progress?.isThirdMissionCleared  ?? false, data);
     }
 
     public void Hide()
@@ -137,7 +145,7 @@ public class StageInfoPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void SetMission(MissionRowUI ui, MissionType type, bool isCleared)
+    private void SetMission(MissionRowUI ui, MissionType type, bool isCleared, SO_StageData data)
     {
         if (ui.row == null) return;
 
@@ -145,25 +153,47 @@ public class StageInfoPanel : MonoBehaviour
         ui.row.SetActive(hasMission);
         if (!hasMission) return;
 
-        if (ui.label    != null) ui.label.text = GetMissionLabel(type);
+        if (ui.label     != null) ui.label.text = GetMissionLabel(type, data);
         if (ui.clearMark != null) ui.clearMark.gameObject.SetActive(isCleared);
     }
 
-    private string GetMissionLabel(MissionType type) => type switch
+    private string GetMissionLabel(MissionType type, SO_StageData data) => type switch
     {
         MissionType.StageClear        => L("Mission_StageClear"),
-        MissionType.TimeLimit         => L("Mission_TimeLimit"),
-        MissionType.MoveCountLimit    => L("Mission_MoveCountLimit"),
+        MissionType.TimeLimit         => GetTimeLimitLabel(data),
+        MissionType.MoveCountLimit    => GetMoveCountLabel(data),
         MissionType.KillAllEnemies    => L("Mission_KillAllEnemies"),
         MissionType.CollectStar       => L("Mission_CollectStar"),
-        MissionType.NoSpecificFeature => L("Mission_NoSpecificFeature"),
+        MissionType.NoSpecificFeature => GetNoFeatureLabel(data),
         _                             => ""
     };
 
+    private string GetTimeLimitLabel(SO_StageData data)
+    {
+        if (data == null || data.limitTime <= 0f) return L("Mission_TimeLimit");
+        return string.Format(L("Mission_TimeLimit_Format"), (int)data.limitTime);
+    }
+
+    private string GetMoveCountLabel(SO_StageData data)
+    {
+        if (data == null || data.missionActionCount <= 0) return L("Mission_MoveCountLimit");
+        return string.Format(L("Mission_MoveCountLimit_Format"), data.missionActionCount);
+    }
+
+    private string GetNoFeatureLabel(SO_StageData data)
+    {
+        string featureName = data?.forbiddenFeature switch
+        {
+            ForbiddenFeature.ALT => "ALT",
+            ForbiddenFeature.F4  => "F4",
+            ForbiddenFeature.TAB => "TAB",
+            _                    => null
+        };
+
+        if (featureName == null) return L("Mission_NoSpecificFeature");
+        return string.Format(L("Mission_NoSpecificFeature_Format"), featureName);
+    }
+
     private string L(string key) =>
         LocalizationSettings.StringDatabase.GetLocalizedString("StageSelect Strings", key);
-
-    private string LDesc(SO_StageData data) =>
-        LocalizationSettings.StringDatabase.GetLocalizedString(
-            "StageData Strings", $"Stage_{data.chapterNum}-{data.stageNum}_Desc");
 }
