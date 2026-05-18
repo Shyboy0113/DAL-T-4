@@ -4,66 +4,96 @@ using TMPro;
 
 public class DevelopmentPanel : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private StageLoader stageLoader;
+    private const int TotalChapters    = 4;
+    private const int StagesPerChapter = 15;
 
-    [Header("스테이지 선택")]
-    [SerializeField] private TMP_Dropdown chapterDropdown;
-    [SerializeField] private TMP_Dropdown stageDropdown;
+    // ─────────────────────────────────────────
+    // 씬별 섹션
+    // ─────────────────────────────────────────
 
     [Header("씬별 섹션")]
     [SerializeField] private GameObject stageSection;
     [SerializeField] private GameObject lobbySection;
 
     // ─────────────────────────────────────────
-    // Undo 무제한
+    // Stage Section - Manage Speed
     // ─────────────────────────────────────────
 
-    [Header("Undo 무제한")]
-    [SerializeField] private Button undoToggleButton;
-    [SerializeField] private TMP_Text undoToggleText;
+    [Header("Manage Speed")]
+    [SerializeField] private TMP_Text speedText;
+    [SerializeField] private Button   speedUpButton;
+    [SerializeField] private Button   speedDownButton;
 
-    /// <summary>
-    /// 다른 시스템에서 DevPanel.IsUnlimitedUndo 로 체크.
-    /// Undo 횟수 제한 로직에서 이 값이 true이면 제한을 무시하도록 사용.
-    /// </summary>
-    public static bool IsUnlimitedUndo { get; private set; } = false;
+    private readonly float[] _speedSteps = { 0.25f, 0.5f, 1f, 2f, 4f };
+    private int _currentSpeedIndex = 2;
 
     // ─────────────────────────────────────────
-    // 미션 강제 클리어 / 리셋
+    // Stage Section - Key Limit
     // ─────────────────────────────────────────
 
-    [Header("미션 제어")]
-    [SerializeField] private Button mission1Button;
-    [SerializeField] private Button mission2Button;
-    [SerializeField] private Button mission3Button;
+    [Header("Key Limit")]
+    [SerializeField] private Button   tabToggleButton;
+    [SerializeField] private TMP_Text tabToggleText;
+
+    public static bool IsUnlimitedTab { get; private set; } = false;
+
+    // ─────────────────────────────────────────
+    // Stage Section - Manage Mission
+    // ─────────────────────────────────────────
+
+    [Header("Manage Mission")]
+    [SerializeField] private Button   mission1Button;
+    [SerializeField] private Button   mission2Button;
+    [SerializeField] private Button   mission3Button;
     [SerializeField] private TMP_Text mission1Text;
     [SerializeField] private TMP_Text mission2Text;
     [SerializeField] private TMP_Text mission3Text;
 
     // ─────────────────────────────────────────
-    // 속도 조절
+    // Stage Section - Other Stage
     // ─────────────────────────────────────────
 
-    [Header("속도 조절")]
-    [SerializeField] private Button speedDownButton;
-    [SerializeField] private Button speedUpButton;
-    [SerializeField] private TMP_Text speedText;
+    [Header("Other Stage")]
+    [SerializeField] private TMP_Dropdown chapterDropdown;
+    [SerializeField] private TMP_Dropdown stageDropdown;
+    [SerializeField] private StageLoader  stageLoader;
 
-    private readonly float[] _speedSteps = { 0.25f, 0.5f, 1f, 2f, 4f };
-    private int _currentSpeedIndex = 2; // 기본값 1x
+    // ─────────────────────────────────────────
+    // Stage Section - Current Stage
+    // ─────────────────────────────────────────
+
+    // Force Clear / Next Stage는 함수만 존재, 별도 레퍼런스 불필요
+
+    // ─────────────────────────────────────────
+    // Lobby Section - 범위 해금/잠금
+    // ─────────────────────────────────────────
+
+    [Header("범위 해금/잠금")]
+    [SerializeField] private TMP_Dropdown rangeStartChapter;
+    [SerializeField] private TMP_Dropdown rangeStartStage;
+    [SerializeField] private TMP_Dropdown rangeEndChapter;
+    [SerializeField] private TMP_Dropdown rangeEndStage;
+
+    // ─────────────────────────────────────────
+    // Lobby Section - 미션 올클리어
+    // ─────────────────────────────────────────
+
+    [Header("미션 올클리어")]
+    [SerializeField] private Toggle clearRangeMission1;
+    [SerializeField] private Toggle clearRangeMission2;
+    [SerializeField] private Toggle clearRangeMission3;
 
     // ─────────────────────────────────────────
     // 상태 표시
     // ─────────────────────────────────────────
 
     [Header("상태 표시")]
-    [SerializeField] private TMP_Text stateDisplayText;
+    [SerializeField] private TMP_Text   stateDisplayText;
     [SerializeField] private GameObject stateDisplayPanel;
 
-    // ─────────────────────────────────────────
+    // ═════════════════════════════════════════
     // Unity Lifecycle
-    // ─────────────────────────────────────────
+    // ═════════════════════════════════════════
 
     private void OnEnable()
     {
@@ -71,13 +101,12 @@ public class DevelopmentPanel : MonoBehaviour
             stageLoader = FindFirstObjectByType<StageLoader>();
 
         bool isInGame = stageLoader != null;
-
         if (stageSection != null) stageSection.SetActive(isInGame);
         if (lobbySection != null) lobbySection.SetActive(!isInGame);
 
-        RefreshUndoUI();
-        RefreshMissionUI();
         RefreshSpeedUI();
+        RefreshTabUI();
+        RefreshMissionUI();
     }
 
     private void Update()
@@ -87,116 +116,77 @@ public class DevelopmentPanel : MonoBehaviour
 
     private void OnDisable()
     {
-        // 패널을 닫을 때 속도를 1x로 복원 (의도치 않은 속도 유지 방지)
-        // 필요 없으면 이 블록 제거
-        // Time.timeScale = 1f;
-        // _currentSpeedIndex = 2;
+        Time.timeScale      = 1f;
+        Time.fixedDeltaTime = 0.02f;
+        _currentSpeedIndex  = 2;
     }
 
     // ═════════════════════════════════════════
-    // 기존 기능
+    // Manage Speed
     // ═════════════════════════════════════════
 
-    public void MoveToStage()
+    public void SpeedUp()
     {
-        if (stageLoader == null) return;
-        stageLoader.LoadStage(chapterDropdown.value + 1, stageDropdown.value + 1);
+        _currentSpeedIndex = Mathf.Min(_speedSteps.Length - 1, _currentSpeedIndex + 1);
+        ApplySpeed();
     }
 
-    public void ForceClear()
+    public void SpeedDown()
     {
-        GameManager.Instance.GameClear();
+        _currentSpeedIndex = Mathf.Max(0, _currentSpeedIndex - 1);
+        ApplySpeed();
     }
 
-    public void CollectAllStars()
+    private void ApplySpeed()
     {
-        var player = FindFirstObjectByType<PlayerBehaviour>();
-        var tiles = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None);
-        foreach (var tile in tiles)
+        Time.timeScale      = _speedSteps[_currentSpeedIndex];
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        RefreshSpeedUI();
+    }
+
+    private void RefreshSpeedUI()
+    {
+        if (speedText != null)
+            speedText.text = $"Current Speed : {_speedSteps[_currentSpeedIndex]:G3}";
+
+        if (speedUpButton   != null) speedUpButton.interactable   = _currentSpeedIndex < _speedSteps.Length - 1;
+        if (speedDownButton != null) speedDownButton.interactable = _currentSpeedIndex > 0;
+    }
+
+    // ═════════════════════════════════════════
+    // Key Limit - TAB 무제한
+    // ═════════════════════════════════════════
+
+    public void ToggleUnlimitedTab()
+    {
+        IsUnlimitedTab = !IsUnlimitedTab;
+        RefreshTabUI();
+    }
+
+    private void RefreshTabUI()
+    {
+        if (tabToggleText != null)
+            tabToggleText.text = IsUnlimitedTab ? "Unlimited\nTAB: ON" : "Unlimited\nTAB Toggle";
+
+        if (tabToggleButton != null)
         {
-            if (tile.currentTileType == TileType.Star && !tile.IsCollected)
-                tile.ApplyTileCommand(player);
-        }
-    }
-
-    public void ResetTimer()
-    {
-        GameManager.Instance.currentTime = 0f;
-    }
-
-    public void NextStage()
-    {
-        var gm = GameManager.Instance;
-        if (!stageLoader.LoadStage(gm.chapter, gm.stage + 1))
-            stageLoader.LoadStage(gm.chapter + 1, 1);
-    }
-
-    public void PrevStage()
-    {
-        var gm = GameManager.Instance;
-        if (gm.stage > 1)
-            stageLoader.LoadStage(gm.chapter, gm.stage - 1);
-        else if (gm.chapter > 1)
-            stageLoader.LoadStage(gm.chapter - 1, 1);
-    }
-
-    public void UnlockAll()
-    {
-        GameManager.Instance.jsonDataManager.UnlockAllStages(5, 10);
-    }
-
-    public void ResetSaveData()
-    {
-        GameManager.Instance.jsonDataManager.ResetAllData();
-    }
-
-    // ═════════════════════════════════════════
-    // 1. Undo 무제한 토글
-    // ═════════════════════════════════════════
-
-    /// <summary>
-    /// 버튼 OnClick에 연결.
-    /// Undo 횟수 제한 로직에서 다음과 같이 사용:
-    /// <code>
-    /// if (DevelopmentPanel.IsUnlimitedUndo || currentUndoCount < maxUndo)
-    ///     PerformUndo();
-    /// </code>
-    /// </summary>
-    public void ToggleUnlimitedUndo()
-    {
-        IsUnlimitedUndo = !IsUnlimitedUndo;
-        RefreshUndoUI();
-        Debug.Log($"[Dev] Undo 무제한: {IsUnlimitedUndo}");
-    }
-
-    private void RefreshUndoUI()
-    {
-        if (undoToggleText != null)
-            undoToggleText.text = IsUnlimitedUndo ? "Undo 무제한: ON" : "Undo 무제한: OFF";
-
-        if (undoToggleButton != null)
-        {
-            var colors = undoToggleButton.colors;
-            colors.normalColor = IsUnlimitedUndo
-                ? new Color(0.2f, 0.8f, 0.2f, 1f)   // 초록
-                : new Color(0.8f, 0.2f, 0.2f, 1f);   // 빨강
-            undoToggleButton.colors = colors;
+            var colors = tabToggleButton.colors;
+            colors.normalColor = IsUnlimitedTab
+                ? new Color(0.2f, 0.8f, 0.2f, 1f)
+                : new Color(1f, 1f, 1f, 1f);
+            tabToggleButton.colors = colors;
         }
     }
 
     // ═════════════════════════════════════════
-    // 2. 미션 강제 클리어 / 리셋
+    // Manage Mission
     // ═════════════════════════════════════════
 
-    /// <summary>
-    /// 미션 1/2/3 버튼 OnClick에 각각 연결.
-    /// 누를 때마다 해당 미션의 클리어 상태를 토글한다.
-    /// </summary>
     public void ToggleMission1() => ToggleMission(1);
     public void ToggleMission2() => ToggleMission(2);
     public void ToggleMission3() => ToggleMission(3);
 
-    private void ToggleMission(int missionIndex)
+    private void ToggleMission(int index)
     {
         var gm = GameManager.Instance;
         if (gm.currentProgressData == null || gm.currentStageData == null)
@@ -206,46 +196,26 @@ public class DevelopmentPanel : MonoBehaviour
         }
 
         var pd = gm.currentProgressData;
-
-        switch (missionIndex)
+        switch (index)
         {
             case 1: pd.isFirstMissionCleared  = !pd.isFirstMissionCleared;  break;
             case 2: pd.isSecondMissionCleared = !pd.isSecondMissionCleared; break;
             case 3: pd.isThirdMissionCleared  = !pd.isThirdMissionCleared;  break;
         }
 
-        // 즉시 세이브
         gm.jsonDataManager.SaveStageData(pd);
         RefreshMissionUI();
-
-        Debug.Log($"[Dev] 미션{missionIndex} → {GetMissionCleared(missionIndex)}");
     }
 
-    private bool GetMissionCleared(int index)
+    public void CollectAllStars()
     {
-        var pd = GameManager.Instance.currentProgressData;
-        if (pd == null) return false;
-        return index switch
+        var player = FindFirstObjectByType<PlayerBehaviour>();
+        var tiles  = FindObjectsByType<TileBehaviour>(FindObjectsSortMode.None);
+        foreach (var tile in tiles)
         {
-            1 => pd.isFirstMissionCleared,
-            2 => pd.isSecondMissionCleared,
-            3 => pd.isThirdMissionCleared,
-            _ => false
-        };
-    }
-
-    private string GetMissionTypeName(int index)
-    {
-        var sd = GameManager.Instance.currentStageData;
-        if (sd == null) return "???";
-        MissionType type = index switch
-        {
-            1 => sd.firstMissionType,
-            2 => sd.secondMissionType,
-            3 => sd.thirdMissionType,
-            _ => MissionType.StageClear
-        };
-        return type.ToString();
+            if (tile.currentTileType == TileType.Star && !tile.IsCollected)
+                tile.ApplyTileCommand(player);
+        }
     }
 
     private void RefreshMissionUI()
@@ -259,114 +229,226 @@ public class DevelopmentPanel : MonoBehaviour
     {
         if (label == null) return;
 
-        bool cleared = GetMissionCleared(index);
-        string typeName = GetMissionTypeName(index);
-        string state = cleared ? "✓" : "✗";
+        var pd = GameManager.Instance.currentProgressData;
+        var sd = GameManager.Instance.currentStageData;
 
-        label.text = $"미션{index} [{typeName}] {state}";
+        bool cleared = index switch
+        {
+            1 => pd?.isFirstMissionCleared  ?? false,
+            2 => pd?.isSecondMissionCleared ?? false,
+            3 => pd?.isThirdMissionCleared  ?? false,
+            _ => false
+        };
+
+        MissionType type = index switch
+        {
+            1 => sd?.firstMissionType  ?? MissionType.None,
+            2 => sd?.secondMissionType ?? MissionType.None,
+            3 => sd?.thirdMissionType  ?? MissionType.None,
+            _ => MissionType.None
+        };
+
+        label.text = $"{index}번째\n[{type}] {(cleared ? "✓" : "✗")}";
 
         if (btn != null)
         {
             var colors = btn.colors;
             colors.normalColor = cleared
                 ? new Color(0.2f, 0.7f, 0.3f, 1f)
-                : new Color(0.5f, 0.5f, 0.5f, 1f);
+                : new Color(1f, 1f, 1f, 1f);
             btn.colors = colors;
         }
     }
 
     // ═════════════════════════════════════════
-    // 3. 속도 조절
+    // Other Stage
     // ═════════════════════════════════════════
 
-    /// <summary>
-    /// 속도 감소/증가 버튼 OnClick에 연결.
-    /// </summary>
-    public void SpeedDown()
+    public void MoveToStage()
     {
-        _currentSpeedIndex = Mathf.Max(0, _currentSpeedIndex - 1);
-        ApplySpeed();
-    }
-
-    public void SpeedUp()
-    {
-        _currentSpeedIndex = Mathf.Min(_speedSteps.Length - 1, _currentSpeedIndex + 1);
-        ApplySpeed();
-    }
-
-    public void ResetSpeed()
-    {
-        _currentSpeedIndex = 2; // 1x
-        ApplySpeed();
-    }
-
-    private void ApplySpeed()
-    {
-        Time.timeScale = _speedSteps[_currentSpeedIndex];
-        // fixedDeltaTime도 비례 조정 (물리 정확도 유지)
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
-        RefreshSpeedUI();
-        Debug.Log($"[Dev] 게임 속도: {_speedSteps[_currentSpeedIndex]}x");
-    }
-
-    private void RefreshSpeedUI()
-    {
-        if (speedText != null)
-            speedText.text = $"x{_speedSteps[_currentSpeedIndex]:G3}";
-
-        if (speedDownButton != null)
-            speedDownButton.interactable = _currentSpeedIndex > 0;
-        if (speedUpButton != null)
-            speedUpButton.interactable = _currentSpeedIndex < _speedSteps.Length - 1;
+        if (stageLoader == null) return;
+        stageLoader.LoadStage(chapterDropdown.value + 1, stageDropdown.value + 1);
     }
 
     // ═════════════════════════════════════════
-    // 4. 현재 상태 표시
+    // Current Stage
+    // ═════════════════════════════════════════
+
+    public void ForceClear()
+    {
+        FindAnyObjectByType<PlayerBehaviour>().ReachedDestination();
+    }
+
+    public void NextStage()
+    {
+        if (stageLoader == null) return;
+        var gm = GameManager.Instance;
+        if (!stageLoader.LoadStage(gm.chapter, gm.stage + 1))
+            stageLoader.LoadStage(gm.chapter + 1, 1);
+    }
+
+    // ═════════════════════════════════════════
+    // Lobby Section - 범위 해금/잠금
+    // ═════════════════════════════════════════
+
+    public void UnlockRange()
+    {
+        GameManager.Instance.jsonDataManager.UnlockSpecificRange(
+            rangeStartChapter.value + 1, rangeStartStage.value + 1,
+            rangeEndChapter.value + 1,   rangeEndStage.value + 1,
+            StagesPerChapter);
+        RefreshStageNodes();
+    }
+
+    public void LockRange()
+    {
+        GameManager.Instance.jsonDataManager.LockSpecificRange(
+            rangeStartChapter.value + 1, rangeStartStage.value + 1,
+            rangeEndChapter.value + 1,   rangeEndStage.value + 1,
+            StagesPerChapter);
+        RefreshStageNodes();
+    }
+
+    public void UnlockAll()
+    {
+        GameManager.Instance.jsonDataManager.UnlockAllStages(TotalChapters, StagesPerChapter);
+        RefreshStageNodes();
+    }
+
+    public void ResetSaveData()
+    {
+        GameManager.Instance.jsonDataManager.ResetAllData();
+        RefreshStageNodes();
+    }
+
+    // ═════════════════════════════════════════
+    // Lobby Section - 미션 올클리어
+    // ═════════════════════════════════════════
+
+    public void ClearRange()
+    {
+        GameManager.Instance.jsonDataManager.ClearSpecificRange(
+            rangeStartChapter.value + 1, rangeStartStage.value + 1,
+            rangeEndChapter.value + 1,   rangeEndStage.value + 1,
+            StagesPerChapter,
+            clearRangeMission1.isOn, clearRangeMission2.isOn, clearRangeMission3.isOn);
+        RefreshStageNodes();
+    }
+
+    // ═════════════════════════════════════════
+    // 공통 유틸
+    // ═════════════════════════════════════════
+
+    private void RefreshStageNodes()
+    {
+        var nodes = FindObjectsByType<StageNode>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var node in nodes)
+            node.RefreshVisuals();
+
+        var paths = FindObjectsByType<StagePathRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var path in paths)
+            path.Refresh();
+    }
+
+    // ═════════════════════════════════════════
+    // 상태 표시
     // ═════════════════════════════════════════
 
     private void UpdateStateDisplay()
-    {
-        if (stateDisplayText == null) return;
+{
+    if (stateDisplayText == null) return;
 
-        var gm = GameManager.Instance;
-        if (gm == null)
-        {
-            stateDisplayText.text = "GameManager 없음";
-            return;
-        }
+    var gm = GameManager.Instance;
+    if (gm == null) { stateDisplayText.text = "GameManager 없음"; return; }
 
-        var player = FindFirstObjectByType<PlayerBehaviour>();
-        string playerLayer = player != null
-            ? LayerMask.LayerToName(player.gameObject.layer)
-            : "N/A";
-        string playerPos = player != null
-            ? $"({player.transform.position.x:F1}, {player.transform.position.y:F1})"
-            : "N/A";
+    var player      = FindFirstObjectByType<PlayerBehaviour>();
+    var mapManager  = FindFirstObjectByType<MapManager>();
+    var behaviourManager = FindFirstObjectByType<BehaviourManager>();
+    var sd = gm.currentStageData;
+    var pd = gm.currentProgressData;
 
-        // 미션 상태 간결 표시
-        string m1 = gm.currentProgressData?.isFirstMissionCleared  == true ? "✓" : "✗";
-        string m2 = gm.currentProgressData?.isSecondMissionCleared == true ? "✓" : "✗";
-        string m3 = gm.currentProgressData?.isThirdMissionCleared  == true ? "✓" : "✗";
+    // ── 플레이어 ──
+    string playerLayer = player != null ? LayerMask.LayerToName(player.gameObject.layer) : "N/A";
+    string playerPos   = player != null
+        ? $"({player.transform.position.x:F1}, {player.transform.position.y:F1})"
+        : "N/A";
+    string iceState    = player != null && player.IsOnIce() ? " [ICE]" : "";
 
-        // 게임 상태 플래그
-        string flags = "";
-        if (gm.isGameOver) flags += "[DEAD] ";
-        if (gm.isCleared)  flags += "[CLEAR] ";
-        if (gm.isPaused)   flags += "[PAUSE] ";
+    // ── 카운트 ──
+    string map1Count = player != null
+        ? $"Move:{player.map1MoveCount} Rot:{player.map1RotationCount}"
+        : "N/A";
+    string map2Count = player != null
+        ? $"Move:{player.map2MoveCount} Rot:{player.map2RotationCount}"
+        : "N/A";
 
-        stateDisplayText.text =
-            $"Stage: {gm.chapter}-{gm.stage}  {flags}\n" +
-            $"Time: {gm.currentTime:F1}s  Speed: x{Time.timeScale:G3}\n" +
-            $"ALT: {gm.pushedNumberALT}  F4: {gm.pushedNumberF4}  TAB: {gm.pushedNumberTAB}\n" +
-            $"Mission: {m1} {m2} {m3}\n" +
-            $"Player: {playerLayer} {playerPos}\n" +
-            $"Undo∞: {(IsUnlimitedUndo ? "ON" : "OFF")}  FPS: {(1f / Time.unscaledDeltaTime):F0}";
-    }
+    // ── 미션 ──
+    string m1 = pd?.isFirstMissionCleared  == true ? "✓" : "✗";
+    string m2 = pd?.isSecondMissionCleared == true ? "✓" : "✗";
+    string m3 = pd?.isThirdMissionCleared  == true ? "✓" : "✗";
 
-    /// <summary>
-    /// 상태 표시 패널 토글 (항상 보이게 하거나 숨기기).
-    /// 개발자 패널이 닫혀있어도 상태 표시만 띄울 수 있도록 분리.
-    /// </summary>
+    // ── 스테이지 제한 ──
+    string keyLimit = sd != null
+        ? $"ALT:{(sd.canUseLeftALT ? $"{gm.pushedNumberALT}/{(sd.limitNumberALT > 0 ? sd.limitNumberALT.ToString() : "∞")}" : "X")}  " +
+          $"F4:{(sd.canUseF4       ? $"{gm.pushedNumberF4}/{(sd.limitNumberF4   > 0 ? sd.limitNumberF4.ToString()   : "∞")}" : "X")}  " +
+          $"TAB:{(sd.canUseTAB     ? $"{gm.pushedNumberTAB}/{(sd.limitNumberTAB > 0 ? sd.limitNumberTAB.ToString() : "∞")}" : "X")}"
+        : "N/A";
+
+    // ── 진행 기록 ──
+    string record = pd != null
+        ? $"시도:{pd.attemptCount}  이탈:{pd.abandonCount}  " +
+          $"최단:{(pd.minClearTime < float.MaxValue ? $"{pd.minClearTime:F1}s" : "-")}  " +
+          $"총플레이:{pd.totalPlayTime:F0}s"
+        : "N/A";
+
+    // ── 최소 키 기록 ──
+    string minKeys = pd != null
+        ? $"minALT:{(pd.minALT < int.MaxValue ? pd.minALT.ToString() : "-")}  " +
+          $"minF4:{(pd.minF4   < int.MaxValue ? pd.minF4.ToString()  : "-")}  " +
+          $"minTAB:{(pd.minTAB < int.MaxValue ? pd.minTAB.ToString() : "-")}"
+        : "N/A";
+
+    // ── 게임 상태 플래그 ──
+    string flags = "";
+    if (gm.isGameOver) flags += "[DEAD] ";
+    if (gm.isCleared)  flags += "[CLEAR] ";
+    if (gm.isPaused)   flags += "[PAUSE] ";
+    if (gm.isOption)   flags += "[OPTION] ";
+    if (gm.isChatting) flags += "[CHAT] ";
+    if (string.IsNullOrEmpty(flags)) flags = "-";
+
+    // ── 턴 상태 ──
+    string turnState = behaviourManager != null
+        ? behaviourManager.currentTurn.ToString()
+        : "N/A";
+
+    // ── 맵 상태 ──
+    string mapState = mapManager != null
+        ? $"{(mapManager.IsFirstRoot() ? "Map 1" : "Map 2")}{(mapManager.IsRotating ? " [ROTATING]" : "")}"
+        : "N/A";
+
+    stateDisplayText.text =
+        $"━━ STAGE ━━━━━━━━━━━━━━━━━━━\n" +
+        $"Stage : {gm.chapter}-{gm.stage}  Time : {gm.currentTime:F1}s\n" +
+        $"Flags : {flags}\n" +
+        $"Turn  : {turnState}  Map : {mapState}\n" +
+        $"\n━━ KEY ━━━━━━━━━━━━━━━━━━━━━\n" +
+        $"{keyLimit}\n" +
+        $"Tab∞ : {(IsUnlimitedTab ? "ON" : "OFF")}\n" +
+        $"\n━━ PLAYER ━━━━━━━━━━━━━━━━━━\n" +
+        $"Layer : {playerLayer}  Pos : {playerPos}{iceState}\n" +
+        $"Map1  : {map1Count}\n" +
+        $"Map2  : {map2Count}\n" +
+        $"Total : Move:{player?.TotalMoveCount ?? 0} Rot:{player?.TotalRotationCount ?? 0} Act:{player?.TotalActionCount ?? 0}\n" +
+        $"\n━━ MISSION ━━━━━━━━━━━━━━━━━\n" +
+        $"1:{m1}  2:{m2}  3:{m3}\n" +
+        $"\n━━ RECORD ━━━━━━━━━━━━━━━━━━\n" +
+        $"{record}\n" +
+        $"{minKeys}\n" +
+        $"\n━━ SYSTEM ━━━━━━━━━━━━━━━━━━\n" +
+        $"Speed : x{Time.timeScale:G3}  FPS : {(1f / Time.unscaledDeltaTime):F0}";
+}
+
     public void ToggleStateDisplay()
     {
         if (stateDisplayPanel != null)

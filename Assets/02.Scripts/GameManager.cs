@@ -64,15 +64,8 @@ public class GameManager : Singleton<GameManager>
     {
         isCleared = true;
 
+        // 데이터 저장
         SaveStageProgress();
-
-        // 데이터 저장 후 초기화
-        GoToNextScene();
-    }
-
-    public void GoToNextScene()
-    {
-        ResetData();
     }
 
     public void ResetData()
@@ -114,6 +107,31 @@ public class GameManager : Singleton<GameManager>
         {
             jsonDataManager.SaveStageData(currentProgressData);
         }
+    }
+    // ─── 키 사용 가능 여부 ────────────────────────────────────────────
+    public bool CanUseKey(KeyType keyType)
+    {
+        if (currentStageData == null) return false;
+
+        return keyType switch
+        {
+            KeyType.Alt => currentStageData.canUseLeftALT &&
+                           (DevelopmentPanel.IsUnlimitedTab ||
+                            currentStageData.limitNumberALT <= 0 ||
+                            pushedNumberALT < currentStageData.limitNumberALT),
+
+            KeyType.F4  => currentStageData.canUseF4 &&
+                           (DevelopmentPanel.IsUnlimitedTab ||
+                            currentStageData.limitNumberF4 <= 0 ||
+                            pushedNumberF4 < currentStageData.limitNumberF4),
+
+            KeyType.Tab => currentStageData.canUseTAB &&
+                           (DevelopmentPanel.IsUnlimitedTab ||
+                            currentStageData.limitNumberTAB <= 0 ||
+                            pushedNumberTAB < currentStageData.limitNumberTAB),
+
+            _ => false
+        };
     }
 
     private void CheckAndSaveMission(MissionType type, SO_StageData data, ref bool result)

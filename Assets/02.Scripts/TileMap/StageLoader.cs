@@ -109,5 +109,13 @@ public class StageLoader : MonoBehaviour
             map2Camera.transform.position = new Vector3(map2Center.x, map2Center.y, pos.z);
         }
     }
+    
+    public bool StageExists(int chapterNum, int stageNum)
+    {
+        if (chapterNum < 1 || chapterNum > chapterList.Count) return false;
+        var chapter = chapterList[chapterNum - 1];
+        if (stageNum < 1 || stageNum > chapter.stages.Count) return false;
+        return chapter.stages[stageNum - 1] != null;
+    }
 
 }
