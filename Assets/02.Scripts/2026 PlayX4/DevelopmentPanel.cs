@@ -348,6 +348,9 @@ public class DevelopmentPanel : MonoBehaviour
         var paths = FindObjectsByType<StagePathRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var path in paths)
             path.Refresh();
+
+        // 현재 스테이지가 비활성화됐다면 isAppeared인 최고 스테이지로 포커스 이동
+        FindFirstObjectByType<StageSelectManagement>()?.TryFocusBestAvailableNode();
     }
 
     // ═════════════════════════════════════════

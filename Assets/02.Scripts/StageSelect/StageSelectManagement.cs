@@ -156,6 +156,7 @@ public class StageSelectManagement : MonoBehaviour
     {
         foreach (var node in _allNodes)
         {
+            if (node == null) continue;
             node.RefreshVisuals();
             node.OnConfirmed  -= OnNodeConfirmed;
             node.OnSelected   -= OnNodeSelected;
@@ -356,6 +357,7 @@ public class StageSelectManagement : MonoBehaviour
         StageNode best = null;
         foreach (var node in _allNodes)
         {
+            if (node == null) continue;
             if (!node.gameObject.activeInHierarchy) continue;
             if (!node.CanEnter()) continue;
             if (best == null) { best = node; continue; }
@@ -373,12 +375,71 @@ public class StageSelectManagement : MonoBehaviour
         yield return new WaitForSeconds(time);
         cutoutFade.FadeOut(() => StartCoroutine(SceneLoader.LoadScene(gameScene)));
     }
+
+    /// <summary>
+    /// 현재 스테이지가 비활성화(isAppeared=false)됐을 때,
+    /// isAppeared인 노드 중 가장 높은 챕터·스테이지로 즉시 포커스를 이동합니다.
+    /// 개발자 패널에서 저장 데이터를 변경한 뒤 호출합니다.
+    /// </summary>
+    public void TryFocusBestAvailableNode()
+    {
+        var gm  = GameManager.Instance;
+        var jdm = gm?.jsonDataManager;
+        if (jdm == null) return;
+
+        // 현재 스테이지가 여전히 isAppeared면 이동 불필요
+        var current = jdm.GetStageData(gm.chapter, gm.stage);
+        if (current != null && current.isAppeared) return;
+
+        // 전체 노드(비활성 챕터 포함) 중 isAppeared인 최고 스테이지 탐색
+        var allNodes = FindObjectsByType<StageNode>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        StageNode best = null;
+        foreach (var node in allNodes)
+        {
+            if (node == null || node.stageData == null) continue;
+            var pd = jdm.GetStageData(node.stageData.chapterNum, node.stageData.stageNum);
+            if (pd == null || !pd.isAppeared) continue;
+
+            if (best == null) { best = node; continue; }
+
+            bool higherCh     = node.stageData.chapterNum > best.stageData.chapterNum;
+            bool sameChHigher = node.stageData.chapterNum == best.stageData.chapterNum
+                             && node.stageData.stageNum   >  best.stageData.stageNum;
+            if (higherCh || sameChHigher) best = node;
+        }
+
+        if (best == null) return;
+
+        // 챕터가 다르면 애니메이션 없이 즉시 전환 (개발자 도구용)
+        int targetChIdx = Mathf.Clamp(best.stageData.chapterNum - 1, 0, chapters.Length - 1);
+        if (targetChIdx != _currentChapter)
+        {
+            if (chapters[_currentChapter] != null) chapters[_currentChapter].SetActive(false);
+            _currentChapter = targetChIdx;
+            if (chapters[_currentChapter] != null) chapters[_currentChapter].SetActive(true);
+
+            UnsubscribeAllNodes();
+            _allNodes = FindObjectsByType<StageNode>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            SubscribeAllNodes();
+        }
+
+        // GameManager 상태 갱신
+        gm.chapter = best.stageData.chapterNum;
+        gm.stage   = best.stageData.stageNum;
+
+        // 포커스·플레이어 이동
+        EventSystem.current?.SetSelectedGameObject(best.gameObject);
+        selectPlayer?.SnapTo(best.GetComponent<RectTransform>());
+    }
     
     private void RefreshAllVisuals()
     {
         // 노드 먼저, 선 나중
         foreach (var node in _allNodes)
+        {
+            if (node == null) continue;
             node.RefreshVisuals();
+        }
 
         var paths = FindObjectsByType<StagePathRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var path in paths)
