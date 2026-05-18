@@ -1645,11 +1645,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5326826099147669851}
+  - component: {fileID: 5595010227070077330}
   - component: {fileID: 4221898259614234663}
   - component: {fileID: 1649807465309433976}
   - component: {fileID: 6770061516974033416}
   - component: {fileID: 7142602148700713387}
-  - component: {fileID: 5595010227070077330}
   m_Layer: 5
   m_Name: StageInfoPanel
   m_TagString: Untagged
@@ -1685,6 +1685,37 @@ RectTransform:
   m_AnchoredPosition: {x: 600, y: 1400}
   m_SizeDelta: {x: 500, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5595010227070077330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3632292307208402691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b8e7f6f2ea13a94ca8bcc8b97a7e44e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 6770061516974033416}
+  fadeTime: 0.18
+  stageNameText: {fileID: 8219480953479255188}
+  stageDescText: {fileID: 3483481048012290145}
+  clearBadge: {fileID: 6140945160945178965}
+  lockedBadge: {fileID: 7309890918274047722}
+  confirmHint: {fileID: 6051443558738556023}
+  mission1:
+    row: {fileID: 2234797308994511797}
+    label: {fileID: 5532782269253501631}
+    clearMark: {fileID: 4086593196465376806}
+  mission2:
+    row: {fileID: 5879798927719138096}
+    label: {fileID: 4936638686236364402}
+    clearMark: {fileID: 8461239653335742379}
+  mission3:
+    row: {fileID: 2010429250509215017}
+    label: {fileID: 2612447349240417146}
+    clearMark: {fileID: 6934929037511111959}
 --- !u!222 &4221898259614234663
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1750,37 +1781,6 @@ MonoBehaviour:
   m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
---- !u!114 &5595010227070077330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3632292307208402691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b8e7f6f2ea13a94ca8bcc8b97a7e44e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 6770061516974033416}
-  fadeTime: 0.18
-  stageNameText: {fileID: 8219480953479255188}
-  stageDescText: {fileID: 3483481048012290145}
-  clearBadge: {fileID: 6140945160945178965}
-  lockedBadge: {fileID: 7309890918274047722}
-  confirmHint: {fileID: 6051443558738556023}
-  mission1:
-    row: {fileID: 2234797308994511797}
-    label: {fileID: 5532782269253501631}
-    clearMark: {fileID: 4086593196465376806}
-  mission2:
-    row: {fileID: 5879798927719138096}
-    label: {fileID: 4936638686236364402}
-    clearMark: {fileID: 8461239653335742379}
-  mission3:
-    row: {fileID: 2010429250509215017}
-    label: {fileID: 2612447349240417146}
-    clearMark: {fileID: 6934929037511111959}
 --- !u!1 &4397479065470796084
 GameObject:
   m_ObjectHideFlags: 0
