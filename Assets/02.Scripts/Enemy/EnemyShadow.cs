@@ -17,16 +17,6 @@ public class EnemyShadow : MonoBehaviour
     [SerializeField] private MapManager     mapManager;
     [SerializeField] private SpriteRenderer shadowRenderer;
     [SerializeField] private SpriteRenderer enemyBodyRenderer; // 플레이어 바디 스프라이트 동기화용
-
-    private void OnEnable()
-    {
-        GameEvents.StageCleared += Hide;
-    }
-
-    private void OnDisable()
-    {
-        GameEvents.StageCleared -= Hide;
-    }
     
     private void LateUpdate()
     {

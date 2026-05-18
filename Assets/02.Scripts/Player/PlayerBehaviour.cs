@@ -612,7 +612,7 @@ public void CalculateRotationCount(int delta, bool isFirst)
         }
     }
 
-    private void StopParticle()
+    public void StopParticle()
     {
         if (particle.isPlaying)
             particle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -660,12 +660,7 @@ public void CalculateRotationCount(int delta, bool isFirst)
     {
         _isInputLocked = true;
         playerAnimator.PlayClear();
-        StartCoroutine(StageClear(1.0f));
-    }
-
-    private IEnumerator StageClear(float time)
-    {
-        yield return new WaitForSeconds(time);
+        
         GameEvents.RaiseStageCleared();
     }
 

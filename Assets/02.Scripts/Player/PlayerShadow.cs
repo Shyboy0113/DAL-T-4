@@ -21,13 +21,11 @@ public class PlayerShadow : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.PlayerDied   += Hide;
-        GameEvents.StageCleared += Hide;
     }
 
     private void OnDisable()
     {
         GameEvents.PlayerDied   -= Hide;
-        GameEvents.StageCleared -= Hide;
     }
 
     private void LateUpdate()
@@ -64,7 +62,7 @@ public class PlayerShadow : MonoBehaviour
         shadowRenderer.enabled = GameManager.Instance.currentStageData?.hasSecondMap ?? false;
     }
 
-    private void Hide()
+    public void Hide()
     {
         shadowRenderer.enabled = false;
     }
