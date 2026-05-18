@@ -2885,7 +2885,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 12
+  m_SortingOrder: 13
   m_TargetDisplay: 0
 --- !u!224 &527168640
 RectTransform:
@@ -5185,7 +5185,7 @@ AudioSource:
   m_GameObject: {fileID: 1116106747}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -2231464370567950747, guid: 74a2b26e5efbc584c9172427843192d3, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
