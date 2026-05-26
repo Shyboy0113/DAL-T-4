@@ -20,18 +20,21 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
+    - Preload
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 243397d45dfadbb4a9b1690a19381da3
     m_Address: Game Sequence Strings_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
+    - Preload
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 33f31aa8778022e49bc29a717383df42
     m_Address: Game Clear Strings_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
+    - Preload
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4cf67464052601f43b495ffc0d83fb21
     m_Address: StageSelect Strings_en

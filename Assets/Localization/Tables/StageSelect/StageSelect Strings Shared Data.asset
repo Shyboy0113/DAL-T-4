@@ -67,12 +67,64 @@ MonoBehaviour:
     m_Key: Mission_NoSpecificFeature_Format
     m_Metadata:
       m_Items: []
+  - m_Id: 1000000006000
+    m_Key: Mission_NoSpecificFeature_CountFormat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000007000
+    m_Key: Mission_Progress_Complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000008000
+    m_Key: Mission_Progress_Time_Format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000009000
+    m_Key: Mission_Progress_Count_Format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000010000
+    m_Key: Mission_Progress_FeatureUsed_Format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000011000
+    m_Key: Mission_Clear_Actual_Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000012000
+    m_Key: Mission_Clear_Actual_Count
+    m_Metadata:
+      m_Items: []
   - m_Id: 12533274778996736
     m_Key: Mission_TimeLimit_Format
     m_Metadata:
       m_Items: []
   - m_Id: 12533330244472832
     m_Key: Mission_MoveCountLimit_Format
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14348928448401408
+    m_Key: Mission_ThirdMission_Header
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14350489387995136
+    m_Key: Mission_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14351131770818560
+    m_Key: Mission_ThirdMission_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14403473396072448
+    m_Key: Mission_ThirdMission_Desc_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14801392053911552
+    m_Key: UnderPanel_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16094561442140160
+    m_Key: Mission_Progress_Mission 3 Condition_Text
     m_Metadata:
       m_Items: []
   m_Metadata:

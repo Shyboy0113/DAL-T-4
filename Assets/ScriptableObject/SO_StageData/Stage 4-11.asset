@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: Stage 4-11
   m_EditorClassIdentifier: 
   stagePrefab: {fileID: 2685018636728712195, guid: b0165bacca81e7a4091f90b42a6bad18, type: 3}
-  bgmClip: {fileID: 8300000, guid: ba505de1b6cab8a43b65c7913ec7aabf, type: 3}
+  bgmClip: {fileID: 8300000, guid: faa26f73808ad774fbc40aa321297d54, type: 3}
   chapterNum: 4
   stageNum: 11
+  continueIceModeAfterTeleport: 0
   canUseF4: 1
   canUseLeftALT: 1
   canUseTAB: 1
   hasSecondMap: 1
-  continueIceModeAfterTeleport: 0
   limitNumberALT: 0
   limitNumberF4: 0
-  limitNumberTAB: 0
-  limitTime: 0
-  steamAchievementKey: CLEAR_CH4_ST11
+  limitNumberTAB: 5
+  limitTime: 60
+  missionActionCount: 50
+  missionFeatureUsageLimit: 3
   firstMissionType: 1
-  secondMissionType: 6
-  thirdMissionType: 5
+  secondMissionType: 5
+  thirdMissionConditions: -1
   forbiddenFeature: 3
-  speedRunTime: 0
   trackingMode: 0

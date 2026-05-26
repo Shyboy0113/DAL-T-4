@@ -67,15 +67,79 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12467183008550912
-    m_Localized: Clear without {0}
+    m_Localized: Clear without <color=yellow>{0}</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000006000
+    m_Localized: Use <color=yellow>{0}</color> <color=yellow>{1}</color> times or
+      fewer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000007000
+    m_Localized: ' (success)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000008000
+    m_Localized: '
+
+      [{0}s / {1}s]'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000009000
+    m_Localized: '
+
+      [{0} / {1}]'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000010000
+    m_Localized: '
+
+      [{0} uses]'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000011000
+    m_Localized: '
+
+      (actual: {0}s)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1000000012000
+    m_Localized: '
+
+      (actual: {0})'
     m_Metadata:
       m_Items: []
   - m_Id: 12533274778996736
-    m_Localized: Clear within {0} seconds
+    m_Localized: Clear within <color=yellow>{0}</color> seconds
     m_Metadata:
       m_Items: []
   - m_Id: 12533330244472832
-    m_Localized: Clear within {0} actions
+    m_Localized: Clear within <color=yellow>{0}</color> actions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14348928448401408
+    m_Localized: Satisfies the special condition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14350489387995136
+    m_Localized: Mission
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14351131770818560
+    m_Localized: Third Mission
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14403473396072448
+    m_Localized: Meets all conditions below
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14801392053911552
+    m_Localized: 'Enter, Mouse Left Click : <color=yellow>Enter Stage</color> / Esc,
+      ArrowKey : <color=red>Cancel</color>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16094561442140160
+    m_Localized: Mission 3 Condition
     m_Metadata:
       m_Items: []
   references:

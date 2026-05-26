@@ -240,15 +240,15 @@ public class DevelopmentPanel : MonoBehaviour
             _ => false
         };
 
-        MissionType type = index switch
+        string typeLabel = index switch
         {
-            1 => sd?.firstMissionType  ?? MissionType.None,
-            2 => sd?.secondMissionType ?? MissionType.None,
-            3 => sd?.thirdMissionType  ?? MissionType.None,
-            _ => MissionType.None
+            1 => (sd?.firstMissionType  ?? MissionType.None).ToString(),
+            2 => (sd?.secondMissionType ?? MissionType.None).ToString(),
+            3 => (sd?.thirdMissionConditions ?? ThirdMissionCondition.None).ToString(),
+            _ => "None"
         };
 
-        label.text = $"{index}번째\n[{type}] {(cleared ? "✓" : "✗")}";
+        label.text = $"{index}번째\n[{typeLabel}] {(cleared ? "✓" : "✗")}";
 
         if (btn != null)
         {

@@ -95,12 +95,21 @@ public class GameManager : Singleton<GameManager>
 
         CheckAndSaveMission(currentStageData.firstMissionType, currentStageData,
             ref currentProgressData.isFirstMissionCleared);
-        
+
         CheckAndSaveMission(currentStageData.secondMissionType, currentStageData,
             ref currentProgressData.isSecondMissionCleared);
-        
-        CheckAndSaveMission(currentStageData.thirdMissionType, currentStageData,
-            ref currentProgressData.isThirdMissionCleared);
+
+        // 3번째 도전과제 — 활성화된 모든 조건이 통과해야 달성
+        if (!currentProgressData.isThirdMissionCleared &&
+            currentStageData.thirdMissionConditions != ThirdMissionCondition.None)
+        {
+            bool allPassed = true;
+            foreach (var c in GetActiveThirdConditions())
+            {
+                if (!EvaluateThirdCondition(c)) { allPassed = false; break; }
+            }
+            if (allPassed) currentProgressData.isThirdMissionCleared = true;
+        }
 
         // 유저 세이브 데이터 업데이트
         if (jsonDataManager != null)
@@ -134,6 +143,51 @@ public class GameManager : Singleton<GameManager>
         };
     }
 
+    // ─── 3번째 도전과제 헬퍼 (UI에서 서브 row 표시에 사용) ──────────────
+
+    public List<ThirdMissionCondition> GetActiveThirdConditions()
+    {
+        var result = new List<ThirdMissionCondition>();
+        if (currentStageData == null) return result;
+        foreach (ThirdMissionCondition c in System.Enum.GetValues(typeof(ThirdMissionCondition)))
+        {
+            if (c == ThirdMissionCondition.None) continue;
+            if ((currentStageData.thirdMissionConditions & c) != 0) result.Add(c);
+        }
+        return result;
+    }
+
+    public bool EvaluateThirdCondition(ThirdMissionCondition condition)
+    {
+        var data = currentStageData;
+        if (data == null) return false;
+
+        switch (condition)
+        {
+            case ThirdMissionCondition.TimeLimit:
+                return currentTime <= data.limitTime;
+
+            case ThirdMissionCondition.MoveCountLimit:
+                return pushedNumberALT + pushedNumberF4 + pushedNumberTAB <= data.missionActionCount;
+
+            case ThirdMissionCondition.KillAllEnemies:
+                var enemies = FindObjectsByType<EnemyBehaviour>(FindObjectsSortMode.None)
+                    .Where(e => e.gameObject.activeSelf).ToArray();
+                return enemies.Length > 0 && enemies.All(e => e.IsDead);
+
+            case ThirdMissionCondition.NoSpecificFeature:
+                return data.forbiddenFeature switch
+                {
+                    ForbiddenFeature.ALT => pushedNumberALT <= data.missionFeatureUsageLimit,
+                    ForbiddenFeature.F4  => pushedNumberF4  <= data.missionFeatureUsageLimit,
+                    ForbiddenFeature.TAB => pushedNumberTAB <= data.missionFeatureUsageLimit,
+                    _                    => false,
+                };
+
+            default: return false;
+        }
+    }
+
     private void CheckAndSaveMission(MissionType type, SO_StageData data, ref bool result)
     {
         if (result) return; 
@@ -145,9 +199,7 @@ public class GameManager : Singleton<GameManager>
                 break;
             
             case MissionType.MoveCountLimit:
-                if (data.limitNumberALT >= pushedNumberALT &&
-                    data.limitNumberF4  >= pushedNumberF4  &&
-                    data.limitNumberTAB >= pushedNumberTAB)
+                if (pushedNumberALT + pushedNumberF4 + pushedNumberTAB <= data.missionActionCount)
                 {
                     result = true;
                     currentProgressData.minALT = Mathf.Min(currentProgressData.minALT, pushedNumberALT);
@@ -181,9 +233,9 @@ public class GameManager : Singleton<GameManager>
             case MissionType.NoSpecificFeature:
                 result = data.forbiddenFeature switch
                 {
-                    ForbiddenFeature.ALT => pushedNumberALT == 0,
-                    ForbiddenFeature.F4  => pushedNumberF4  == 0,
-                    ForbiddenFeature.TAB => pushedNumberTAB == 0,
+                    ForbiddenFeature.ALT => pushedNumberALT <= data.missionFeatureUsageLimit,
+                    ForbiddenFeature.F4  => pushedNumberF4  <= data.missionFeatureUsageLimit,
+                    ForbiddenFeature.TAB => pushedNumberTAB <= data.missionFeatureUsageLimit,
                     _                    => false
                 };
                 break;

@@ -15,6 +15,17 @@ public enum MissionType
 // NoSpecificFeature 미션에서 금지할 기능
 public enum ForbiddenFeature { None, ALT, F4, TAB }
 
+// 3번째 도전과제에 복수 선택 가능한 조건 (Flags — 인스펙터에서 체크박스로 다중 선택)
+[System.Flags]
+public enum ThirdMissionCondition
+{
+    None              = 0,
+    TimeLimit         = 1 << 0,   // 제한 시간 내 클리어
+    MoveCountLimit    = 1 << 1,   // 특정 횟수 이하 키 사용
+    KillAllEnemies    = 1 << 2,   // 모든 적 처치
+    NoSpecificFeature = 1 << 3,   // 특정 기능 미사용
+}
+
 [CreateAssetMenu(fileName = "SO_StageData", menuName = "ScriptableObject/StageData")]
 public class SO_StageData : ScriptableObject
 {
@@ -30,6 +41,9 @@ public class SO_StageData : ScriptableObject
     public string stageName => chapterNum + "-" + stageNum;
     
     [Header("기능 제한 (Feature Limits)")]
+    // Ice모드가 발동된 상태로 텔레포트를 타면, Ice 모드가 이후 유지되는지에 대한 여부
+    public bool continueIceModeAfterTeleport = false;
+    
     public bool canUseF4 = true;
     public bool canUseLeftALT = true;
     public bool canUseTAB = true;
@@ -40,18 +54,23 @@ public class SO_StageData : ScriptableObject
     public int limitNumberF4;
     public int limitNumberTAB;
     
-    [Header("미션 및 업적 세팅")]
+    [Header("미션 및 도전과제 (Missions)")]
     public float limitTime;
 
     public int missionActionCount;
+    public int missionFeatureUsageLimit; // 0 = 완전 미사용, N = N회 이하 허용
     
-    public MissionType firstMissionType = MissionType.None;
-    public MissionType secondMissionType = MissionType.None;
-    public MissionType thirdMissionType = MissionType.None;
-    
+    public MissionType firstMissionType  = MissionType.StageClear;
+    public MissionType secondMissionType = MissionType.CollectStar;
+
+    // 3번째 도전과제 — 복수 조건 AND, 디폴트는 4가지 모두 활성
+    public ThirdMissionCondition thirdMissionConditions =
+        ThirdMissionCondition.TimeLimit      |
+        ThirdMissionCondition.MoveCountLimit |
+        ThirdMissionCondition.KillAllEnemies |
+        ThirdMissionCondition.NoSpecificFeature;
+
     public ForbiddenFeature forbiddenFeature = ForbiddenFeature.None;
-    
-    public bool continueIceModeAfterTeleport = false;
     // 게임 시작 시, 카메라가 움직이는 모드 설정
     public CameraTrackingMode trackingMode = CameraTrackingMode.FrameEntireMap;
 }

@@ -16,19 +16,19 @@ MonoBehaviour:
   bgmClip: {fileID: 8300000, guid: ba505de1b6cab8a43b65c7913ec7aabf, type: 3}
   chapterNum: 2
   stageNum: 7
+  continueIceModeAfterTeleport: 0
   canUseF4: 1
   canUseLeftALT: 1
   canUseTAB: 1
   hasSecondMap: 0
-  continueIceModeAfterTeleport: 0
   limitNumberALT: 0
   limitNumberF4: 0
-  limitNumberTAB: 0
-  limitTime: 0
-  steamAchievementKey: CLEAR_CH2_ST7
+  limitNumberTAB: 5
+  limitTime: 60
+  missionActionCount: 26
+  missionFeatureUsageLimit: 2
   firstMissionType: 1
-  secondMissionType: 6
-  thirdMissionType: 5
+  secondMissionType: 5
+  thirdMissionConditions: 11
   forbiddenFeature: 3
-  speedRunTime: 0
   trackingMode: 0
