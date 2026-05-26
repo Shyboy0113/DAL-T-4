@@ -321,5 +321,13 @@ public static class GameEvents
     public static void RaiseSaveDataChanged() => OnSaveDataChanged?.Invoke();
 
     #endregion
+
+    #region ClearPanel
+
+    public static event Action ClearSequenceCompleted;
+    public static void RaiseClearSequenceCompleted() => ClearSequenceCompleted?.Invoke();
+
+    #endregion
+   
     
 }

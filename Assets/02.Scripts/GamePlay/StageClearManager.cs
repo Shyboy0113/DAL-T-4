@@ -45,5 +45,8 @@ public class StageClearManager : MonoBehaviour
         {
             yield return StartCoroutine(effect.Execute());
         }
+
+        yield return new WaitForSeconds(0.5f);
+        GameEvents.RaiseClearSequenceCompleted();
     }
 }

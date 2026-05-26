@@ -78,6 +78,7 @@ public class GameStateManagement : MonoBehaviour
         GameEvents.StageRecordStarted += OnStageEntered; // 스테이지 입장 시 다음 스테이지 해금
         GameEvents.ChatCommandRestart += RestartStage;
         GameEvents.ChatCommandPause += TogglePausePanel;
+        GameEvents.ClearSequenceCompleted += SetIsProcessingFalse;
     }
 
     private void OnDisable()
@@ -86,7 +87,13 @@ public class GameStateManagement : MonoBehaviour
         GameEvents.StageRecordStarted -= OnStageEntered;
         GameEvents.ChatCommandRestart -= RestartStage;
         GameEvents.ChatCommandPause -= TogglePausePanel;
+        GameEvents.ClearSequenceCompleted -= SetIsProcessingFalse;
         
+    }
+    
+    private void SetIsProcessingFalse()
+    {
+        _isProcessing = false;
     }
 
     // --- 스테이지 흐름 제어 ---
@@ -99,20 +106,24 @@ public class GameStateManagement : MonoBehaviour
         RecordStage();
         ChangeStage();
         
-        if(clearPanel.gameObject.activeSelf) clearPanel.ResetEffect();
-        if(missionPanel.gameObject.activeSelf) ToggleMissionPanel();
+        clearPanel.ResetEffect();
+        
+        if (missionPanel.gameObject.activeSelf)
+        {
+            ToggleMissionPanel();
+        }
     }
 
     public void RecordStage()
     {
-        GameEvents.RaiseStageRecordEnded();
+        _isProcessing = true;
         
+        GameEvents.RaiseStageRecordEnded();
         GameEvents.RaiseInputLockChanged(true);
     }
 
     public void ChangeStage()
     {
-        if (_isProcessing) return;
         _isProcessing = true;
         
         cutoutFade.FadeOut(() => StartCoroutine(IChangeStage()));

@@ -39,6 +39,7 @@ public class FadeClearPanel : MonoBehaviour, IStageClearEffect
         // 알파를 1로 페이드 시키고 애니메이션이 끝날 때까지 대기
         // .SetUpdate(true)는 게임이 정지(TimeScale = 0)된 상태에서도 작동하게 함
         yield return gameObject.transform.DOScale(1f, fadeTime).SetEase(Ease.InOutElastic);
+        
     }
 
     // 인터페이스 구현: 초기화
