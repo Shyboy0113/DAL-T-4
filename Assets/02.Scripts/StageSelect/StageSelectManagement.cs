@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Eflatun.SceneReference;
@@ -34,6 +35,9 @@ public class StageSelectManagement : MonoBehaviour
     private bool        _isTransitioning = false;
     private int         _currentChapter  = 0;
     private StageNode[] _allNodes;
+
+    // 각 노드의 Inspector 원본 Navigation을 보존 (잠금 건너뛰기 재배선용)
+    private readonly Dictionary<StageNode, Navigation> _originalNavigation = new();
 
     // ── 패널 상태 (중앙 관리) ──────────────────────────────────
     /// <summary>현재 패널이 열려 있는 노드. null이면 패널 닫힘.</summary>
@@ -161,6 +165,12 @@ public class StageSelectManagement : MonoBehaviour
         {
             if (node == null) continue;
             node.RefreshVisuals();
+
+            // 원본 Navigation 최초 1회 캐싱 (이미 재배선된 이후라면 갱신하지 않음)
+            var btn = node.GetComponent<Button>();
+            if (btn != null && !_originalNavigation.ContainsKey(node))
+                _originalNavigation[node] = btn.navigation;
+
             node.OnConfirmed  -= OnNodeConfirmed;
             node.OnSelected   -= OnNodeSelected;
             node.OnDeselected -= OnNodeDeselected;
@@ -168,6 +178,7 @@ public class StageSelectManagement : MonoBehaviour
             node.OnSelected   += OnNodeSelected;
             node.OnDeselected += OnNodeDeselected;
         }
+        RewireNavigation();
     }
 
     private void UnsubscribeAllNodes()
@@ -461,5 +472,46 @@ public class StageSelectManagement : MonoBehaviour
         var paths = FindObjectsByType<StagePathRenderer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var path in paths)
             path.Refresh();
+
+        RewireNavigation();
+    }
+
+    /// <summary>잠긴 노드를 건너뛰도록 활성 노드들의 Navigation을 재배선합니다.</summary>
+    private void RewireNavigation()
+    {
+        foreach (var node in _allNodes)
+        {
+            if (node == null || !node.gameObject.activeInHierarchy) continue;
+
+            var btn = node.GetComponent<Button>();
+            if (btn == null || !_originalNavigation.TryGetValue(node, out _)) continue;
+
+            Navigation nav = btn.navigation;
+            nav.selectOnLeft  = FindSkipLocked(node, n => n.selectOnLeft);
+            nav.selectOnRight = FindSkipLocked(node, n => n.selectOnRight);
+            nav.selectOnUp    = FindSkipLocked(node, n => n.selectOnUp);
+            nav.selectOnDown  = FindSkipLocked(node, n => n.selectOnDown);
+            btn.navigation = nav;
+        }
+    }
+
+    /// <summary>
+    /// 원본 Navigation 체인을 따라 이동하며 interactable한 첫 번째 Selectable을 반환합니다.
+    /// 잠긴 노드는 투명하게 건너뜁니다.
+    /// </summary>
+    private Selectable FindSkipLocked(StageNode start, Func<Navigation, Selectable> getNext)
+    {
+        if (!_originalNavigation.TryGetValue(start, out var nav)) return null;
+        var candidate = getNext(nav);
+
+        for (int i = 0; i < 20 && candidate != null; i++)
+        {
+            if (candidate.interactable) return candidate;
+
+            var nextNode = candidate.GetComponent<StageNode>();
+            if (nextNode == null || !_originalNavigation.TryGetValue(nextNode, out var nextNav)) return null;
+            candidate = getNext(nextNav);
+        }
+        return null;
     }
 }
