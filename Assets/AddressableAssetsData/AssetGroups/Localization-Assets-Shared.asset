@@ -27,12 +27,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4b48acd05be1f4347a3d8e04a1c769c0
-    m_Address: Assets/Game Clear Strings Shared Data.asset
+    m_Address: Assets/Localization/Tables/Game Clear/Game Clear Strings Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 558601e8c8530df4fb5aafd17e62328a
-    m_Address: Assets/HowToPlay Strings Shared Data.asset
+    m_Address: Assets/Localization/Tables/HowToPlay/HowToPlay Strings Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

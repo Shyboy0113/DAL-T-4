@@ -20,7 +20,6 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR
-    - Preload
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 26ce0e86211d8294e8b0cf303a8013ce
     m_Address: Option Strings_ko-KR
@@ -69,7 +68,6 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR
-    - Preload
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ff528f6f8adb19a428837206dea17ced
     m_Address: Intro Strings_ko-KR
