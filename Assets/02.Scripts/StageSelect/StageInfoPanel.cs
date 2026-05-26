@@ -113,7 +113,7 @@ public class StageInfoPanel : MonoBehaviour
             RefreshTexts(_currentData);
     }
 
-    public void ShowFromData(SO_StageData data)
+    public void ShowFromData(SO_StageData data) // Pause Panel에서 데이터를 가져옴
     {
         if (data == null) return;
         _currentData = data;
@@ -135,7 +135,7 @@ public class StageInfoPanel : MonoBehaviour
         }
     }
 
-    public void Show(StageNode node, Vector2 offset)
+    public void Show(StageNode node, Vector2 offset) // StageSelect에서 가져옴
     {
         Debug.Log($"[InfoPanel] Show() 진입 | canvasGroup={canvasGroup != null} | stageData={node?.stageData?.name}");
 
