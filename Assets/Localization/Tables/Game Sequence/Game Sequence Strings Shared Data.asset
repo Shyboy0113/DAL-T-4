@@ -51,6 +51,10 @@ MonoBehaviour:
     m_Key: StageMission_Text
     m_Metadata:
       m_Items: []
+  - m_Id: 14421557347483648
+    m_Key: ThirdMissionPanel_Text
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

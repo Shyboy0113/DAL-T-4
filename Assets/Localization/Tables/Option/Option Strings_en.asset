@@ -46,6 +46,10 @@ MonoBehaviour:
     m_Localized: Sound
     m_Metadata:
       m_Items: []
+  - m_Id: 16108213100548096
+    m_Localized: "Stage\t"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

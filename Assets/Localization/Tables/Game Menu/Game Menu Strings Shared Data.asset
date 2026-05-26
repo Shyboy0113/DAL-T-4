@@ -39,6 +39,46 @@ MonoBehaviour:
     m_Key: Pause_Text
     m_Metadata:
       m_Items: []
+  - m_Id: 25000000001000
+    m_Key: ClearStats_StageClear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000002000
+    m_Key: ClearStats_Stars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000003000
+    m_Key: ClearStats_EnemyKills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000004000
+    m_Key: ClearStats_TotalActions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000005000
+    m_Key: ClearStats_ALT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000006000
+    m_Key: ClearStats_F4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000007000
+    m_Key: ClearStats_TAB
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000008000
+    m_Key: ClearStats_PlayTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000009000
+    m_Key: ClearStats_Deaths
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16085242025807872
+    m_Key: ClearStats_Congratulations
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

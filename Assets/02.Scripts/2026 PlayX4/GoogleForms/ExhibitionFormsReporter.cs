@@ -51,7 +51,7 @@ public class ExhibitionFormsReporter : MonoBehaviour
     // 세션 상태
     // ─────────────────────────────────────────────────────────────────
 
-    private string _visitorId;
+    private ExhibitionLogger _logger;
     private int    _currentChapter;
     private int    _currentStage;
     private float  _sessionStartTime;
@@ -81,6 +81,7 @@ public class ExhibitionFormsReporter : MonoBehaviour
             return;
         }
 #endif
+        _logger = GetComponent<ExhibitionLogger>();
     }
 
     private void OnEnable()
@@ -121,14 +122,6 @@ public class ExhibitionFormsReporter : MonoBehaviour
             bool sameStage = _currentChapter == chapter && _currentStage == stage;
             EndSessionAndSend(sameStage ? "retry" : "abandon");
         }
-
-        // 1-1 진입 시 새 visitor_id 발급
-        if (chapter == 1 && stage == 1)
-            _visitorId = GenerateVisitorId();
-
-        // visitor_id가 없으면 생성 (게임 중간부터 컴포넌트 활성화된 경우 방어)
-        if (string.IsNullOrEmpty(_visitorId))
-            _visitorId = GenerateVisitorId();
 
         _currentChapter   = chapter;
         _currentStage     = stage;
@@ -189,7 +182,7 @@ public class ExhibitionFormsReporter : MonoBehaviour
 
         var payload = new FormPayload
         {
-            visitorId  = _visitorId,
+            visitorId  = _logger != null ? _logger.CurrentVisitorId : GenerateVisitorId(),
             chapter    = _currentChapter,
             stage      = _currentStage,
             result     = result,

@@ -47,12 +47,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11518183329366016
-    m_Localized: "<color=yellow>LeftShift</color>\n\uC2A4\uD14C\uC774\uC9C0 \uBBF8\uC158"
+    m_Localized: "<color=yellow>M</color>\uD0A4\n\uC2A4\uD14C\uC774\uC9C0 \uBBF8\uC158"
     m_Metadata:
       m_Items: []
   - m_Id: 11518601224650752
-    m_Localized: "<color=yellow>LeftShift</color><color=grey>\uB97C \uB20C\uB7EC
+    m_Localized: "<color=yellow>M</color><color=grey>\uD0A4\uB97C \uB20C\uB7EC \uBBF8\uC158
       \uCC3D \uB2EB\uAE30</color>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14421557347483648
+    m_Localized: "<color=yellow>\uC138\uBC88\uC9F8 \uBBF8\uC158</color>"
     m_Metadata:
       m_Items: []
   references:

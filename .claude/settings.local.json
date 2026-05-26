@@ -27,7 +27,8 @@
       "Bash(grep -n \"script: {fileID: 11500000, guid: \" \"C:\\\\Users\\\\ghdrl\\\\Downloads\\\\Individual Project\\\\DAL-T-4\\\\Assets\\\\01.Scene\\\\StageSelect.unity\")",
       "Bash(SceneLoader/Bootstrapper.cs)",
       "Skill(superpowers:brainstorming)",
-      "Skill(superpowers:finishing-a-development-branch)"
+      "Skill(superpowers:finishing-a-development-branch)",
+      "mcp__UnityMCP__refresh_unity"
     ]
   }
 }

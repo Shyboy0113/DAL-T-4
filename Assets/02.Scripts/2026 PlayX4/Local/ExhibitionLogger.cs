@@ -1,14 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// 전시회 분석 로거 — 로컬 JSON 저장
+/// 전시회 분석 로거 — 로컬 JSON 저장 + CSV 행 저장
 ///
 /// [세션 = 한 번의 시도]
 ///   진입 → 세션 시작 (카운터 리셋)
 ///   클리어 / 재시작 / 이탈 → 세션 종료 (데이터 기록)
+///
+/// [CSV 저장]
+///   구글 폼 응답시트와 동일한 컬럼 순서로 세션마다 1행 append
+///   → 나중에 응답시트에 그대로 붙여넣기 가능
 ///
 /// [씬 배치] GameManager 옆 GameObject 에 추가
 /// </summary>
@@ -20,6 +25,7 @@ public class ExhibitionLogger : MonoBehaviour
 
     [Header("저장 파일명 (persistentDataPath 기준)")]
     [SerializeField] private string fileName = "ExhibitionLog.json";
+    [SerializeField] private string csvFileName = "ExhibitionLog.csv";
 
     [Tooltip("변경 있을 때마다 즉시 저장 (전시 중 강제 종료 대비)")]
     [SerializeField] private bool saveOnEveryChange = true;
@@ -34,6 +40,7 @@ public class ExhibitionLogger : MonoBehaviour
 
     private ExhibitionSaveData _data;
     private string             _filePath;
+    private string             _csvFilePath;
 
     // 세션 추적
     private int   _currentChapter;
@@ -47,6 +54,9 @@ public class ExhibitionLogger : MonoBehaviour
     private int _sessionTabCount;
     private int _sessionF4Count;
     private int _sessionUndoCount;
+
+    // CSV 용 visitor_id
+    private string _visitorId;
 
     // ─────────────────────────────────────────────────────────────────
     // 생명주기
@@ -62,8 +72,10 @@ public class ExhibitionLogger : MonoBehaviour
             return;
         }
 #endif
-        _filePath = Path.Combine(Application.persistentDataPath, fileName);
+        _filePath    = Path.Combine(Application.persistentDataPath, fileName);
+        _csvFilePath = Path.Combine(Application.persistentDataPath, csvFileName);
         Load();
+        EnsureCsvHeader();
     }
 
     private void OnEnable()
@@ -119,7 +131,15 @@ public class ExhibitionLogger : MonoBehaviour
         _sessionF4Count    = 0;
         _sessionUndoCount  = 0;
 
-        // entry 카운트 증가
+        // 1-1 진입 시 새 visitor_id 발급
+        if (chapter == 1 && stage == 1)
+            _visitorId = GenerateVisitorId();
+
+        // visitor_id가 없으면 생성 (게임 중간부터 컴포넌트 활성화된 경우 방어)
+        if (string.IsNullOrEmpty(_visitorId))
+            _visitorId = GenerateVisitorId();
+
+        // ── JSON 집계 ──
         var rec = GetOrCreate(chapter, stage);
         rec.entryCount++;
 
@@ -148,6 +168,7 @@ public class ExhibitionLogger : MonoBehaviour
         if (!_sessionActive) return;
         _sessionDeathCount++;
         _data.summary.totalDeaths++;
+        DirtyAndSave();
     }
 
     private void OnKeyUsed(KeyType keyType)
@@ -174,13 +195,16 @@ public class ExhibitionLogger : MonoBehaviour
     private void EndSession(string result)
     {
         float elapsed = Time.realtimeSinceStartup - _sessionStartTime;
+
+        // ── CSV 행 저장 (구글 폼 응답시트와 동일 양식) ──
+        AppendCsvRow(result, elapsed);
+
+        // ── JSON 집계 ──
         var rec = GetOrCreate(_currentChapter, _currentStage);
 
-        // 플레이 시간 (모든 result에 기록)
         rec.totalPlayTime += elapsed;
         _data.summary.totalPlaySeconds += elapsed;
 
-        // result별 처리
         switch (result)
         {
             case "clear":
@@ -200,14 +224,89 @@ public class ExhibitionLogger : MonoBehaviour
                 break;
         }
 
-        // 세션 카운터 누적
-        rec.deathCount    += _sessionDeathCount;
-        rec.totalAltCount += _sessionAltCount;
-        rec.totalTabCount += _sessionTabCount;
-        rec.totalF4Count  += _sessionF4Count;
+        rec.deathCount     += _sessionDeathCount;
+        rec.totalAltCount  += _sessionAltCount;
+        rec.totalTabCount  += _sessionTabCount;
+        rec.totalF4Count   += _sessionF4Count;
         rec.totalUndoCount += _sessionUndoCount;
 
         _sessionActive = false;
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // CSV 저장
+    // ─────────────────────────────────────────────────────────────────
+
+    // 구글 폼 응답시트 컬럼 순서와 동일
+    private const string CsvHeader =
+        "타임스탬프,visitor_id,stage,death_count,alt_count,chapter,result,play_time,tab_count,f4_count,undo_count";
+
+    private void EnsureCsvHeader()
+    {
+        if (!File.Exists(_csvFilePath))
+        {
+            try
+            {
+                File.WriteAllText(_csvFilePath, CsvHeader + "\n", Encoding.UTF8);
+                Debug.Log($"[ExhibitionLogger] CSV 파일 생성: {_csvFilePath}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[ExhibitionLogger] CSV 헤더 쓰기 실패: {e.Message}");
+            }
+        }
+    }
+
+    private void AppendCsvRow(string result, float playTime)
+    {
+        // 구글 폼 타임스탬프 형식과 동일: "2026. 5. 20 오후 3:20:10"
+        string timestamp = FormatTimestamp(DateTime.Now);
+
+        string row =
+            $"{timestamp}," +
+            $"{_visitorId}," +
+            $"{_currentStage}," +
+            $"{_sessionDeathCount}," +
+            $"{_sessionAltCount}," +
+            $"{_currentChapter}," +
+            $"{result}," +
+            $"{playTime:F1}," +
+            $"{_sessionTabCount}," +
+            $"{_sessionF4Count}," +
+            $"{_sessionUndoCount}";
+
+        try
+        {
+            File.AppendAllText(_csvFilePath, row + "\n", Encoding.UTF8);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[ExhibitionLogger] CSV 행 쓰기 실패: {e.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 구글 폼 타임스탬프 형식으로 변환
+    /// 예: "2026. 5. 20 오후 3:20:10"
+    /// </summary>
+    private string FormatTimestamp(DateTime dt)
+    {
+        string amPm   = dt.Hour < 12 ? "오전" : "오후";
+        int    hour12 = dt.Hour % 12;
+        if (hour12 == 0) hour12 = 12;
+
+        return $"{dt.Year}. {dt.Month}. {dt.Day} {amPm} {hour12}:{dt.Minute:D2}:{dt.Second:D2}";
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // visitor_id 생성
+    // ─────────────────────────────────────────────────────────────────
+
+    private string GenerateVisitorId()
+    {
+        string time   = DateTime.Now.ToString("MMddHHmmss");
+        string random = UnityEngine.Random.Range(0, 0xFFFF).ToString("X4");
+        return $"V{time}_{random}";
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -233,7 +332,7 @@ public class ExhibitionLogger : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────────────
-    // 직렬화
+    // JSON 직렬화
     // ─────────────────────────────────────────────────────────────────
 
     private void Load()
@@ -280,6 +379,7 @@ public class ExhibitionLogger : MonoBehaviour
     // 공개 API
     // ─────────────────────────────────────────────────────────────────
 
+    public string                       CurrentVisitorId               => _visitorId;
     public ExhibitionSaveData          GetData()                      => _data;
     public ExhibitionSummary           GetSummary()                   => _data.summary;
     public List<ExhibitionStageRecord> GetAllStageRecords()           => _data.stages;

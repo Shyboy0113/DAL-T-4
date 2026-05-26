@@ -42,6 +42,46 @@ MonoBehaviour:
     m_Localized: PAUSE
     m_Metadata:
       m_Items: []
+  - m_Id: 25000000001000
+    m_Localized: Cleared Stages
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000002000
+    m_Localized: Stars
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000003000
+    m_Localized: Enemies Defeated
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000004000
+    m_Localized: Total Actions
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000005000
+    m_Localized: ALT Pressed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000006000
+    m_Localized: F4 Pressed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000007000
+    m_Localized: TAB Pressed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000008000
+    m_Localized: Play Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25000000009000
+    m_Localized: Deaths
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16085242025807872
+    m_Localized: Congratulations!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

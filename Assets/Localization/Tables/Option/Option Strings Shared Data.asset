@@ -43,6 +43,10 @@ MonoBehaviour:
     m_Key: Sound_Text
     m_Metadata:
       m_Items: []
+  - m_Id: 16108213100548096
+    m_Key: Stage_Text
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

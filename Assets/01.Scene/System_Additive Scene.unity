@@ -2835,74 +2835,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 383478362}
   m_CullTransparentMesh: 1
---- !u!1 &394524148
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 394524150}
-  - component: {fileID: 394524149}
-  - component: {fileID: 394524151}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &394524149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 394524148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
---- !u!4 &394524150
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 394524148}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 960, y: 540, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &394524151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 394524148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!1 &399565464
 GameObject:
   m_ObjectHideFlags: 0
@@ -3458,6 +3390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayX4Logger
   fileName: ExhibitionLog.json
+  csvFileName: ExhibitionLog.csv
   saveOnEveryChange: 1
   enableInEditor: 1
 --- !u!4 &587702207
@@ -8653,8 +8586,8 @@ MonoBehaviour:
   stageSection: {fileID: 1468537860}
   lobbySection: {fileID: 1421479213}
   speedText: {fileID: 1840478526}
-  speedUpButton: {fileID: 1581506238}
-  speedDownButton: {fileID: 1358462901}
+  speedUpButton: {fileID: 1358462901}
+  speedDownButton: {fileID: 1581506238}
   tabToggleButton: {fileID: 614523080}
   tabToggleText: {fileID: 160094284}
   mission1Button: {fileID: 1351777083}
@@ -11920,6 +11853,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1601566533}
   m_CullTransparentMesh: 1
+--- !u!1 &1603644396
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1603644399}
+  - component: {fileID: 1603644398}
+  - component: {fileID: 1603644397}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1603644397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603644396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.StandaloneInputModule
+  m_SendPointerHoverToParent: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &1603644398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603644396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &1603644399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603644396}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1607450180
 GameObject:
   m_ObjectHideFlags: 0
@@ -15794,10 +15795,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
       propertyPath: sceneBGMList.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
       propertyPath: sceneBGMList.Array.data[0].bgm
+      value: 
+      objectReference: {fileID: 8300000, guid: 113a66ee8c2c087408761916621b6432, type: 3}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[1].bgm
+      value: 
+      objectReference: {fileID: 8300000, guid: 113a66ee8c2c087408761916621b6432, type: 3}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[2].bgm
+      value: 
+      objectReference: {fileID: 8300000, guid: 9a17b5f0b5da0a649aa8a0c41ec0b07d, type: 3}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[3].bgm
       value: 
       objectReference: {fileID: 8300000, guid: 113a66ee8c2c087408761916621b6432, type: 3}
     - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
@@ -15806,12 +15819,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
       propertyPath: sceneBGMList.Array.data[1].scene.guid
-      value: 00000000000000000000000000000000
+      value: 512813f33c161244e819f292826cb697
+      objectReference: {fileID: 0}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[2].scene.guid
+      value: dba9d80d8aaa4ff40bfbb4645b827af2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[3].scene.guid
+      value: 512813f33c161244e819f292826cb697
       objectReference: {fileID: 0}
     - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
       propertyPath: sceneBGMList.Array.data[0].scene.asset
       value: 
       objectReference: {fileID: 102900000, guid: d68248f948374724e856736bad7dba5e, type: 3}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[1].scene.asset
+      value: 
+      objectReference: {fileID: 102900000, guid: 512813f33c161244e819f292826cb697, type: 3}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[2].scene.asset
+      value: 
+      objectReference: {fileID: 102900000, guid: dba9d80d8aaa4ff40bfbb4645b827af2, type: 3}
+    - target: {fileID: 5934818156145081928, guid: a454213281f358945b760983c9a0dad6, type: 3}
+      propertyPath: sceneBGMList.Array.data[3].scene.asset
+      value: 
+      objectReference: {fileID: 102900000, guid: 512813f33c161244e819f292826cb697, type: 3}
     - target: {fileID: 7291214103830277130, guid: a454213281f358945b760983c9a0dad6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -15942,9 +15975,9 @@ SceneRoots:
   - {fileID: 2280307333624154375}
   - {fileID: 1236398971752100640}
   - {fileID: 2050203652}
-  - {fileID: 394524150}
   - {fileID: 1747289533}
   - {fileID: 159656026}
   - {fileID: 1790195173}
   - {fileID: 587702207}
   - {fileID: 1718566395}
+  - {fileID: 1603644399}
