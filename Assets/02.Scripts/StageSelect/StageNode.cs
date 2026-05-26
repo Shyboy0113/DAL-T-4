@@ -47,6 +47,9 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     private Button    _button;
 
     public NodeState CurrentState => _state;
+    
+    // 마우스 입력이 무시 되는 문제 해결용
+    private GraphicRaycaster _raycaster;
 
     private void Awake()
     {
@@ -56,6 +59,8 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
         _button.onClick.AddListener(Confirm);
 
         _stageInfoCanvas = GetComponentInChildren<Canvas>();
+        _raycaster = _stageInfoCanvas.GetComponent<GraphicRaycaster>();
+        if (_raycaster != null) _raycaster.enabled = false; // 초기엔 꺼둠
         
     }
 
@@ -116,19 +121,19 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     // ── 패널 제어 (Management가 호출) ─────────────────────────
 
-    /// <summary>이 노드의 정보 패널을 표시합니다.</summary>
     public void ShowPanel()
     {
+        if (_raycaster != null) _raycaster.enabled = true;
+
         if (infoPanel == null)
         {
-            Debug.LogWarning($"[StageNode] {name}: infoPanel이 null - Inspector에서 StageInfoPanel을 할당해야 합니다.", this);  
+            Debug.LogWarning($"[StageNode] {name}: infoPanel이 null - Inspector에서 StageInfoPanel을 할당해야 합니다.", this);
             return;
         }
-        
-        _stageInfoCanvas.sortingOrder = stageData.chapterNum+1;
 
-        var nodeRect = GetComponent<RectTransform>();
-        infoPanel.Show(this, nodeRect, panelOffset);
+        _stageInfoCanvas.sortingOrder = stageData.chapterNum + 1;
+
+        infoPanel.Show(this, panelOffset);
 
         infoPanel.transform.DOKill();
         infoPanel.transform.localScale = _originScale * 4;
@@ -138,6 +143,8 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     /// <summary>이 노드의 정보 패널을 숨깁니다.</summary>
     public void HidePanel()
     {
+        if (_raycaster != null) _raycaster.enabled = false;
+        
         if (infoPanel == null) return;
 
         infoPanel.transform.DOKill();
