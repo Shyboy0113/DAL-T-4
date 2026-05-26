@@ -98,15 +98,15 @@ public class BehaviourManager : MonoBehaviour
     ICommand playerCommand = _history.PopUndoPlayerCommand();
     if (playerCommand != null)
     {
-        GameEvents.RaiseUndoTriggered();
-
-        // Undo 시 키 카운터 복원
+        // 카운터를 먼저 복원한 뒤 UI 갱신 이벤트 발행
         switch (ReturnKeyType(playerCommand))
         {
             case KeyType.Alt: GameManager.Instance.pushedNumberALT = Mathf.Max(0, GameManager.Instance.pushedNumberALT - 1); break;
             case KeyType.F4:  GameManager.Instance.pushedNumberF4  = Mathf.Max(0, GameManager.Instance.pushedNumberF4  - 1); break;
             case KeyType.Tab: GameManager.Instance.pushedNumberTAB = Mathf.Max(0, GameManager.Instance.pushedNumberTAB - 1); break;
         }
+
+        GameEvents.RaiseUndoTriggered();
 
         playerCommand.Undo();
         playerBehaviour.UndoState();
