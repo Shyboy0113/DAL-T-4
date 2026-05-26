@@ -33,7 +33,7 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
 
     [Header("Info Panel")]
     [SerializeField] private Vector2 panelOffset;
-    [SerializeField] private StageInfoPanel infoPanel;
+    [SerializeField] private StageSelect_StageInfoPanel stageInfoPanel;
 
     private Canvas _stageInfoCanvas;
     
@@ -125,19 +125,19 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         if (_raycaster != null) _raycaster.enabled = true;
 
-        if (infoPanel == null)
+        if (stageInfoPanel == null)
         {
-            Debug.LogWarning($"[StageNode] {name}: infoPanel이 null - Inspector에서 StageInfoPanel을 할당해야 합니다.", this);
+            Debug.LogWarning($"[StageNode] {name}: stageInfoPanel이 null - Inspector에서 StageInfoPanel을 할당해야 합니다.", this);
             return;
         }
 
         _stageInfoCanvas.sortingOrder = stageData.chapterNum + 1;
 
-        infoPanel.Show(this, panelOffset);
+        stageInfoPanel.ShowAtNode(this, panelOffset);
 
-        infoPanel.transform.DOKill();
-        infoPanel.transform.localScale = _originScale * 4;
-        infoPanel.transform.DOPunchScale(Vector3.one * 0.2f, 0.25f, 6, 0.5f);
+        stageInfoPanel.transform.DOKill();
+        stageInfoPanel.transform.localScale = _originScale * 4;
+        stageInfoPanel.transform.DOPunchScale(Vector3.one * 0.2f, 0.25f, 6, 0.5f);
     }
 
     /// <summary>이 노드의 정보 패널을 숨깁니다.</summary>
@@ -145,10 +145,10 @@ public class StageNode : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         if (_raycaster != null) _raycaster.enabled = false;
         
-        if (infoPanel == null) return;
+        if (stageInfoPanel == null) return;
 
-        infoPanel.transform.DOKill();
-        infoPanel.Hide();
+        stageInfoPanel.transform.DOKill();
+        stageInfoPanel.Hide();
     }
 
     // ── EventSystem 콜백 ──────────────────────────────────────

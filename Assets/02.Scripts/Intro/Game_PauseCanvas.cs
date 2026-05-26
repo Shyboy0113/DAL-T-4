@@ -10,7 +10,7 @@ public class Game_PauseCanvas : MonoBehaviour
     [SerializeField] private SceneReference introScene; // Title button
     
     [SerializeField] private CanvasEventSystemFocusKeeper sequenceFocusKeeper;
-    [SerializeField] private StageInfoPanel stageInfoPanel;
+    [SerializeField] private Game_PausePanel_StageInfoPanel stageInfoPanel;
 
     public SO_UIEvent optionEvent;
     
@@ -28,7 +28,7 @@ public class Game_PauseCanvas : MonoBehaviour
 
         stageInfoPanel.gameObject.SetActive(true);
         // 현재 스테이지 정보를 왼쪽 패널에 표시
-        stageInfoPanel?.ShowFromData(GameManager.Instance?.currentStageData);
+        stageInfoPanel?.ShowInfo(GameManager.Instance?.currentStageData);
     }
 
     private void OnDisable()
