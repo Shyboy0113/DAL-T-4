@@ -369,6 +369,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.5
@@ -409,6 +413,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -424,6 +432,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -455,6 +467,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5
@@ -495,6 +511,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -506,6 +526,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -529,6 +553,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.5
@@ -569,6 +597,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -584,6 +616,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -615,6 +651,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5
@@ -655,6 +695,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -670,6 +714,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7821118168015453621, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -713,6 +761,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.5
@@ -753,6 +805,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -764,6 +820,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -787,6 +847,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.5
@@ -827,6 +891,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -842,6 +910,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -873,6 +945,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.5
@@ -913,6 +989,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -928,6 +1008,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -959,6 +1043,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.5
@@ -999,6 +1087,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1014,6 +1106,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -1054,12 +1150,16 @@ PrefabInstance:
       value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 3222420548296216281, guid: 02d1a728459765b44ae36cedb02c2a2f, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222420548296216281, guid: 02d1a728459765b44ae36cedb02c2a2f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.75
+      value: -110
       objectReference: {fileID: 0}
     - target: {fileID: 3222420548296216281, guid: 02d1a728459765b44ae36cedb02c2a2f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.5
+      value: -85
       objectReference: {fileID: 0}
     - target: {fileID: 4214013828730127038, guid: 02d1a728459765b44ae36cedb02c2a2f, type: 3}
       propertyPath: m_Name
@@ -1071,11 +1171,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7464697482408069351, guid: 02d1a728459765b44ae36cedb02c2a2f, type: 3}
       propertyPath: m_text
-      value: Same <color=red>Number</color> Is Same <color=blue>Teleport</color>
+      value: 'Same <color=red>Number</color>
+
+        Is
+
+        Same <color=yellow>Teleport</color>'
       objectReference: {fileID: 0}
     - target: {fileID: 7464697482408069351, guid: 02d1a728459765b44ae36cedb02c2a2f, type: 3}
       propertyPath: m_fontSize
-      value: 42.85
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7464697482408069351, guid: 02d1a728459765b44ae36cedb02c2a2f, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7892745831393830026, guid: 02d1a728459765b44ae36cedb02c2a2f, type: 3}
       propertyPath: m_Pivot.x
@@ -1179,6 +1287,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.5
@@ -1219,6 +1331,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1234,6 +1350,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8407074332212949285, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -1265,6 +1385,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3076497431010509599}
     m_Modifications:
+    - target: {fileID: 922816479834955068, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4402312857909068941, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.5
@@ -1305,6 +1429,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4463892419848183079, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4598842383691446328, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1320,6 +1448,10 @@ PrefabInstance:
     - target: {fileID: 6008541588933117872, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_Name
       value: TilePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595941245121296919, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7821118168015453621, guid: 2009a230d32d5144bae936b5c78ed175, type: 3}
       propertyPath: m_AnchoredPosition.y

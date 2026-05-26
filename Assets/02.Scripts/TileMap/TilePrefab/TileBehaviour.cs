@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.VFX;
 
 #region Struct/Enum
 
@@ -497,7 +498,11 @@ public class TileBehaviour : BaseTile
     #region Teleport Logic
 
     [Header("Teleport")] [SerializeField] private TileBehaviour teleportTarget;
-
+    
+    // 텔레포트에 할당되는 VFX
+    [SerializeField] private VisualEffect startTeleportVFX;
+    [SerializeField] private VisualEffect endTeleportVFX;
+    
     /// <summary>
     /// true  : Ice 슬라이딩 중 텔레포트 → EndTeleport 도착 후 Ice 유지 (계속 미끄러짐)
     /// false : Ice 슬라이딩 중 텔레포트 → EndTeleport 도착 후 Ice 종료 (Stop 타일과 동일)
@@ -582,9 +587,26 @@ public class TileBehaviour : BaseTile
         if (player == null) player = FindFirstObjectByType<PlayerBehaviour>();
         if (mapManager == null) mapManager = FindFirstObjectByType<MapManager>();
 
-        if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
+        if (currentTileType == TileType.StartTeleport)
+        {
+            endTeleportVFX.Stop();
+            startTeleportVFX.Play();
+            
             AutoLinkTeleport();
-
+        }
+        else if (currentTileType == TileType.EndTeleport)
+        {
+            startTeleportVFX.Stop();
+            endTeleportVFX.Play();
+            
+            AutoLinkTeleport();
+        }
+        else
+        {
+            startTeleportVFX.Stop();
+            endTeleportVFX.Stop();
+        }
+        
         _collider = GetComponent<Collider2D>();
         if (IsPlayerActionTile() || currentTileType == TileType.ToggleTargeted)
             _collider.enabled = !isToggled;
@@ -615,8 +637,24 @@ public class TileBehaviour : BaseTile
     {
         SyncLayerWithParent();
 
-        if (currentTileType == TileType.StartTeleport || currentTileType == TileType.EndTeleport)
+        if (currentTileType == TileType.StartTeleport)
+        {
+            endTeleportVFX.Stop();
+            startTeleportVFX.Play();
+            
             AutoLinkTeleport();
+        }
+        else if (currentTileType == TileType.EndTeleport)
+        {
+            startTeleportVFX.Stop();
+            endTeleportVFX.Play();
+            AutoLinkTeleport();
+        }
+        else
+        {
+            startTeleportVFX.Stop();
+            endTeleportVFX.Stop();
+        }
 
         if (allDataAssets != null && allDataAssets.Count > 0)
         {
@@ -1018,9 +1056,8 @@ public class TileBehaviour : BaseTile
                 var pd = gm.currentProgressData;
 
                 bool starMissionCleared =
-                    (sd.firstMissionType  == MissionType.CollectStar && pd.isFirstMissionCleared)  ||
-                    (sd.secondMissionType == MissionType.CollectStar && pd.isSecondMissionCleared) ||
-                    (sd.thirdMissionType  == MissionType.CollectStar && pd.isThirdMissionCleared);
+                    (sd.firstMissionType  == MissionType.CollectStar && pd.isFirstMissionCleared) ||
+                    (sd.secondMissionType == MissionType.CollectStar && pd.isSecondMissionCleared);
 
                 if (starMissionCleared)
                 {
