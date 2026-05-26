@@ -40,6 +40,7 @@ public class GlobalStatsData
     public int lifetimeAltTab = 0;
     public int totalDeaths    = 0;
     public int totalClears    = 0;
+    public int totalEnemyKills = 0;
 }
 
 [System.Serializable]
@@ -230,6 +231,34 @@ public class JsonDataManager : MonoBehaviour
         int prevSt = stage > 1 ? stage - 1 : stagesPerChapter;
         if (prevCh < 1) return null;
         return stageDataDict.TryGetValue($"{prevCh}-{prevSt}", out var data) ? data : null;
+    }
+
+    public int GetClearedStageCount()
+    {
+        int count = 0;
+        foreach (var data in stageDataDict.Values)
+            if (data.isCleared) count++;
+        return count;
+    }
+
+    public void GetStarStats(out int collected, out int max, int totalChapters, int stagesPerChapter)
+    {
+        collected = 0;
+        max = totalChapters * stagesPerChapter * 3;
+        foreach (var data in stageDataDict.Values)
+        {
+            if (data.isFirstMissionCleared)  collected++;
+            if (data.isSecondMissionCleared) collected++;
+            if (data.isThirdMissionCleared)  collected++;
+        }
+    }
+
+    public float GetTotalPlayTime()
+    {
+        float total = 0f;
+        foreach (var data in stageDataDict.Values)
+            total += data.totalPlayTime;
+        return total;
     }
 
     public void ResetAllData()

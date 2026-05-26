@@ -74,6 +74,7 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         GameEvents.KeyUsed      += OnKeyUsed;
         GameEvents.PlayerDied   += OnPlayerDied;
         GameEvents.MapSwitched  += OnMapSwitched;
+        GameEvents.EnemyDied    += OnEnemyDied;
     }
 
     private void OnDisable()
@@ -81,6 +82,7 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         GameEvents.KeyUsed      -= OnKeyUsed;
         GameEvents.PlayerDied   -= OnPlayerDied;
         GameEvents.MapSwitched  -= OnMapSwitched;
+        GameEvents.EnemyDied    -= OnEnemyDied;
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -133,6 +135,13 @@ public class LifetimeAchievemenHandler : MonoBehaviour
         StoreStats();
     }
 
+    private void OnEnemyDied()
+    {
+        var stats = _jsonDataManager.GetGlobalStats();
+        stats.totalEnemyKills++;
+        _jsonDataManager.SaveGlobalStats();
+    }
+
     // ─────────────────────────────────────────────────────────────────
     // 임계치 일괄 판정
     // ─────────────────────────────────────────────────────────────────
@@ -150,11 +159,12 @@ public class LifetimeAchievemenHandler : MonoBehaviour
     // 외부 조회용
     // ─────────────────────────────────────────────────────────────────
 
-    public int GetLifetimeALT()    => _jsonDataManager.GetGlobalStats().lifetimeALT;
-    public int GetLifetimeF4()     => _jsonDataManager.GetGlobalStats().lifetimeF4;
-    public int GetLifetimeTAB()    => _jsonDataManager.GetGlobalStats().lifetimeTAB;
-    public int GetLifetimeAltTab() => _jsonDataManager.GetGlobalStats().lifetimeAltTab;
-    public int GetTotalDeaths()    => _jsonDataManager.GetGlobalStats().totalDeaths;
+    public int GetLifetimeALT()      => _jsonDataManager.GetGlobalStats().lifetimeALT;
+    public int GetLifetimeF4()       => _jsonDataManager.GetGlobalStats().lifetimeF4;
+    public int GetLifetimeTAB()      => _jsonDataManager.GetGlobalStats().lifetimeTAB;
+    public int GetLifetimeAltTab()   => _jsonDataManager.GetGlobalStats().lifetimeAltTab;
+    public int GetTotalDeaths()      => _jsonDataManager.GetGlobalStats().totalDeaths;
+    public int GetTotalEnemyKills()  => _jsonDataManager.GetGlobalStats().totalEnemyKills;
 
     #region Steamworks Utility
 
