@@ -26,13 +26,9 @@ public class Game_PauseCanvas : MonoBehaviour
         if (firstSelectedButton != null && EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(firstSelectedButton);
 
+        stageInfoPanel.gameObject.SetActive(true);
         // 현재 스테이지 정보를 왼쪽 패널에 표시
         stageInfoPanel?.ShowFromData(GameManager.Instance?.currentStageData);
-    }
-
-    private void Start()
-    {
-        gameObject.SetActive(false);
     }
 
     private void OnDisable()
