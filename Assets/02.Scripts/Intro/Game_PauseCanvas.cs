@@ -78,6 +78,7 @@ public class Game_PauseCanvas : MonoBehaviour
         cutoutFade.FadeOut(() =>
         {
             StartCoroutine(SceneLoader.LoadScene(stageSelectScene));
+            SoundManager.Instance.RenewalBGMForSCene(stageSelectScene);
         });
     }
 
