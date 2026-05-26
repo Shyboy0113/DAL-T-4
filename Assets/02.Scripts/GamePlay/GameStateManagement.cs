@@ -8,6 +8,7 @@ public class GameStateManagement : MonoBehaviour
     [SerializeField] private StageLoader stageLoader;
     [SerializeField] private CutoutFade cutoutFade;
     [SerializeField] private SceneReference stageSelectScene;
+    [SerializeField] private SceneReference clearScene;
     [SerializeField] private BehaviourManager behaviourManager;
 
     [Header("UI Panels")]
@@ -33,7 +34,7 @@ public class GameStateManagement : MonoBehaviour
         cutoutFade.FadeIn(() => GameEvents.RaiseInputLockChanged(false));
         
         GameManager.Instance.ResetData();
-        HideHowToPlayPanel();
+        //HideHowToPlayPanel();
         HidePausePanel();
         
         stageLoader.LoadStage(GameManager.Instance.chapter, GameManager.Instance.stage);
@@ -45,11 +46,20 @@ public class GameStateManagement : MonoBehaviour
         if (GameManager.Instance.isCleared)
         {
             if (Input.GetKeyDown(KeyCode.R)) RestartStage();
-            if (Input.GetKeyDown(KeyCode.Escape)) clearPanel.ResetEffect();
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Escape)) TogglePausePanel();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (howToPlayPanel.activeSelf)
+                {
+                    HideHowToPlayPanel();
+                }
+                else
+                {
+                    TogglePausePanel();
+                }
+            }
 
             // 입력 차단 조건 통합
             if (GameManager.Instance == null || GameManager.Instance.isChatting ||
@@ -57,7 +67,7 @@ public class GameStateManagement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.R)) RestartStage();
             if (Input.GetKeyDown(KeyCode.H)) ToggleHowToPlayPanel();
-            if (Input.GetKeyDown(KeyCode.LeftShift)) ToggleMissionPanel();
+            if (Input.GetKeyDown(KeyCode.M)) ToggleMissionPanel();
         }
     }
 
@@ -88,6 +98,9 @@ public class GameStateManagement : MonoBehaviour
         _isRestart = true;
         RecordStage();
         ChangeStage();
+        
+        if(clearPanel.gameObject.activeSelf) clearPanel.ResetEffect();
+        if(missionPanel.gameObject.activeSelf) ToggleMissionPanel();
     }
 
     public void RecordStage()
@@ -103,6 +116,8 @@ public class GameStateManagement : MonoBehaviour
         _isProcessing = true;
         
         cutoutFade.FadeOut(() => StartCoroutine(IChangeStage()));
+        
+        if(missionPanel.gameObject.activeSelf) ToggleMissionPanel();
     }
     
     private IEnumerator IChangeStage()
@@ -173,7 +188,7 @@ public class GameStateManagement : MonoBehaviour
 
             if (!loaded)
             {
-                StartCoroutine(SceneLoader.LoadScene(stageSelectScene));
+                StartCoroutine(SceneLoader.LoadScene(clearScene));
                 return;
             }
         }
