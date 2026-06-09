@@ -3,7 +3,7 @@ using UnityEngine;
 using Steamworks;
 #endif
 
-public class LifetimeAchievemenHandler : MonoBehaviour
+public class LifetimeAchievementHandler : MonoBehaviour
 {
     private JsonDataManager _jsonDataManager => GameManager.Instance.jsonDataManager;
 

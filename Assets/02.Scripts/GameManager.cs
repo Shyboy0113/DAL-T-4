@@ -115,6 +115,7 @@ public class GameManager : Singleton<GameManager>
         if (jsonDataManager != null)
         {
             jsonDataManager.SaveStageData(currentProgressData);
+            GameEvents.RaiseStageProgressSaved();
         }
     }
     // ─── 키 사용 가능 여부 ────────────────────────────────────────────

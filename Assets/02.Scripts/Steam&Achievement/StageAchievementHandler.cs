@@ -20,14 +20,14 @@ public class StageAchievementHandler : MonoBehaviour
     
     private void OnEnable()
     {
-        GameEvents.StageCleared += OnStageCleared;
-        GameEvents.PlayerDied   += OnPlayerDied;
+        GameEvents.StageProgressSaved += OnStageCleared;
+        GameEvents.PlayerDied         += OnPlayerDied;
     }
 
     private void OnDisable()
     {
-        GameEvents.StageCleared -= OnStageCleared;
-        GameEvents.PlayerDied   -= OnPlayerDied;
+        GameEvents.StageProgressSaved -= OnStageCleared;
+        GameEvents.PlayerDied         -= OnPlayerDied;
     }
 
 #if UNITY_EDITOR && !DISABLESTEAMWORKS

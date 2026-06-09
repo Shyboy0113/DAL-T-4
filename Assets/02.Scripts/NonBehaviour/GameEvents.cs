@@ -211,6 +211,11 @@ public static class GameEvents
     public static event Action<int, int> StageAbandoned; // (chapter, stage)
     public static void RaiseStageAbandoned(int ch, int st) => StageAbandoned?.Invoke(ch, st);
 
+    // [발행] GameManager.cs — SaveStageProgress() isCleared 저장 완료 후
+    // [수신] StageAchievementHandler.cs — 챕터/전체 클리어 업적 판정 (StageCleared보다 늦게 실행 보장)
+    public static event Action StageProgressSaved;
+    public static void RaiseStageProgressSaved() => StageProgressSaved?.Invoke();
+
     #endregion
 
     #region Mission Tracking
