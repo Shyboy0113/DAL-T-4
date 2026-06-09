@@ -1004,6 +1004,7 @@ public class TileBehaviour : BaseTile
 
         // 타일이 파괴되는 상황도 커맨드로 등록
         behaviourManager.ExecuteCommand(new TileBreakCommand(this));
+        
     }
 
     private IEnumerator ShakeUntilBreak()
@@ -1028,10 +1029,14 @@ public class TileBehaviour : BaseTile
 
     public void ApplyBreak()
     {
+        if (_isEnemyOnMe && _currentEnemyOnMe != null && !_currentEnemyOnMe.IsDead)
+            _currentEnemyOnMe.PlayExplosion();
+        
         iconRenderer.enabled = false;
         backgroundRenderer.enabled = false;
         _collider.enabled = false;
         if (breakSound) _effectSound.PlayOneShot(breakSound);
+        
     }
 
     public void RevertBreak()

@@ -239,6 +239,7 @@ public void CalculateRotationCount(int delta, bool isFirst)
         GameEvents.MapRotationCompleted  += FreezePlayerPhysicalLogic;
         GameEvents.ChatCommandSuicide  += PlayExplosion;
         GameEvents.PhysicsTurnStarted  += OnPhysicsTurn;
+        GameEvents.TileMapChanged        += CheckForGround;
         
         // chat command로 whistle Sound를 내는 이벤트
         GameEvents.ChatCommandWhistle += PlayWhistleSound;
@@ -255,6 +256,7 @@ public void CalculateRotationCount(int delta, bool isFirst)
         GameEvents.ChatCommandSuicide -= PlayExplosion;
         GameEvents.PhysicsTurnStarted -= OnPhysicsTurn;
 
+        GameEvents.TileMapChanged        -= CheckForGround;
         GameEvents.ChatCommandWhistle -= PlayWhistleSound;
     }
 
@@ -673,8 +675,7 @@ public void CalculateRotationCount(int delta, bool isFirst)
         _rigidbody2D.simulated       = false;
 
         transform.position = targetPosition;
-        Physics2D.SyncTransforms();
-
+        
         _rigidbody2D.simulated = true;
         CheckForGround();
         // Ice 슬라이딩 중 텔레포트는 입력 잠금을 해제하지 않음
