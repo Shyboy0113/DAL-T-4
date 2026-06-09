@@ -23,10 +23,10 @@ MonoBehaviour:
   hasSecondMap: 1
   limitNumberALT: 0
   limitNumberF4: 0
-  limitNumberTAB: 5
+  limitNumberTAB: 6
   limitTime: 60
   missionActionCount: 50
-  missionFeatureUsageLimit: 3
+  missionFeatureUsageLimit: 4
   firstMissionType: 1
   secondMissionType: 5
   thirdMissionConditions: -1

@@ -20,7 +20,7 @@ MonoBehaviour:
   canUseF4: 1
   canUseLeftALT: 1
   canUseTAB: 1
-  hasSecondMap: 0
+  hasSecondMap: 1
   limitNumberALT: 0
   limitNumberF4: 0
   limitNumberTAB: 5
