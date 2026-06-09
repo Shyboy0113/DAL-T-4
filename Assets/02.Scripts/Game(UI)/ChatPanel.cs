@@ -143,7 +143,7 @@ public class ChatPanel : MonoBehaviour
             || GameManager.Instance.isOption) return;
         
         if (!chatInputField.gameObject.activeSelf &&
-            Input.GetKeyDown(KeyCode.T) &&
+            Input.GetKeyDown(KeyCode.Slash) &&
             Time.frameCount != _lastClosedFrame)
         {
             OpenChatInput();
