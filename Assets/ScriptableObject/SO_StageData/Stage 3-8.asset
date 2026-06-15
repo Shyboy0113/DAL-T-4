@@ -25,7 +25,7 @@ MonoBehaviour:
   limitNumberF4: 0
   limitNumberTAB: 5
   limitTime: 60
-  missionActionCount: 50
+  missionActionCount: 80
   missionFeatureUsageLimit: 3
   firstMissionType: 1
   secondMissionType: 5
