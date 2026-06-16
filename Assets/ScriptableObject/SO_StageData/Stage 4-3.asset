@@ -29,6 +29,6 @@ MonoBehaviour:
   missionFeatureUsageLimit: 3
   firstMissionType: 1
   secondMissionType: 5
-  thirdMissionConditions: -1
+  thirdMissionConditions: 11
   forbiddenFeature: 3
   trackingMode: 1
